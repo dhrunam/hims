@@ -56,6 +56,81 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
 
         ]
 
+    def create(self, validated_data):
+
+        try:
+            with transaction.atomic():
+
+                item_received = op_models.ItemReceived.objects.create(
+                    hotel=validated_data['hotel'],
+                    item=validated_data['item'],
+                    opening_balance=validated_data['opening_balance'],
+                    quantity_received=validated_data['quantity_received'],
+                    unit_price=validated_data['unit_price'],
+                    expiry_date=validated_data['expiry_date'],
+                    remarks=validated_data['remarks'],
+                    created_by=validated_data['created_by'],
+
+                )
+
+                item_received.save()
+
+                item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                
+                    # hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
+                    # item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+                    # opening_balance=models.IntegerField(default=0)
+                    # received=models.IntegerField(default=0)
+                    # damaged=models.IntegerField(default=0)
+                    # returned=models.IntegerField(default=0)
+                    # transferred=models.IntegerField(default=0)
+                    # min_level=models.IntegerField(default=0)
+                    # max_level=models.IntegerField(default=0)
+
+                if item_in_hotel:
+                    item_in_hotel[0].opening_balance=validated_data['opening_balance'],
+                    item_in_hotel[0].received=item_in_hotel[0].received + validated_data['received'],
+                    item_in_hotel[0].save()
+                else:
+                    item_in_hotel=op_models.ItemInHotel.objects.create(
+                    hotel=validated_data['hotel'],
+                    item=validated_data['item'],
+                    opening_balance=validated_data['quantity_received'],
+                    received=validated_data['quantity_received']
+                )
+                return item_received
+
+                # return Response(serializers.data(), status=status.HTTP_200_OK)
+
+        except TypeError:
+            return TypeError("There is some error in processing your data.")
+
+    def update(self, instance, validated_data):
+
+        try:
+            with transaction.atomic():
+                item_received = instance
+                prev_quantity_received = item_received.quantity_received
+
+                item_received.hotel = validated_data['hotel']
+                item_received.item = validated_data['item']
+                item_received.opening_balance = validated_data['opening_balance']
+                item_received.quantity_received = validated_data['quantity_received']
+                item_received.remarks = validated_data['remarks']
+                item_received.created_by = validated_data['created_by']
+                item_received.save()
+
+                item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                if item_in_hotel:
+                    item_in_hotel[0].received=item_in_hotel[0].received - prev_quantity_received + validated_data['quantity_received'],
+                    item_in_hotel[0].save()
+
+                return item_received
+
+        except TypeError:
+            return TypeError("There is some error in processing your data.")
+
+
 
 class ItemReturnedSerializer(serializers.ModelSerializer):
     # purchase_amount = serializers.FloatField(read_only=True)
@@ -92,6 +167,75 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
 
 
         ]
+    
+        def create(self, validated_data):
+
+            try:
+                with transaction.atomic():
+
+                    item_returned = op_models.ItemReturned.objects.create(
+                        hotel=validated_data['hotel'],
+                        item=validated_data['item'],
+                        opening_balance=validated_data['opening_balance'],
+                        quantity_returned=validated_data['quantity_returned'],
+                        remarks=validated_data['remarks'],
+                        created_by=validated_data['created_by'],
+
+                    )
+
+                    item_returned.save()
+
+                    item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                    
+                        # hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
+                        # item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+                        # opening_balance=models.IntegerField(default=0)
+                        # received=models.IntegerField(default=0)
+                        # damaged=models.IntegerField(default=0)
+                        # returned=models.IntegerField(default=0)
+                        # transferred=models.IntegerField(default=0)
+                        # min_level=models.IntegerField(default=0)
+                        # max_level=models.IntegerField(default=0)
+
+                    if item_in_hotel:
+                        item_in_hotel[0].returned=item_in_hotel[0].returned + validated_data['returned'],
+                        item_in_hotel[0].save()
+
+                    return item_returned
+
+                # return Response(serializers.data(), status=status.HTTP_200_OK)
+
+            except TypeError:
+                return TypeError("There is some error in processing your data.")
+
+        def update(self, instance, validated_data):
+
+            try:
+                with transaction.atomic():
+                    item_returned = instance
+                    prev_quantity_returned = item_returned.quantity_returned
+
+                    item_returned.hotel = validated_data['hotel']
+                    item_returned.item = validated_data['item']
+                    item_returned.opening_balance = validated_data['opening_balance']
+                    item_returned.quantity_returned = validated_data['quantity_returned']
+                    item_returned.remarks = validated_data['remarks']
+                    item_returned.created_by = validated_data['created_by']
+                    item_returned.save()
+
+                    item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                    if item_in_hotel:
+                        item_in_hotel[0].returned=item_in_hotel[0].returned - prev_quantity_returned + validated_data['quantity_returned'],
+                        item_in_hotel[0].save()
+
+                    return item_returned
+
+            except TypeError:
+                return TypeError("There is some error in processing your data.")
+
+
+
+
 
 class ItemDamagedSerializer(serializers.ModelSerializer):
     # purchase_amount = serializers.FloatField(read_only=True)
@@ -129,6 +273,74 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
 
         ]
 
+        def create(self, validated_data):
+
+            try:
+                with transaction.atomic():
+
+                    item_damaged = op_models.ItemDamaged.objects.create(
+                        hotel=validated_data['hotel'],
+                        item=validated_data['item'],
+                        opening_balance=validated_data['opening_balance'],
+                        quantity_damaged=validated_data['quantity_damaged'],
+                        remarks=validated_data['remarks'],
+                        created_by=validated_data['created_by'],
+
+                    )
+
+                    item_damaged.save()
+
+                    item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                    
+                        # hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
+                        # item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+                        # opening_balance=models.IntegerField(default=0)
+                        # received=models.IntegerField(default=0)
+                        # damaged=models.IntegerField(default=0)
+                        # returned=models.IntegerField(default=0)
+                        # transferred=models.IntegerField(default=0)
+                        # min_level=models.IntegerField(default=0)
+                        # max_level=models.IntegerField(default=0)
+
+                    if item_in_hotel:
+                        item_in_hotel[0].damaged=item_in_hotel[0].returned + validated_data['damaged'],
+                        item_in_hotel[0].save()
+
+                    return item_damaged
+
+                # return Response(serializers.data(), status=status.HTTP_200_OK)
+
+            except TypeError:
+                return TypeError("There is some error in processing your data.")
+       
+        def update(self, instance, validated_data):
+
+            try:
+                with transaction.atomic():
+                    item_damaged = instance
+                    prev_quantity_damaged = item_damaged.quantity_damaged
+
+                    item_damaged.hotel = validated_data['hotel']
+                    item_damaged.item = validated_data['item']
+                    item_damaged.opening_balance = validated_data['opening_balance']
+                    item_damaged.quantity_damaged = validated_data['quantity_damaged']
+                    item_damaged.remarks = validated_data['remarks']
+                    item_damaged.created_by = validated_data['created_by']
+                    item_damaged.save()
+
+                    item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                    if item_in_hotel:
+                        item_in_hotel[0].damaged=item_in_hotel[0].damaged - prev_quantity_damaged + validated_data['quantity_damaged'],
+                        item_in_hotel[0].save()
+
+                    return item_damaged
+
+            except TypeError:
+                return TypeError("There is some error in processing your data.")
+
+
+
+
 
 class ItemTransferredSerializer(serializers.ModelSerializer):
     # purchase_amount = serializers.FloatField(read_only=True)
@@ -161,6 +373,7 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
             'to_hotel',
             'from_department',
             'to_department',
+            'item',
             'opening_balance',
             'quantity_transferred',
             'remarks',
@@ -177,6 +390,82 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
 
 
         ]
+
+        def create(self, validated_data):
+
+            try:
+                with transaction.atomic():
+
+                    item_transferred = op_models.ItemTransferred.objects.create(
+                        from_hotel=validated_data['from_hotel'],
+                        to_hotel=validated_data['to_hotel'],
+                        from_department=validated_data['from_department'],
+                        to_department=validated_data['to_department'],
+                        item=validated_data['item'],
+                        opening_balance=validated_data['opening_balance'],
+                        quantity_transferred=validated_data['quantity_transferred'],
+                        remarks=validated_data['remarks'],
+                        created_by=validated_data['created_by'],
+                        is_acknowledged=False
+                    )
+
+                    item_transferred.save()
+
+                    item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                    
+                        # hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
+                        # item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+                        # opening_balance=models.IntegerField(default=0)
+                        # received=models.IntegerField(default=0)
+                        # damaged=models.IntegerField(default=0)
+                        # returned=models.IntegerField(default=0)
+                        # transferred=models.IntegerField(default=0)
+                        # min_level=models.IntegerField(default=0)
+                        # max_level=models.IntegerField(default=0)
+
+                    if item_in_hotel:
+                        item_in_hotel[0].transferred=item_in_hotel[0].transferred + validated_data['quantity_transferred'],
+                        item_in_hotel[0].save()
+
+                    return item_transferred
+
+                # return Response(serializers.data(), status=status.HTTP_200_OK)
+
+            except TypeError:
+                return TypeError("There is some error in processing your data.")
+
+    
+    
+        def update(self, instance, validated_data):
+
+            try:
+                with transaction.atomic():
+                    item_transferred = instance
+                    prev_quantity_transferred = item_transferred.quantity_transferred 
+                    item_transferred.from_hotel = validated_data['from_hotel']
+                    item_transferred.to_hotel = validated_data['to_hotel']
+                    item_transferred.from_department = validated_data['from_department']
+                    item_transferred.to_department = validated_data['to_department']
+                    item_transferred.item = validated_data['item']
+                    item_transferred.opening_balance = validated_data['opening_balance']
+                    item_transferred.quantity_transferred = validated_data['quantity_transferred']
+                    item_transferred.remarks = validated_data['remarks']
+                    item_transferred.created_by = validated_data['created_by']
+                    item_transferred.is_acknowledged = validated_data['is_acknowledged']
+                    item_transferred.save()
+
+                    item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+                    if item_in_hotel:
+                        item_in_hotel[0].transferred=item_in_hotel[0].transferred - prev_quantity_transferred + validated_data['quantity_transferred'],
+                        item_in_hotel[0].save()
+
+                    return item_transferred
+
+            except TypeError:
+                return TypeError("There is some error in processing your data.")
+
+
+
 
 
 
