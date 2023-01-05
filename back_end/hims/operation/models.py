@@ -14,6 +14,8 @@ class ItemReceived(models.Model):
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
     opening_balance=models.IntegerField(default=0)
     quantity_received=models.IntegerField(default=0)
+    unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    expiry_date=models.DateField(auto_now=False, auto_now_add=False,blank=True, null=True)
     remarks=models.CharField(max_length=1024, default='', null=True)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_received_created_by')

@@ -44,6 +44,8 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
             'item',
             'opening_balance',
             'quantity_received',
+            'unit_price',
+            'expiry_date',
             'remarks',
             'created_by',
             'created_at',
