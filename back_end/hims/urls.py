@@ -16,12 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from hims.configuration import urls as conf_url
+from hims.account import urls as acc_url
+from hims.operation import urls as op_url
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
 
+    path('', include(acc_url)),
+
     path('', include(conf_url)),
+
+    path('', include(op_url))
 
 ]

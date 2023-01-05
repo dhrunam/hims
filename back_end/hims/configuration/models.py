@@ -19,6 +19,11 @@ class District(models.Model):
     def __str__(self) -> str:
         return super().__str__()
 
+class DesignationMaster(models.Model):
+    name = models.CharField(max_length=64,blank=False, unique=True)
+    def __str__(self) -> str:
+        return super().__str__()
+
 class Proprietor(models.Model):
     name=models.CharField(max_length=128,blank=False)
     address_line1=models.CharField(max_length=128, blank=False)
@@ -53,27 +58,25 @@ class DepartmentMaster(models.Model):
 
 class HotelDepartment(models.Model):
     hotel=models.ForeignKey(Hotel,on_delete=models.SET_NULL, null=True)
-    name=models.CharField(max_length=128,blank=False)
+    department=models.ForeignKey(DepartmentMaster, on_delete=models.SET_NULL, null=True)
+
     def __str__(self) -> str:
         return super().__str__()
 
-class DesignationMaster(models.Model):
-    name = models.CharField(max_length=64,blank=False, unique=True)
-    def __str__(self) -> str:
-        return super().__str__()
+
 
 # Item Type Master
 
-class ItemType(models.Model):
-    name = models.CharField(max_length=128, unique=True)
-    def __str__(self) -> str:
-        return super().__str__()
+# class ItemType(models.Model):
+#     name = models.CharField(max_length=128, unique=True)
+#     def __str__(self) -> str:
+#         return super().__str__()
 
 # Item Master
 
 class Item(models.Model):
     name = models.CharField(max_length=128, blank=False, unique=True)
-    item_type = models.ForeignKey(ItemType, related_name="item_type",  on_delete=models.SET_NULL, null=True)
+    # item_type = models.ForeignKey(ItemType, related_name="item_type",  on_delete=models.SET_NULL, null=True)
     def __str__(self) -> str:
         return super().__str__()
 

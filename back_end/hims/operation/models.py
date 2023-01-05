@@ -12,7 +12,9 @@ from hims.account import models as acc_model
 class ItemReceived(models.Model):
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    opening_balance=models.IntegerField(default=0)
     quantity_received=models.IntegerField(default=0)
+    remarks=models.CharField(max_length=1024, default='', null=True)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_received_created_by')
     created_at = models.DateTimeField(auto_now=True, blank=False)
@@ -20,7 +22,9 @@ class ItemReceived(models.Model):
 class ItemReturned(models.Model):
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    opening_balance=models.IntegerField(default=0)
     quantity_returned=models.IntegerField(default=0)
+    remarks=models.CharField(max_length=1024, default='', null=True)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_returned_created_by')
     created_at = models.DateTimeField(auto_now=True, blank=False)
@@ -28,10 +32,31 @@ class ItemReturned(models.Model):
 class ItemDamaged(models.Model):
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    opening_balance=models.IntegerField(default=0)
     quantity_damaged=models.IntegerField(default=0)
+    remarks=models.CharField(max_length=1024, default='', null=True)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_damaged_created_by')
     created_at = models.DateTimeField(auto_now=True, blank=False)
+
+class ItemTransferred(models.Model):
+    from_hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL, related_name='from_hotel')
+    to_hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL, related_name='to_hotel')
+
+    from_department=models.ForeignKey(config_model.DepartmentMaster, on_delete=models.SET_NULL, null=True, related_name='from_department')
+    to_department=models.ForeignKey(config_model.DepartmentMaster, on_delete=models.SET_NULL, null=True, related_name='to_department')
+   
+    item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    opening_balance=models.IntegerField(default=0)
+    quantity_transferred=models.IntegerField(default=0)
+    remarks=models.CharField(max_length=1024, default='', null=True)
+    created_by = models.ForeignKey(
+     acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_transferred_created_by')
+    created_at = models.DateTimeField(auto_now=True, blank=False)
+
+    is_acknowledged = models.BooleanField(default=False, null=False)
+    acknowledged_by=models.ForeignKey(
+     acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_transferred_acknowledged_by')
 
 # Items in Hotel
 class ItemInHotel(models.Model):
