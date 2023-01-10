@@ -12,6 +12,7 @@ from hims.account import models as acc_model
 class ItemReceived(models.Model):
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    batch_no=models.CharField(max_length=128, null=False)
     opening_balance=models.IntegerField(default=0)
     quantity_received=models.IntegerField(default=0)
     unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)

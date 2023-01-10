@@ -42,6 +42,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
             'id',
             'hotel',
             'item',
+            'batch_no',
             'opening_balance',
             'quantity_received',
             'unit_price',
@@ -64,6 +65,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
                 item_received = op_models.ItemReceived.objects.create(
                     hotel=validated_data['hotel'],
                     item=validated_data['item'],
+                    batch_no=validated_data['batch_no'],
                     opening_balance=validated_data['opening_balance'],
                     quantity_received=validated_data['quantity_received'],
                     unit_price=validated_data['unit_price'],
