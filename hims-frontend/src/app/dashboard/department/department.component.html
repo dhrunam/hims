@@ -1,0 +1,52 @@
+<div class="title text-center mb-2">
+    <h2>Departments</h2>
+</div>
+<div class="text-end">
+    <button class="btn btn-primary mb-3" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Department</button>
+</div>
+<div class="table-responsive mt-2">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th span="col">S.No.</th>
+                <th span="col">Department</th>
+                <th span="col">Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td width="5%">1</td>
+                <td>Laundry</td>
+                <td>Edit/Delete</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Department</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row px-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Department</label>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="col-md-12 mt-3 mb-3">
+                        <label class="form-label">Hotel</label>
+                        <select class="form-select">
+                            <option>Hotel Test</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+<div class="title text-center">
+    <h2>Item Received</h2>
+</div>
+<section>
+    <div class="table-responsive mt-2">
+        <div class="button text-end mb-3">
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Receive Item</button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th span="col">S.No.</th>
+                    <th span="col">Voucher Number</th>
+                    <th span="col">Received Item</th>
+                    <th span="col">Receiving Date</th>
+                    <th span="col">Operations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>GC/HK/2223/0001</td>
+                    <td>Glasses</td>
+                    <td>13-10-2022</td>
+                    <td>Edit/Print</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Item Receive</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row px-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Hotel</label>
+                        <input class="form-control" type="text" disabled value="Hotel Test">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Department</label>
+                        <input class="form-control" type="text" disabled value="Department Test">
+                    </div>
+                </div>
+                <div class="row px-2 mt-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Item</label>
+                        <select class="form-select">
+                            <option>1</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Quantity</label>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="row px-2 mt-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Price Per Unit</label>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Expiry Date</label>
+                        <input class="form-control" type="date">
+                    </div>
+                </div>
+                <div class="row px-2 mt-3 mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label">Item Remarks</label>
+                        <textarea rows="2" cols="10" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

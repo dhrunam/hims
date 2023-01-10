@@ -1,0 +1,6 @@
+.card:hover{
+    -webkit-box-shadow: 3px 4px 34px 0px rgba(129,177,142,1);
+    -moz-box-shadow: 3px 4px 34px 0px rgba(129,177,142,1);
+    box-shadow: 3px 4px 34px 0px rgba(129,177,142,1);
+    cursor: pointer;
+}
