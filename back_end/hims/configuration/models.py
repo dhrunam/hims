@@ -42,6 +42,7 @@ class Hotel(models.Model):
     district=models.ForeignKey(District,on_delete=models.SET_NULL, null=True, related_name='hotel_district')
     proprietor = models.ForeignKey(Proprietor, on_delete=models.SET_NULL, null=True, related_name='hotel_proprietor')
     name=models.CharField(max_length=128,blank=False)
+    short_name=models.CharField(max_length=3,blank=False)
     address_line1=models.CharField(max_length=128, blank=False)
     address_line2=models.CharField(max_length=128,blank=True, default='')
     address_line3=models.CharField(max_length=128,blank=True, default='')
@@ -53,13 +54,15 @@ class Hotel(models.Model):
 class DepartmentMaster(models.Model):
     # office=models.ForeignKey(Hotel,on_delete=models.SET_NULL, null=True)
     name=models.CharField(max_length=128,blank=False)
+    short_name=models.CharField(max_length=3,blank=False)
+
     def __str__(self) -> str:
         return super().__str__()
 
 class HotelDepartment(models.Model):
     hotel=models.ForeignKey(Hotel,on_delete=models.SET_NULL, null=True)
     department=models.ForeignKey(DepartmentMaster, on_delete=models.SET_NULL, null=True)
-
+    
     def __str__(self) -> str:
         return super().__str__()
 

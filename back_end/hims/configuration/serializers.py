@@ -66,6 +66,7 @@ class HotelSerializer(serializers.ModelSerializer):
         fields = [
                     'id', 
                     'name',
+                    'short_name',
                     'state',
                     'district',
                     'proprietor',
@@ -83,7 +84,8 @@ class HotelSerializer(serializers.ModelSerializer):
 class DepartmentMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DepartmentMaster
-        fields = ['id','name']
+
+        fields = ['id','name','short_name']
 
 
 # Hotel Departments
