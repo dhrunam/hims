@@ -21,6 +21,7 @@ class District(models.Model):
 
 class DesignationMaster(models.Model):
     name = models.CharField(max_length=64,blank=False, unique=True)
+    
     def __str__(self) -> str:
         return super().__str__()
 
@@ -79,6 +80,7 @@ class HotelDepartment(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=128, blank=False, unique=True)
+    department=models.ForeignKey(DepartmentMaster,null=True, on_delete=models.SET_NULL, related_name='related_department')
     # item_type = models.ForeignKey(ItemType, related_name="item_type",  on_delete=models.SET_NULL, null=True)
     def __str__(self) -> str:
         return super().__str__()

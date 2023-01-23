@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from rest_framework.settings import api_settings
+from datetime import timedelta
 from pathlib import Path
+import os
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,7 +36,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:4200',
-    'http://127.0.0.1:4200'
+    'http://127.0.0.1:4200',
+    'http://192.168.1.150:4200'
 )
 
 
@@ -58,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -140,7 +146,45 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    # ]
+    'DEFAULT_AUTHENTICATION_CLASSES': ('durin.auth.TokenAuthentication',),
+
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    #     'rest_framework.renderers.BrowsableAPIRenderer',
+    #     'rest_framework_datatables.renderers.DatatablesRenderer',
+    # ),
+    # 'DEFAULT_FILTER_BACKENDS': (
+    #     'rest_framework_datatables.filters.DatatablesFilterBackend',
+    # ),
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
+    'PAGE_SIZE': 10000000
+}
+
+
+# from durin.serializers import UserSerializer
+REST_DURIN = {
+    "DEFAULT_TOKEN_TTL": timedelta(days=1),
+    "TOKEN_CHARACTER_LENGTH": 64,
+    "USER_SERIALIZER": 'hims.account.serializers.LeanUserSerializer',
+    "AUTH_HEADER_PREFIX": "Token",
+    "EXPIRY_DATETIME_FORMAT": api_settings.DATETIME_FORMAT,
+    "TOKEN_CACHE_TIMEOUT": 60,
+    "REFRESH_TOKEN_ON_LOGIN": True,
+    "AUTHTOKEN_SELECT_RELATED_LIST": ["user"],
+    "API_ACCESS_CLIENT_NAME": ['web', 'mobile', 'cli'],
+    "API_ACCESS_EXCLUDE_FROM_SESSIONS": False,
+    "API_ACCESS_RESPONSE_INCLUDE_TOKEN": False,
+}
