@@ -97,7 +97,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     # email=serializers.CharField(write_only=True, max_length=128)
     first_name = serializers.CharField(max_length=128)
     last_name = serializers.CharField(max_length=128)
-    designation = serializers.IntegerField(write_only=True, required=True)
+    department = serializers.IntegerField(write_only=True, required=True)
+    designation = serializers.IntegerField(write_only=True, required=False)
     proprietor = serializers.IntegerField(write_only=True, required=True)
     hotel = serializers.IntegerField(write_only=True, required=True)
     contact_number = serializers.CharField(write_only=True, max_length=12)
@@ -114,6 +115,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'designation',
+            'department'
             'proprietor',
             'hotel',
             'is_staff',
@@ -125,7 +127,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
-            'designation': {'required': True},
+            'department': {'required': True},
             'proprietor': {'required': True},
             'hotel': {'required': True},
             'contact_number': {'required': True},
