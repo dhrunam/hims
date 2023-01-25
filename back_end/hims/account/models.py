@@ -3,7 +3,7 @@ from unicodedata import name
 from django.db import models
 from django.contrib.auth.models import User
 from hims.configuration.models import (
-    DesignationMaster, Proprietor, Hotel
+    DesignationMaster, Proprietor, Hotel, DepartmentMaster
 )
 
 
@@ -15,6 +15,8 @@ class UserProfile(models.Model):
         User, on_delete=models.SET_NULL, null=True, related_name='related_profile')
     designation = models.ForeignKey(
         DesignationMaster, on_delete=models.SET_NULL, null=True, related_name='related_designation')
+    department = models.ForeignKey(
+        DepartmentMaster, on_delete=models.SET_NULL, null=True, related_name='user_related_department')
     proprietor = models.ForeignKey(
         Proprietor, on_delete=models.SET_NULL, null=True, related_name='related_proprietor')
     hotel = models.ForeignKey(
