@@ -10,5 +10,5 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  user: string = 'superadmin';
+  user: string = 'admin';
 }

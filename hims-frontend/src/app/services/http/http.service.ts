@@ -15,4 +15,25 @@ export class HttpService {
   add_hotel(fd:any){
     return this.http.post(`${URL}/api/hotel`,fd);
   }
+  get_hotels(){
+    return this.http.get<any>(`${URL}/api/hotel`);
+  }
+  add_department(fd:any){
+    return this.http.post(`${URL}/api/department`, fd);
+  }
+  get_departments(){
+    return this.http.get<any>(`${URL}/api/department`)
+  }
+  map_department(fd:any){
+    return this.http.post(`${URL}/api/hotel_department`, fd);
+  }
+  get_map_departments(){
+    return this.http.get<any>(`${URL}/api/hotel_department`);
+  }
+  add_items(fd:any){
+    return this.http.post(`${URL}/api/item`, fd);
+  }
+  get_items(){
+    return this.http.get<any>(`${URL}/api/item`);
+  }
 }

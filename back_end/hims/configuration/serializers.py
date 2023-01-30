@@ -100,8 +100,6 @@ class HotelDepartmentSerializer(serializers.ModelSerializer):
             'department',
             'related_hotel',
             'related_department',
-
-
         ]
 
 
@@ -114,7 +112,6 @@ class ItemSerializer(serializers.ModelSerializer):
                     'id',
                     'name',
                     'department'
-
         ]   
 
 

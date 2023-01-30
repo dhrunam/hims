@@ -5,7 +5,10 @@
     <button class="btn btn-primary mb-3" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Department</button>
 </div>
 <div class="table-responsive mt-2">
-    <table class="table table-bordered">
+    <div class="message text-center" *ngIf="!showDepartments">
+        <h3>No Departments Data Available</h3>
+    </div>
+    <table class="table table-bordered" *ngIf="showDepartments">
         <thead>
             <tr>
                 <th span="col">S.No.</th>
@@ -14,9 +17,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td width="5%">1</td>
-                <td>Laundry</td>
+            <tr *ngFor="let d of departments; let i=index;">
+                <td width="5%">{{i+1}}</td>
+                <td>{{d.name}}</td>
                 <td>Edit/Delete</td>
             </tr>
         </tbody>
@@ -29,24 +32,24 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">Add Department</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row px-2">
-                    <div class="col-md-12">
-                        <label class="form-label">Department</label>
-                        <input class="form-control" type="text">
-                    </div>
-                    <div class="col-md-12 mt-3 mb-3">
-                        <label class="form-label">Hotel</label>
-                        <select class="form-select">
-                            <option>Hotel Test</option>
-                        </select>
+            <form #dept="ngForm" (ngSubmit)="add_department(dept)">
+                <div class="modal-body">
+                    <div class="row px-2">
+                        <div class="col-md-12">
+                            <label class="form-label">Department</label>
+                            <input class="form-control" type="text" name="department_name" ngModel #department_name="ngModel" required>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label">Short Name</label>
+                            <input class="form-control" type="text" name="department_short_name" ngModel #department_short_name="ngModel" required>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                    <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" type="submit">Add</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
