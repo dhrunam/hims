@@ -2,10 +2,13 @@
     <h2>Items</h2>
 </div>
 <div class="text-end">
-    <button class="btn btn-primary mb-3" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Items</button>
+    <button class="btn btn-primary mb-3" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="loadData()">+ Add Items</button>
 </div>
 <div class="table-responsive mt-2">
-    <table class="table table-bordered">
+    <div class="message text-center" *ngIf="!showItems">
+        <h3>No Items Added</h3>
+    </div>
+    <table class="table table-bordered" *ngIf="showItems">
         <thead>
             <tr>
                 <th span="col">S.No.</th>
@@ -14,9 +17,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td width="5%">1</td>
-                <td>Glass</td>
+            <tr *ngFor="let it of items; let i=index;">
+                <td width="5%">{{i+1}}</td>
+                <td>{{it.name}}</td>
                 <td>Edit/Delete</td>
             </tr>
         </tbody>
@@ -26,35 +29,32 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Item</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body px-3 mb-3">
-                <div class="row">
-                    <div class="col-md-12">
-                        <label class="form-label">Item Name</label>
-                        <input class="form-control" type="text">
+            <form #item="ngForm" (ngSubmit)="add_item(item)">
+                <div class="modal-body px-3 mb-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Item Name</label>
+                            <input class="form-control" type="text" name="itemName" ngModel #itemName="ngModel" requried>
+                        </div>
+                    </div>
+                    <div class="row mt-3 mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" [(ngModel)]="dept_option" name="dept" #dept="ngModel" required>
+                                <option disabled selected value="N/A">---Select Department---</option>
+                                <option *ngFor="let d of departments" [ngValue]="d.id">{{d.name}}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-3 mb-3">
-                    <div class="col-md-12">
-                        <label class="form-label">Department</label>
-                        <select class="form-select">
-                            <option>Department A</option>
-                        </select>
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" type="submit">Add</button>
                 </div>
-                <div class="row px-2 mt-3 mb-3">
-                    <div class="col-md-12">
-                        <label class="form-label">Minimum Order Quantity</label>
-                        <input class="form-control" type="text">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Add</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
