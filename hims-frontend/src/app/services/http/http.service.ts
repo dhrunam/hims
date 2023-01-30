@@ -10,7 +10,13 @@ export class HttpService {
   constructor(private http: HttpClient) { }
 
   login(fd:any){
-    return this.http.post(`${URL}/api/auth/login/`, fd);
+    return this.http.post<any>(`${URL}/api/auth/login/`, fd);
+  }
+  logout(token: string){
+    const data = {
+      data: '',
+    }
+    return this.http.post(`${URL}/api/auth/logout/`, data);
   }
   add_hotel(fd:any){
     return this.http.post(`${URL}/api/hotel`,fd);
@@ -41,5 +47,14 @@ export class HttpService {
   }
   get_users(){
     return this.http.get<any>(`${URL}/api/user/reg`);
+  }
+  get_items_dept(id:string){
+    return this.http.get<any>(`${URL}/api/item?dept_id=${id}`);
+  }
+  add_item_received(fd:any){
+    return this.http.post(`${URL}/api/op/item/received`,fd);
+  }
+  get_item_received(){
+    return this.http.get<any>(`${URL}/api/op/item/received`);
   }
 }

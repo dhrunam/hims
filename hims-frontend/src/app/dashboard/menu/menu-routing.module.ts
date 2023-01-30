@@ -1,18 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ItemDamageComponent } from './item-damage/item-damage.component';
-import { ItemReceiveComponent } from './item-receive/item-receive.component';
-import { ItemReturnComponent } from './item-return/item-return.component';
-import { ItemTransferComponent } from './item-transfer/item-transfer.component';
 import { MenuComponent } from './menu.component';
 
 const routes: Routes = [
   { 
     path: '', component: MenuComponent, children: [
-      { path: 'item-receive', component: ItemReceiveComponent },
-      { path: 'item-return', component: ItemReturnComponent },
-      { path: 'item-damage', component: ItemDamageComponent},
-      { path: 'item-transfer', component: ItemTransferComponent},
+      { path: 'item-receive', loadChildren: () => import('./item-receive/item-receive.module').then(m => m.ItemReceiveModule) },
+      { path: 'item-damage', loadChildren: () => import('./item-damage/item-damage.module').then(m => m.ItemDamageModule) },
+      { path: 'item-transfer', loadChildren: () => import('./item-transfer/item-transfer.module').then(m => m.ItemTransferModule) },
+      { path: 'item-return', loadChildren: () => import('./item-return/item-return.module').then(m => m.ItemReturnModule) },
     ]
   }
 ];

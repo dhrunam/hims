@@ -58,7 +58,6 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-
         try:
             with transaction.atomic():
 
