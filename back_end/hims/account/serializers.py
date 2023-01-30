@@ -34,6 +34,8 @@ class UserGroupSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     related_designation = DesignationSerializer(
         source='designation', read_only=True)
+    related_department = DepartmentMasterSerializer(
+        source='department', read_only=True)
     related_proprietor = ProprietorSerializer(source='proprietor', read_only=True)
     related_hotel = ProprietorSerializer(source='hotel', read_only=True)
 
@@ -62,6 +64,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'related_designation',
             'related_proprietor',
             'related_hotel',
+            'related_department',
 
         ]
 
@@ -217,6 +220,7 @@ class LeanUserSerializer(serializers.ModelSerializer):
     related_profile = UserProfileSerializer(many=True, read_only=True)
     related_groups = UserGroupSerializer(
         source='groups',  many=True, read_only=True)
+    
 
     class Meta:
         model = User
