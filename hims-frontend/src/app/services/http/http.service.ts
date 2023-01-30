@@ -36,4 +36,10 @@ export class HttpService {
   get_items(){
     return this.http.get<any>(`${URL}/api/item`);
   }
+  add_user(fd:any){
+    return this.http.post(`${URL}/api/user/reg`, fd);
+  }
+  get_users(){
+    return this.http.get<any>(`${URL}/api/user/reg`);
+  }
 }
