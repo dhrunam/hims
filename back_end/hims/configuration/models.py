@@ -22,7 +22,7 @@ class District(models.Model):
 class DesignationMaster(models.Model):
     name = models.CharField(max_length=64,blank=False, unique=True)
     
-    def __str__(self) -> str:
+    def __str__(self) -> str: 
         return super().__str__()
 
 class Proprietor(models.Model):
