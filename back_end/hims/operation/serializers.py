@@ -59,7 +59,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         try:
-            with transaction.atomic():
+            # with transaction.atomic():
 
                 item_received = op_models.ItemReceived.objects.create(
                     hotel=validated_data['hotel'],
@@ -78,19 +78,10 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
 
                 item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
                 
-                    # hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
-                    # item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
-                    # opening_balance=models.IntegerField(default=0)
-                    # received=models.IntegerField(default=0)
-                    # damaged=models.IntegerField(default=0)
-                    # returned=models.IntegerField(default=0)
-                    # transferred=models.IntegerField(default=0)
-                    # min_level=models.IntegerField(default=0)
-                    # max_level=models.IntegerField(default=0)
 
                 if item_in_hotel:
                     item_in_hotel[0].opening_balance=validated_data['opening_balance'],
-                    item_in_hotel[0].received=item_in_hotel[0].received + validated_data['received'],
+                    item_in_hotel[0].received=item_in_hotel[0].received + validated_data['quantity_received'],
                     item_in_hotel[0].save()
                 else:
                     item_in_hotel=op_models.ItemInHotel.objects.create(
@@ -109,7 +100,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         try:
-            with transaction.atomic():
+            # with transaction.atomic():
                 item_received = instance
                 prev_quantity_received = item_received.quantity_received
 
@@ -172,7 +163,7 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
         def create(self, validated_data):
 
             try:
-                with transaction.atomic():
+                # with transaction.atomic():
 
                     item_returned = op_models.ItemReturned.objects.create(
                         hotel=validated_data['hotel'],
@@ -199,7 +190,7 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
                         # max_level=models.IntegerField(default=0)
 
                     if item_in_hotel:
-                        item_in_hotel[0].returned=item_in_hotel[0].returned + validated_data['returned'],
+                        item_in_hotel[0].returned=item_in_hotel[0].returned + validated_data['quantity_returned'],
                         item_in_hotel[0].save()
 
                     return item_returned
@@ -212,7 +203,7 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
         def update(self, instance, validated_data):
 
             try:
-                with transaction.atomic():
+                # with transaction.atomic():
                     item_returned = instance
                     prev_quantity_returned = item_returned.quantity_returned
 
@@ -277,7 +268,7 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
         def create(self, validated_data):
 
             try:
-                with transaction.atomic():
+                # with transaction.atomic():
 
                     item_damaged = op_models.ItemDamaged.objects.create(
                         hotel=validated_data['hotel'],
@@ -304,7 +295,7 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
                         # max_level=models.IntegerField(default=0)
 
                     if item_in_hotel:
-                        item_in_hotel[0].damaged=item_in_hotel[0].returned + validated_data['damaged'],
+                        item_in_hotel[0].damaged=item_in_hotel[0].returned + validated_data['quantity_damaged'],
                         item_in_hotel[0].save()
 
                     return item_damaged
@@ -317,7 +308,7 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
         def update(self, instance, validated_data):
 
             try:
-                with transaction.atomic():
+                # with transaction.atomic():
                     item_damaged = instance
                     prev_quantity_damaged = item_damaged.quantity_damaged
 
@@ -395,7 +386,7 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
         def create(self, validated_data):
 
             try:
-                with transaction.atomic():
+                # with transaction.atomic():
 
                     item_transferred = op_models.ItemTransferred.objects.create(
                         from_hotel=validated_data['from_hotel'],

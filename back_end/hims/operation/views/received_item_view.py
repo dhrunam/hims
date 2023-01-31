@@ -14,39 +14,35 @@ class ReceivedItemList(generics.ListCreateAPIView):
     serializer_class = serializers.ItemReceivedSerializer
     # pagination.PageNumberPagination.page_size = 2
 
-    # @transaction.atomic
-    # def post(self, request, *args, **kwargs):
-    #     print('hi')
-        #data = request.data['data']
-        # result = self.create(request, *args, **kwargs)
-        # if(data):
-        #     for element in data:
-        #         print(element)
-        #         request.data['id'] = element['id']
-        #         request.data['item_dispatch_list'] = element['item_dispatch_list']
-        #         request.data['dispatch'] = element['dispatch']
-        #         request.data['purchase'] = element['purchase']
-        #         request.data['item'] = element['item']
-        #         request.data['serial_no'] = element['serial_no']
-        #         request.data['model_no'] = element['model_no']
-        #         request.data['specification'] = element['specification']
-        #         request.data['brand'] = element['brand']
-        #         request.data['warranty_period'] = element['warranty_period']
-        #         request.data['is_in_use'] = element['is_in_use']
-        #         request.data['remarks'] = element['remarks']
-        #         if(request.data['id'] is None or request.data['id'] <= 0):
-        #             result = self.create(request, *args, **kwargs)
-
-        #     # update_item_dispatch_list(self, data)
-        # # self.request.query_params['dispatch_id'] = data[0]['dispatch']
-        # self.dispatch_id = data[0]['dispatch']
-        # return self.get(request, *args, **kwargs)
-    
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
+        print('hi')
         request.data._mutable = True
-        request.data['created_by'] = request.user.id
-        return self.create(request, *args, **kwargs)
+        data = request.data['data']
+        result = self.create(request, *args, **kwargs)
+        if(data):
+            for element in data:
 
+                print(element)
+                # request.data['id'] = element['id']
+                request.data['hotel'] = element['hotel']
+                request.data['item'] = element['item']
+                request.data['batch_no'] = element['batch_no']
+                request.data['opening_balance'] = element['opening_balance']
+                request.data['quantity_received'] = element['quantity_received']
+                request.data['unit_price'] = element['unit_price']
+                request.data['expiry_date'] = element['expiry_date']
+                request.data['brand'] = element['brand']
+                request.data['warranty_period'] = element['warranty_period']
+                request.data['remarks'] = element['remarks']
+                request.data['created_by'] = request.user.id
+                if(request.data['id'] is None or request.data['id'] <= 0):
+                    result = self.create(request, *args, **kwargs)
+
+
+        request.data._mutable = False
+        return self.get(request, *args, **kwargs)
+    
 
 
 
