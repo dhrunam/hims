@@ -14,7 +14,7 @@ class ReceivedItemList(generics.ListCreateAPIView):
     serializer_class = serializers.ItemReceivedSerializer
     # pagination.PageNumberPagination.page_size = 2
 
-    #@transaction.atomic
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         #request.data._mutable = True
         data = request.data['data']

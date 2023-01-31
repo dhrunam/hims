@@ -18,26 +18,34 @@ class ReturnedItemList(generics.ListCreateAPIView):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         print('hi')
-        request.data._mutable = True
+        #request.data._mutable = True
         data = request.data['data']
-        result = self.create(request, *args, **kwargs)
+        result=Response()
         if(data):
             for element in data:
 
                 print(element)
 
-                request.data['id'] = element['id']
+                
                 request.data['hotel'] = element['hotel']
                 request.data['item'] = element['item']
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_returned'] = element['quantity_returned']
                 request.data['remarks'] = element['remarks']
                 request.data['created_by'] = request.user.id
-                if(request.data['id'] is None or request.data['id'] <= 0):
-                    result = self.create(request, *args, **kwargs)
+
+                result = self.create(request, *args, **kwargs)
+
+                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
+                    
+
+                if item_in_hotel:
+                    item_in_hotel[0].returned=item_in_hotel[0].returned + element['quantity_returned']
+                    item_in_hotel[0].save()
 
 
-        request.data._mutable = False
+
+        #request.data._mutable = False
         return self.get(request, *args, **kwargs)
     
 

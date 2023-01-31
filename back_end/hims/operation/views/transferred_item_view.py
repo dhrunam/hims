@@ -19,9 +19,9 @@ class TransferredItemList(generics.ListCreateAPIView):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         print('hi')
-        request.data._mutable = True
+        #request.data._mutable = True
         data = request.data['data']
-        result = self.create(request, *args, **kwargs)
+        result = Response()
         if(data):
             for element in data:
 
@@ -37,10 +37,20 @@ class TransferredItemList(generics.ListCreateAPIView):
                 request.data['remarks'] = element['remarks']
                 request.data['created_by'] = request.user.id
                 request.data['is_acknowledged'] = False
-                if(request.data['id'] is None or request.data['id'] <= 0):
-                    result = self.create(request, *args, **kwargs)
 
-        request.data._mutable = False
+                result = self.create(request, *args, **kwargs)
+
+                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
+                    
+
+                if item_in_hotel:
+                    item_in_hotel[0].transferred=item_in_hotel[0].transferred + element['quantity_transferred']
+                    item_in_hotel[0].save()
+
+            
+
+
+        #request.data._mutable = False
         return self.get(request, *args, **kwargs)
     
 
