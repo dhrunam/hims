@@ -51,8 +51,11 @@ export class HttpService {
   get_items_dept(id:string){
     return this.http.get<any>(`${URL}/api/item?dept_id=${id}`);
   }
-  add_item_received(fd:any){
-    return this.http.post(`${URL}/api/op/item/received`,fd);
+  add_item_received(data: any){
+    const d = {
+      data: data,
+    }
+    return this.http.post(`${URL}/api/op/item/received`, d);
   }
   get_item_received(){
     return this.http.get<any>(`${URL}/api/op/item/received`);

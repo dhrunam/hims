@@ -16,14 +16,12 @@ class ReceivedItemList(generics.ListCreateAPIView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        print('hi')
-        request.data._mutable = True
+        #request.data._mutable = True
         data = request.data['data']
-        result = self.create(request, *args, **kwargs)
+        # result = self.create(request, *args, **kwargs)
         if(data):
             for element in data:
-
-                print(element)
+                
                 # request.data['id'] = element['id']
                 request.data['hotel'] = element['hotel']
                 request.data['item'] = element['item']
@@ -32,15 +30,15 @@ class ReceivedItemList(generics.ListCreateAPIView):
                 request.data['quantity_received'] = element['quantity_received']
                 request.data['unit_price'] = element['unit_price']
                 request.data['expiry_date'] = element['expiry_date']
-                request.data['brand'] = element['brand']
-                request.data['warranty_period'] = element['warranty_period']
+                #request.data['brand'] = element['brand']
+                #request.data['warranty_period'] = element['warranty_period']
                 request.data['remarks'] = element['remarks']
                 request.data['created_by'] = request.user.id
-                if(request.data['id'] is None or request.data['id'] <= 0):
-                    result = self.create(request, *args, **kwargs)
+                #if(request.data['id'] is None or request.data['id'] <= 0):
+                result = self.create(request, *args, **kwargs)
 
 
-        request.data._mutable = False
+        #request.data._mutable = False
         return self.get(request, *args, **kwargs)
     
 

@@ -5,26 +5,31 @@
     <div class="message text-center" *ngIf="!draft[0]">
         <h3>Please add items to proceed</h3>
     </div>
-    <table class="table table-bordered" *ngIf="draft[0]">
-        <thead>
-            <tr>
-                <th span="col">S.No.</th>
-                <th span="col">Item</th>
-                <th span="col">Quantity</th>
-                <th span="col">Price Per Unit (in Rs.)</th>
-                <th span="col">Remarks</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Glasses</td>
-                <td>3</td>
-                <td>13.5</td>
-                <td>Test 1234</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="section" *ngIf="draft[0]">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th span="col">S.No.</th>
+                    <th span="col">Item</th>
+                    <th span="col">Quantity</th>
+                    <th span="col">Price Per Unit (in Rs.)</th>
+                    <th span="col">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let d of draft; let i=index;">
+                    <td>{{i+1}}</td>
+                    <td>{{d.item}}</td>
+                    <td>{{d.quantity_received}}</td>
+                    <td>{{d.unit_price}}</td>
+                    <td>{{d.remarks}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="confirm mt-4">
+            <button class="btn btn-primary" (click)="received_item()">Submit</button>
+        </div>
+    </div>
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -83,37 +88,3 @@
       </div>
     </div>
 </div>
-<!-- <div class="row mt-4">
-    <div class="col-md-4">
-        <label class="form-label">Hotel</label>
-        <input type="text" class="form-control" disabled>
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">Department</label>
-        <input type="text" class="form-control" disabled>
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">Item</label>
-        <input type="text" class="form-control">
-    </div>
-</div>
-<div class="row mt-4">
-    <div class="col-md-4">
-        <label class="form-label">Quantity</label>
-        <input type="text" class="form-control">
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">Price Per Unit</label>
-        <input type="text" class="form-control">
-    </div>
-    <div class="col-md-4">
-        <label class="form-label">Expiry</label>
-        <input type="text" class="form-control">
-    </div>
-</div>
-<div class="row mt-4">
-    <div class="col-md-12">
-        <label class="form-label">Remarks</label>
-        <textarea class="form-control" rows="5" cols="10"></textarea>
-    </div>
-</div> -->

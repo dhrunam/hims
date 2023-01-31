@@ -22,9 +22,9 @@ export class TokenInterceptorInterceptor implements HttpInterceptor {
       authReq = request.clone({ headers: request.headers.set(TOKEN_HEADER_KEY, 'Token ' + token) });
     }
     return next.handle(authReq).pipe(catchError((err:any)=>{
-      alert('Invalid Session !!!');
-      window.location.href = '/login';
-      this.local_storage.clearSession();
+      // alert('Invalid Session !!!');
+      // window.location.href = '/login';
+      // this.local_storage.clearSession();
       return throwError(() => err);
     }));
   }

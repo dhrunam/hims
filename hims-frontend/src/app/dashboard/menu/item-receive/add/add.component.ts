@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
 import { HttpService } from 'src/app/services/http/http.service';
+import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
@@ -30,16 +31,21 @@ export class AddComponent {
     })
   }
   add_item_received(data: any){
-    let fd = new FormData();
-    fd.append('hotel', this.hotel_id);
-    fd.append('item', data.value.item);
-    fd.append('batch_no', 'GC/HK/2223/0001');
-    fd.append('opening_balance', '0');
-    fd.append('quantity_received', data.value.quantity);
-    fd.append('unit_price', data.value.ppu);
-    fd.append('expiry_date', data.value.expiry);
-    fd.append('remarks', data.value.remarks);
-    this.http.add_item_received(fd).subscribe({
+    console.log(this.item)
+    data = {
+      hotel: this.hotel_id,
+      item: data.value.item,
+      batch_no: 'GC/HK/2223/0001',
+      opening_balance: '0',
+      quantity_received: data.value.quantity,
+      unit_price: data.value.ppu,
+      expiry_date: data.value.expiry,
+      remarks: data.value.remarks
+    }
+    this.draft.push(data);
+  }
+  received_item(){
+    this.http.add_item_received(this.draft).subscribe({
       next: data => {
         console.log(data);
       },

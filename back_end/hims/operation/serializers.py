@@ -57,45 +57,46 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
 
         ]
 
-    def create(self, validated_data):
-        try:
-            # with transaction.atomic():
+    # def create(self, validated_data):
+    #     # print(validated_data['batch_no'])
+    #     try:
+    #         # with transaction.atomic():
 
-                item_received = op_models.ItemReceived.objects.create(
-                    hotel=validated_data['hotel'],
-                    item=validated_data['item'],
-                    batch_no=validated_data['batch_no'],
-                    opening_balance=validated_data['opening_balance'],
-                    quantity_received=validated_data['quantity_received'],
-                    unit_price=validated_data['unit_price'],
-                    expiry_date=validated_data['expiry_date'],
-                    remarks=validated_data['remarks'],
-                    created_by=validated_data['created_by'],
+    #             item_received = op_models.ItemReceived.objects.create(
+    #                 hotel=validated_data['hotel'],
+    #                 item=validated_data['item'],
+    #                 batch_no=validated_data['batch_no'],
+    #                 opening_balance=validated_data['opening_balance'],
+    #                 quantity_received=validated_data['quantity_received'],
+    #                 unit_price=validated_data['unit_price'],
+    #                 expiry_date=validated_data['expiry_date'],
+    #                 remarks=validated_data['remarks'],
+    #                 created_by=validated_data['created_by'],
 
-                )
+    #             )
 
-                item_received.save()
+    #             item_received.save()
 
-                item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
+    #             item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
                 
 
-                if item_in_hotel:
-                    item_in_hotel[0].opening_balance=validated_data['opening_balance'],
-                    item_in_hotel[0].received=item_in_hotel[0].received + validated_data['quantity_received'],
-                    item_in_hotel[0].save()
-                else:
-                    item_in_hotel=op_models.ItemInHotel.objects.create(
-                    hotel=validated_data['hotel'],
-                    item=validated_data['item'],
-                    opening_balance=validated_data['quantity_received'],
-                    received=validated_data['quantity_received']
-                )
-                return item_received
+    #             if item_in_hotel:
+    #                 item_in_hotel[0].opening_balance=validated_data['opening_balance'],
+    #                 item_in_hotel[0].received=item_in_hotel[0].received + validated_data['quantity_received'],
+    #                 item_in_hotel[0].save()
+    #             else:
+    #                 item_in_hotel=op_models.ItemInHotel.objects.create(
+    #                 hotel=validated_data['hotel'],
+    #                 item=validated_data['item'],
+    #                 opening_balance=validated_data['quantity_received'],
+    #                 received=validated_data['quantity_received']
+    #             )
+    #             return item_received
 
-                # return Response(serializers.data(), status=status.HTTP_200_OK)
+    #             # return Response(serializers.data(), status=status.HTTP_200_OK)
 
-        except TypeError:
-            return TypeError("There is some error in processing your data.")
+    #     except TypeError:
+    #         return TypeError("There is some error in processing your data.")
 
     def update(self, instance, validated_data):
 
