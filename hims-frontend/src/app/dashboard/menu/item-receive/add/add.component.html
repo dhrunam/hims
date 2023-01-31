@@ -19,7 +19,7 @@
             <tbody>
                 <tr *ngFor="let d of draft; let i=index;">
                     <td>{{i+1}}</td>
-                    <td>{{d.item}}</td>
+                    <td>{{d.item_name}}</td>
                     <td>{{d.quantity_received}}</td>
                     <td>{{d.unit_price}}</td>
                     <td>{{d.remarks}}</td>
@@ -53,7 +53,7 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="form-label">Item</label>
-                        <select class="form-select" [(ngModel)]="item" name="item">
+                        <select class="form-select" [(ngModel)]="item" name="item" (change)="onChange($event)">
                             <option value="N/A">---Select Item---</option>
                             <option *ngFor="let i of items" [ngValue]="i.id">{{i.name}}</option>
                         </select>

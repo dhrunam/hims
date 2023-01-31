@@ -75,7 +75,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
 
     #             )
 
-    #             item_received.save()
+    #             #item_received.save()
 
     #             item_in_hotel = op_models.ItemInHotel.objects.filter(hotel=validated_data['hotel'], item=validated_data['item'])
                 

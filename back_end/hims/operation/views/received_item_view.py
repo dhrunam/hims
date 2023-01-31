@@ -14,7 +14,7 @@ class ReceivedItemList(generics.ListCreateAPIView):
     serializer_class = serializers.ItemReceivedSerializer
     # pagination.PageNumberPagination.page_size = 2
 
-    @transaction.atomic
+    #@transaction.atomic
     def post(self, request, *args, **kwargs):
         #request.data._mutable = True
         data = request.data['data']
@@ -38,19 +38,17 @@ class ReceivedItemList(generics.ListCreateAPIView):
                 result = self.create(request, *args, **kwargs)
 
                 item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
-                
-
                 if item_in_hotel:
-                    item_in_hotel[0].opening_balance=element['opening_balance'],
-                    item_in_hotel[0].received=item_in_hotel[0].received + element['quantity_received'],
+                    #item_in_hotel[0].opening_balance=element['opening_balance']
+                    item_in_hotel[0].received=item_in_hotel[0].received + element['quantity_received']
                     item_in_hotel[0].save()
                 else:
                     item_in_hotel=op_model.ItemInHotel.objects.create(
-                    hotel=element['hotel'],
-                    item=element['item'],
-                    opening_balance=element['quantity_received'],
-                    received=element['quantity_received']
-                )
+                        hotel=conf_model.Hotel.objects.get(id=element['hotel']),
+                        item=conf_model.Item.objects.get(id=element['item']),
+                        opening_balance=element['quantity_received'],
+                        received=element['quantity_received']
+                    )
                 
 
 

@@ -11,6 +11,7 @@ export class AddComponent {
   items: any = [];
   draft: any = [];
   item: string = 'N/A';
+  item_name: string = '';
   hotel_name: string = '';
   dept_name: string = '';
   hotel_id: string = '';
@@ -30,15 +31,19 @@ export class AddComponent {
       }
     })
   }
+  onChange(event:any){
+    let text = event.target.options[event.target.options.selectedIndex].text;
+    this.item_name = text;
+  }
   add_item_received(data: any){
-    console.log(this.item)
     data = {
       hotel: this.hotel_id,
       item: data.value.item,
+      item_name: this.item_name,
       batch_no: 'GC/HK/2223/0001',
-      opening_balance: '0',
-      quantity_received: data.value.quantity,
-      unit_price: data.value.ppu,
+      opening_balance: 0,
+      quantity_received: parseInt(data.value.quantity),
+      unit_price: parseInt(data.value.ppu),
       expiry_date: data.value.expiry,
       remarks: data.value.remarks
     }
