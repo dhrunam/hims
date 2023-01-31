@@ -37,6 +37,23 @@ class ReceivedItemList(generics.ListCreateAPIView):
                 #if(request.data['id'] is None or request.data['id'] <= 0):
                 result = self.create(request, *args, **kwargs)
 
+                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
+                
+
+                if item_in_hotel:
+                    item_in_hotel[0].opening_balance=element['opening_balance'],
+                    item_in_hotel[0].received=item_in_hotel[0].received + element['quantity_received'],
+                    item_in_hotel[0].save()
+                else:
+                    item_in_hotel=op_model.ItemInHotel.objects.create(
+                    hotel=element['hotel'],
+                    item=element['item'],
+                    opening_balance=element['quantity_received'],
+                    received=element['quantity_received']
+                )
+                
+
+
 
         #request.data._mutable = False
         return self.get(request, *args, **kwargs)
