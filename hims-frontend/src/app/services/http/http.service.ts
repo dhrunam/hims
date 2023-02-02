@@ -57,7 +57,34 @@ export class HttpService {
     }
     return this.http.post(`${URL}/api/op/item/received`, d);
   }
-  get_item_received(){
-    return this.http.get<any>(`${URL}/api/op/item/received`);
+  add_item_damaged(data: any){
+    const d = {
+      data: data,
+    }
+    return this.http.post(`${URL}/api/op/item/damage`, d);
+  }
+  add_item_transferred(data: any){
+    const d = {
+      data: data,
+    }
+    return this.http.post(`${URL}/api/op/item/transfer`, d);
+  }
+  add_item_returned(data: any){
+    const d = {
+      data: data,
+    }
+    return this.http.post(`${URL}/api/op/item/return`, d);
+  }
+  get_item_received(id: string){
+    return this.http.get<any>(`${URL}/api/op/item/received/batch?hotel_id=${id}`);
+  }
+  get_item_returned(id: string){
+    return this.http.get<any>(`${URL}/api/op/item/received/batch?hotel_id=${id}`);
+  }
+  get_item_damaged(id: string){
+    return this.http.get<any>(`${URL}/api/op/item/received/batch?hotel_id=${id}`);
+  }
+  get_item_transferred(id: string){
+    return this.http.get<any>(`${URL}/api/op/item/received/batch?hotel_id=${id}`);
   }
 }
