@@ -40,14 +40,18 @@ class TransferredItemList(generics.ListCreateAPIView):
 
                 result = self.create(request, *args, **kwargs)
 
-                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
+                item_in_from_hotel = op_model.ItemInHotel.objects.filter(hotel=element['from_hotel'], item=element['item'])
                     
 
-                if item_in_hotel:
-                    item_in_hotel[0].transferred=item_in_hotel[0].transferred + element['quantity_transferred']
-                    item_in_hotel[0].save()
+                if item_in_from_hotel and element['from_hotel']!=element['to_hotel']:
+                    item_in_from_hotel[0].transferred=item_in_from_hotel[0].transferred + element['quantity_transferred']
+                    item_in_from_hotel[0].save()
 
-            
+                item_in_to_hotel = op_model.ItemInHotel.objects.filter(hotel=element['to_hotel'], item=element['item'])
+               
+                if item_in_to_hotel and element['from_hotel']!=element['to_hotel']:
+                    item_in_to_hotel[0].received=item_in_to_hotel[0].received + element['quantity_transferred']
+                    item_in_to_hotel[0].save()
 
 
         #request.data._mutable = False
