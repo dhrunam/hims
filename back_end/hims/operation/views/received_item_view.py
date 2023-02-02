@@ -61,10 +61,11 @@ class ReceivedItemBatches(generics.ListAPIView):
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
     queryset = op_model.ItemReceived.objects.all()
-    serializer_class = serializers.ItemReceivedSerializer
+    serializer_class = serializers.ItemReceivedBatchesSerializer
     # pagination.PageNumberPagination.page_size = 2
 
     def get_queryset(self):
+        print('What is this?')
         """
         This view should return a list of all the purchases item  received
         for the specified order .
@@ -78,9 +79,9 @@ class ReceivedItemBatches(generics.ListAPIView):
                 ''', [hotel])
         return queryset
 
-    def list(self, request, *arg, **kwargs):
+    # def list(self, request, *arg, **kwargs):
 
-        return super().list(self, request, *arg, **kwargs)
+    #     return super().list(self, request, *arg, **kwargs)
 
 
 

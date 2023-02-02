@@ -125,6 +125,18 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
             return TypeError("There is some error in processing your data.")
 
 
+class ItemReceivedBatchesSerializer(serializers.ModelSerializer):
+    number_of_item = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = op_models.ItemReceived
+
+        fields = [
+        'id',
+        'number_of_item',
+        'batch_no',
+
+        ]
 
 class ItemReturnedSerializer(serializers.ModelSerializer):
     # purchase_amount = serializers.FloatField(read_only=True)
