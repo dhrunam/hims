@@ -10,7 +10,8 @@ from hims.configuration.serializers import(
     HotelSerializer,
     ProprietorSerializer,
     StateSerializer,
-    HotelDepartmentSerializer
+    HotelDepartmentSerializer,
+    DepartmentMasterSerializer,
 )
 from hims.account.serializers import (
     ResgisteredUserSerializer,
@@ -324,8 +325,8 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
     related_from_hotel = HotelSerializer(source='from_hotel', read_only=True)
     related_to_hotel = HotelSerializer(source='to_hotel', read_only=True)
 
-    related_from_department = HotelSerializer(source='from_department', read_only=True)
-    related_to_department = HotelSerializer(source='to_department', read_only=True)
+    related_from_department = DepartmentMasterSerializer(source='from_department', read_only=True)
+    related_to_department = DepartmentMasterSerializer(source='to_department', read_only=True)
     related_item= ItemSerializer(source='item', read_only=True)
     class Meta:
         model = op_models.ItemTransferred

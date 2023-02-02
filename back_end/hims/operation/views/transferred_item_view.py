@@ -25,7 +25,7 @@ class TransferredItemList(generics.ListCreateAPIView):
         if(data):
             for element in data:
 
-                request.data['id'] = element['id']
+
                 request.data['from_hotel'] = element['from_hotel']
                 request.data['to_hotel'] = element['to_hotel']
                 request.data['from_department'] = element['from_department']
