@@ -14,6 +14,20 @@ class ReceivedItemList(generics.ListCreateAPIView):
     serializer_class = serializers.ItemReceivedSerializer
     # pagination.PageNumberPagination.page_size = 2
 
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases item  received
+        for the specified order .
+        """
+
+        # order_number = self.request.data['order_no']
+        search_text = self.request.query_params.get('batch_no')
+
+        if(search_text):
+            return op_model.ItemReceived.objects.filter(batch_no=search_text)
+
+        return op_model.ItemReceived.objects.all()
+
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         #request.data._mutable = True
