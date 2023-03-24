@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpService } from '../services/http/http.service';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth-service/auth.service';
+import { AuthResponse } from '../shared/interfaces/auth-response.interface';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '../services/local-storage/local-storage.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -12,21 +12,20 @@ import { LocalStorageService } from '../services/local-storage/local-storage.ser
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  constructor (private http: HttpService, private router: Router, private storage: LocalStorageService){}
+  constructor (private authService: AuthService, private router: Router){}
   login(data:any){
-    let fd = new FormData();
-    fd.append('username', data.username);
-    fd.append('password', data.password);
-    fd.append('client', 'api');
-    this.http.login(fd).subscribe({
-      next: data => {
-        this.storage.saveToken(data.token);
-        this.storage.saveUser(JSON.stringify(data.user));
-        window.location.href="/dashboard";
-      },
-      error: err => {
-        alert('Invalid Credentials');
-      }
-    })  
+    if(!data.valid){
+      data.control.markAllAsTouched();
+    }
+    else{
+      let fd = new FormData();
+      fd.append('username', data.value.username);
+      fd.append('password', data.value.password);
+      fd.append('client', 'api');
+      this.authService.onLogin(fd).subscribe({
+        next: (data:AuthResponse) => this.router.navigate(['/dashboard']),
+        error: err => console.log(err),
+      })
+    } 
   }
 }

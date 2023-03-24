@@ -1,23 +1,27 @@
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { tokenInterceptor } from './interceptors/token/token-interceptor.interceptor';
-import { ServicesModule } from './services/services.module';
-import { UtilitiesModule } from './utilities/utilities.module';
+import { TokenInterceptor } from './interceptors/token-interceptor/token.interceptor';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    UtilitiesModule,
-    ServicesModule,
+    HttpClientModule
   ],
-  providers: [tokenInterceptor],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

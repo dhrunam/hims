@@ -124,7 +124,6 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
         except TypeError:
             return TypeError("There is some error in processing your data.")
 
-
 class ItemReceivedBatchesSerializer(serializers.ModelSerializer):
     number_of_item = serializers.IntegerField(read_only=True)
 
@@ -229,10 +228,6 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
             except TypeError:
                 return TypeError("There is some error in processing your data.")
 
-
-
-
-
 class ItemDamagedSerializer(serializers.ModelSerializer):
     # purchase_amount = serializers.FloatField(read_only=True)
     # balance_amount = serializers.FloatField(read_only=True)
@@ -320,10 +315,6 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
 
             except TypeError:
                 return TypeError("There is some error in processing your data.")
-
-
-
-
 
 class ItemTransferredSerializer(serializers.ModelSerializer):
     # purchase_amount = serializers.FloatField(read_only=True)
@@ -437,11 +428,6 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
 
             except TypeError:
                 return TypeError("There is some error in processing your data.")
-
-
-
-
-
 
 class ItemInHotelSerializer(serializers.ModelSerializer):
     # purchase_amount = serializers.FloatField(read_only=True)
