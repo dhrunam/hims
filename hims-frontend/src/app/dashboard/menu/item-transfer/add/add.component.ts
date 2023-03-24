@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpService } from 'src/app/services/http/http.service';
 import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
+import { URLs } from 'src/environments/environment.prod';
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
@@ -27,7 +28,7 @@ export class AddComponent {
     this.dept_name = this.storage.getDepartmentName();
     this.hotel_id = this.storage.getHotelId();
     this.dept_id = this.storage.getDepartmentId();
-    this.http.get_items_dept(this.dept_id).subscribe({
+    this.http.get({url: URLs['item']}).subscribe({
       next: data => {
         this.items = data;
       },

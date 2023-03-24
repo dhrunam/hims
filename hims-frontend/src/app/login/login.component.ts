@@ -4,6 +4,7 @@ import { HttpService } from '../services/http/http.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../services/local-storage/local-storage.service';
+import { URLs } from 'src/environments/environment.prod';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -18,10 +19,10 @@ export class LoginComponent {
     fd.append('username', data.username);
     fd.append('password', data.password);
     fd.append('client', 'api');
-    this.http.login(fd).subscribe({
+    this.http.post(URLs['login'],fd).subscribe({
       next: data => {
         this.storage.saveToken(data.token);
-        this.storage.saveUser(JSON.stringify(data.user));
+      //  this.storage.saveUser(JSON.stringify(data.user));
         window.location.href="/dashboard";
       },
       error: err => {

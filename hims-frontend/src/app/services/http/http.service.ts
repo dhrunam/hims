@@ -1,23 +1,43 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { URL } from 'src/environments/environment.prod';
 
+interface queryParams{
+  url: string,
+  q_params?: Array<any>
+}
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
-
   constructor(private http: HttpClient) { }
 
-  login(fd:any){
-    return this.http.post<any>(`${URL}/api/auth/login/`, fd);
+  post(url:string, fd:any)
+  {
+    return this.http.post<any>(`${URL}${url}/`, fd);
   }
-  logout(token: string){
-    const data = {
-      data: '',
+
+  get(meta_data: queryParams){
+    
+    let params=this.make_q_param_url(meta_data.q_params)
+    
+    return this.http.get<any>(`${URL}${meta_data.url}`, { params: params});
+  }
+
+  make_q_param_url(q_param?:Array<any>)
+  {
+    let params = new HttpParams();
+    if(q_param !== undefined && q_param.length>0)
+    {
+      q_param?.forEach((element,index) => {
+        params.append(element['name'],element['value'])
+      });
     }
-    return this.http.post(`${URL}/api/auth/logout/`, data);
+
+    return params;
+
   }
+
   add_hotel(fd:any){
     return this.http.post(`${URL}/api/hotel`,fd);
   }

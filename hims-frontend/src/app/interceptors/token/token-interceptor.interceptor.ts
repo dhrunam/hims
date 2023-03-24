@@ -4,7 +4,8 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HTTP_INTERCEPTORS
+  HTTP_INTERCEPTORS,
+  HttpHeaders
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
@@ -19,7 +20,7 @@ export class TokenInterceptorInterceptor implements HttpInterceptor {
     let authReq = request;
     const token = this.local_storage.getToken();
     if (token != null) {
-      authReq = request.clone({ headers: request.headers.set(TOKEN_HEADER_KEY, 'Token ' + token) });
+      authReq = request.clone({ headers: new HttpHeaders().set(TOKEN_HEADER_KEY, `Token ${token}`)});
     }
     return next.handle(authReq).pipe(catchError((err:any)=>{
       // alert('Invalid Session !!!');

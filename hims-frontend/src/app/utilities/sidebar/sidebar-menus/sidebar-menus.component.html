@@ -1,0 +1,102 @@
+<ul class="menu" [ngClass]="{'close': toggleValue, '': !toggleValue}">
+    <li class="menu-item i" [routerLinkActive]="'routerActive'" routerLink="/dashboard/home">
+        <label>
+            <i class="bi bi-pc-display-horizontal"></i>
+            <span>Dashboard</span>
+        </label>
+    </li>
+    <!-- <li class="menu-item" *ngIf="role === 1"> -->
+    <li class="menu-item">
+        <div class="icon-links" (click)="onToggle(elem1,elem2)">
+            <label>
+                <i class="bi bi-server"></i>
+                <span>Masters</span>
+            </label>
+            <i class="bi bi-chevron-down arrow mx-3" #elem1></i>
+        </div>
+        <ul class="sub-menu" #elem2>
+            <li class="sub-menu-item i" [routerLinkActive]="'routerActive'" [routerLink]="[m.route]" *ngFor="let m of masters">
+                <label>
+                    <i [ngClass]="m.class" id="btn"></i>
+                    <span>{{m.menu}}</span>
+                </label>
+            </li>
+        </ul>
+    </li>
+    <!-- <li class="menu-item" *ngIf="role === 1">
+        <div class="icon-links" (click)="onToggle(elem3,elem4)">
+            <label>
+                <i class="bi bi-tools"></i>
+                <span>Configurations</span>
+            </label>
+            <i class="bi bi-chevron-down arrow mx-3" #elem3></i>
+        </div>
+        <ul class="sub-menu" #elem4>
+            <li class="sub-menu-item i" [routerLinkActive]="'routerActive'" routerLink="/dashboard/room-rate">
+                <label>
+                    <i class="bi bi-currency-rupee" id="btn"></i>
+                    <span>Room Rate</span>
+                </label>
+            </li>
+        </ul>
+    </li>
+    <li class="menu-item" *ngIf="role === 1">
+        <div class="icon-links" (click)="onToggle(elem5,elem6)">
+            <label>
+                <i class="bi bi-box-seam"></i>
+                <span>Inventory</span>
+            </label>
+            <i class="bi bi-chevron-down arrow mx-3" #elem5></i>
+        </div>
+        <ul class="sub-menu" #elem6>
+            <li class="sub-menu-item i" [routerLinkActive]="'routerActive'" routerLink="/dashboard/inventory/masters">
+                <label>
+                    <i class="bi bi-bag-plus-fill"></i>
+                    <span>Item Master</span>
+                </label>
+            </li>
+        </ul>
+    </li>
+    <li class="menu-item i" *ngIf="role === 2" [routerLinkActive]="'routerActive'" routerLink="/dashboard/reservation">
+        <label>
+            <i class="bi bi-pencil"></i>
+            <span>Booking</span>
+        </label>
+    </li>
+    <li class="menu-item i" *ngIf="role === 2" [routerLinkActive]="'routerActive'" routerLink="/dashboard/cancel">
+        <label>
+            <i class="bi bi-x-circle"></i>
+            <span>Cancel</span>
+        </label>
+    </li>
+    <li class="menu-item i" *ngIf="role === 2" [routerLinkActive]="'routerActive'" routerLink="/dashboard/report">
+        <label>
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            <span>Report</span>
+        </label>
+    </li>
+    <li class="menu-item i" *ngIf="role === 3" [routerLinkActive]="'routerActive'" routerLink="/dashboard/check-in">
+        <label>
+            <i class="bi bi-house-up"></i>
+            <span>Check-In</span>
+        </label>
+    </li>
+    <li class="menu-item i" *ngIf="role === 3" [routerLinkActive]="'routerActive'" routerLink="/dashboard/check-out">
+        <label>
+            <i class="bi bi-house-down"></i>
+            <span>Check-Out</span>
+        </label>
+    </li>
+    <li class="menu-item i" *ngIf="role === 3" [routerLinkActive]="'routerActive'" routerLink="/dashboard/other-service">
+        <label>
+            <i class="bi bi-house-gear"></i>
+            <span>Other Services</span>
+        </label>
+    </li>
+    <li class="menu-item i" *ngIf="role === 3" [routerLinkActive]="'routerActive'" routerLink="/dashboard/bill">
+        <label>
+            <i class="bi bi-house-check"></i>
+            <span>Billing</span>
+        </label>
+    </li> -->
+</ul>
