@@ -31,6 +31,7 @@ class ReturnedItemList(generics.ListCreateAPIView):
                 request.data['item'] = element['item']
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_returned'] = element['quantity_returned']
+                request.data['returned_on'] = element['returned_on']
                 request.data['remarks'] = element['remarks']
                 request.data['created_by'] = request.user.id
 

@@ -31,6 +31,7 @@ class DamagedItemList(generics.ListCreateAPIView):
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_damaged'] = element['quantity_damaged']
                 request.data['remarks'] = element['remarks']
+                request.data['damaged_on'] = element['damaged_on']
                 request.data['created_by'] = request.user.id
                 
                 result = self.create(request, *args, **kwargs)
