@@ -17,6 +17,7 @@ class ItemReceived(models.Model):
     quantity_received=models.IntegerField(default=0)
     unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)
     expiry_date=models.DateField(auto_now=False, auto_now_add=False,blank=True, null=True)
+    received_on = models.DateTimeField(blank=False)
     remarks=models.CharField(max_length=1024, default='', null=True)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_received_created_by')
@@ -27,6 +28,7 @@ class ItemReturned(models.Model):
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
     opening_balance=models.IntegerField(default=0)
     quantity_returned=models.IntegerField(default=0)
+    returned_on = models.DateTimeField(blank=False)
     remarks=models.CharField(max_length=1024, default='', null=True)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_returned_created_by')
@@ -38,6 +40,7 @@ class ItemDamaged(models.Model):
     opening_balance=models.IntegerField(default=0)
     quantity_damaged=models.IntegerField(default=0)
     remarks=models.CharField(max_length=1024, default='', null=True)
+    damaged_on = models.DateTimeField(blank=False)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_damaged_created_by')
     created_at = models.DateTimeField(auto_now=True, blank=False)
@@ -53,6 +56,7 @@ class ItemTransferred(models.Model):
     opening_balance=models.IntegerField(default=0)
     quantity_transferred=models.IntegerField(default=0)
     remarks=models.CharField(max_length=1024, default='', null=True)
+    transferred_on = models.DateTimeField(blank=False)
     created_by = models.ForeignKey(
      acc_model.User, null=True, on_delete=models.SET_NULL, related_name='item_transferred_created_by')
     created_at = models.DateTimeField(auto_now=True, blank=False)
