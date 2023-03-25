@@ -44,6 +44,7 @@ class ReceivedItemList(generics.ListCreateAPIView):
                 request.data['quantity_received'] = element['quantity_received']
                 request.data['unit_price'] = element['unit_price']
                 request.data['expiry_date'] = element['expiry_date']
+                request.data['received_on'] = element['received_on']
                 #request.data['brand'] = element['brand']
                 #request.data['warranty_period'] = element['warranty_period']
                 request.data['remarks'] = element['remarks']

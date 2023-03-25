@@ -1,0 +1,82 @@
+<div class="row d-flex justify-content-center align-items-center px-5">
+    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
+        <div class="card" [routerLink]="['/dashboard/masters/hotel']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-building-add"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Hotels</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
+        <div class="card" [routerLink]="['/dashboard/masters/department']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-clipboard-plus"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Departments</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
+        <div class="card" [routerLink]="['/dashboard/configurations/mapping']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-diagram-3"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Map Department</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
+        <div class="card" [routerLink]="['/dashboard/masters/user']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-person-add"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Users</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
+        <div class="card" [routerLink]="['/dashboard/masters/item']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-bag-plus"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Items</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4">
+        <div class="card" [routerLink]="['/dashboard/operations/item-receive']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-database-check"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Item Receive</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4">
+        <div class="card" [routerLink]="['/dashboard/operations/item-return']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-database-down"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Item Return</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4">
+        <div class="card" [routerLink]="['/dashboard/operations/item-damage']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-database-slash"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Item Damage</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4">
+        <div class="card" [routerLink]="['/dashboard/operations/item-transfer']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-database-up"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Item Transfer</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4" [routerLink]="['/dashboard/reporting/report']"  *ngIf="role === 1">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-journal"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Report</h6>
+            </div>
+        </div>
+    </div>
+</div>

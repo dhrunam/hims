@@ -1,0 +1,9 @@
+.navbar{
+    background-color: #4A7856;
+}
+.navbar .nav-link{
+    color: white;
+}
+a{
+    cursor: pointer;
+}

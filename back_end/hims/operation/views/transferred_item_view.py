@@ -35,6 +35,8 @@ class TransferredItemList(generics.ListCreateAPIView):
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_transferred'] = element['quantity_transferred']
                 request.data['remarks'] = element['remarks']
+                request.data['transferred_on'] = element['transferred_on']
+                
                 request.data['created_by'] = request.user.id
                 request.data['is_acknowledged'] = False
 
