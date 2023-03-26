@@ -1,0 +1,15 @@
+li{
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    transition: all 0.3s ease;
+}
+li,
+li label,
+li span{
+    cursor: pointer;
+}
+li:hover{
+    background-color: #CEF0D7;
+    color: #4A7856;
+}

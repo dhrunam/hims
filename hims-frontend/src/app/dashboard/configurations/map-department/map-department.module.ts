@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { MapDepartmentRoutingModule } from './map-department-routing.module';
 import { MapDepartmentComponent } from './map-department.component';
-import { ViewComponent } from './view/view.component';
-import { EditComponent } from './edit/edit.component';
+import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
+const routes: Routes = [
+  { path: '', component: MapDepartmentComponent },
+]
 
 @NgModule({
   declarations: [
     MapDepartmentComponent,
-    ViewComponent,
-    EditComponent
   ],
   imports: [
     CommonModule,
-    MapDepartmentRoutingModule
+    RouterModule.forChild(routes),
+    FormsModule,
   ]
 })
 export class MapDepartmentModule { }

@@ -1,1 +1,82 @@
-<router-outlet></router-outlet>
+<div class="px-5">
+    <button class="btn btn-light" (click)="onGoBack()"><i class="bi bi-arrow-left-circle"></i>&nbsp;&nbsp;Go Back</button>
+</div>
+<div class="text-center">
+    <h2>Item Master</h2>
+</div>
+<section class="mt-4 px-5">
+    <div class="d-flex justify-content-between">
+        <h3>Item(s)</h3>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onGetOperation({operation:'add'})">Add Item</button>
+    </div>  
+    <hr>
+    <div *ngIf="!items[0]">
+        <h5>No Item(s) Registered</h5>
+    </div>
+    <div class="row" *ngIf="items[0]">
+        <div class="col-xl-2 col-md-4 col-6 mt-3" *ngFor="let i of items">
+            <div class="card" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <i class="bi bi-pencil-square" style="color: blue;font-size: 20px;" (click)="onGetOperation({operation: 'update', id: i.id})"></i>
+                        <i class="bi bi-trash3" style="color: red;font-size: 20px;" (click)="getDeleteMessage(i.id)"></i>
+                    </div>
+                    <h5 class="card-title text-center mb-4" style="font-size: 50px;"><i class="bi bi-bag-check"></i></h5>
+                    <h6 class="card-subtitle mb-4 text-center" style="font-size: 20px;">{{i.name}}</h6>
+                </div>
+              </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" *ngIf="deleteMessage">Delete Item</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" *ngIf="!deleteMessage">{{ editMode ? 'Update Hotel':'Add Hotel'}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" #modalBtn aria-label="Close"></button>
+            </div>
+            <form #hotel="ngForm" (ngSubmit)="onSubmit(hotel)">
+                <div class="modal-body">
+                    <div *ngIf="deleteMessage; else form">
+                        Are you sure you want to delete this item ?
+                    </div>
+                    <ng-template #form>
+                        <div class="row px-2 mb-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Item Name</label>
+                                <input type="text" class="form-control" name="name" [ngModel]="item_name" #name="ngModel" required>
+                                <small class="text-danger" *ngIf="name.touched && !name.valid">Please enter item name</small>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label class="form-label">Department</label>
+                                <select class="form-select" [ngModel]="item_department" name="department" #department="ngModel" required>
+                                    <option value="">---Select Department---</option>
+                                    <option *ngFor="let d of departments" [value]="d.id">{{d.name}}</option>
+                                </select>
+                                <div *ngIf="department.invalid && department.touched">
+                                    <small class="text-danger" *ngIf="department.errors!['required']">Please select a department</small>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="px-4">
+                    <div class="alert alert-danger" *ngIf="showSuccess === 'false'">
+                        Error
+                    </div>
+                </div>
+                <div class="modal-footer" *ngIf="deleteMessage; else formBtn">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" type="submit">Yes</button>
+                </div>
+                <ng-template #formBtn>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" type="submit">{{ editMode ? 'Update' : 'Add'}}</button>
+                    </div>
+                </ng-template>
+            </form>
+        </div>
+    </div>
+</div>

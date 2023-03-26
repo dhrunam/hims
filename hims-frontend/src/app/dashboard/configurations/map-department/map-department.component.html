@@ -1,1 +1,83 @@
-<router-outlet></router-outlet>
+<div class="px-5">
+    <button class="btn btn-light" (click)="onGoBack()"><i class="bi bi-arrow-left-circle"></i>&nbsp;&nbsp;Go Back</button>
+</div>
+<div class="text-center">
+    <h2>Map Department</h2>
+</div>
+<section class="mt-4 px-5">
+    <div class="d-flex justify-content-between">
+        <h3>Mapped Department(s)</h3>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onGetOperation({operation:'add'})">Map Department</button>
+    </div>
+    <hr>
+    <div *ngIf="!mappedDepartments[0]">
+        <h5>No Departments Mapped</h5>
+    </div>
+    <div class="row" *ngIf="mappedDepartments[0]">
+        <div class="col-xl-4 col-md-4 col-6 mt-3" *ngFor="let m of mappedDepartments">
+            <div class="card card-map" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <h5 class="card-header">Hotel {{ m.hotel_name }}</h5>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li 
+                            class="list-group-item d-flex justify-content-between"
+                            *ngFor="let d of m.departments">
+                            <label>{{d.department_name}}</label><span class="text-danger"><i class="bi bi-trash3" (click)="getDeleteMessage(m.id)"></i></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" *ngIf="deleteMessage">Unlink Department</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" *ngIf="!deleteMessage">Map Department</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" #modalBtn aria-label="Close"></button>
+            </div>
+            <form #map="ngForm" (ngSubmit)="onSubmit(map)">
+                <div class="modal-body">
+                    <div *ngIf="deleteMessage; else form">
+                        Are you sure you want to unlink ?
+                    </div>
+                    <ng-template #form>
+                        <div class="row px-2 mb-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Hotel</label>
+                                <select class="form-select" [ngModel]="hotel_name" name="hotel" #hotel="ngModel" required>
+                                    <option value="" selected>---Select Hotel---</option>
+                                    <option *ngFor="let h of hotels" [value]="h.id">{{ h.name }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label class="form-label">Department</label>
+                                <select class="form-select" [ngModel]="department_name" name="department" #department="ngModel" required>
+                                    <option value="" selected>---Select Department---</option>
+                                    <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="px-4" *ngIf="showSuccess === 'false'">
+                    <div class="alert alert-danger">
+                        Error
+                    </div>
+                </div>
+                <div class="modal-footer" *ngIf="deleteMessage; else formBtn">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" type="submit">Yes</button>
+                </div>
+                <ng-template #formBtn>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" type="submit">Map</button>
+                    </div>
+                </ng-template>
+            </form>
+        </div>
+    </div>
+</div>

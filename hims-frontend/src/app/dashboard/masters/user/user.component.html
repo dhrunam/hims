@@ -1,1 +1,113 @@
-<router-outlet></router-outlet>
+<div class="px-5">
+    <button class="btn btn-light" (click)="onGoBack()"><i class="bi bi-arrow-left-circle"></i>&nbsp;&nbsp;Go Back</button>
+</div>
+<div class="text-center">
+    <h2>User Master</h2>
+</div>
+<section class="mt-4 px-5">
+    <div class="d-flex justify-content-between">
+        <h3>User(s)</h3>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onGetOperation({operation:'add'})">Add User</button>
+    </div>
+    <hr>
+    <div *ngIf="!users[0]">
+        <h5>No User(s) Registered</h5>
+    </div>
+    <div class="row" *ngIf="users[0]">
+        <div class="col-xl-2 col-md-4 col-6 mt-3" *ngFor="let u of users">
+            <div class="card" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <i class="bi bi-pencil-square" style="color: blue;font-size: 20px;" (click)="onGetOperation({operation: 'update', id: u.id})"></i>
+                        <i class="bi bi-trash3" style="color: red;font-size: 20px;" (click)="getDeleteMessage(u.id)"></i>
+                    </div>
+                    <h5 class="card-title text-center mb-4" style="font-size: 50px;"><i class="bi bi-buildings"></i></h5>
+                    <h6 class="card-subtitle mb-4 text-center" style="font-size: 20px;">{{u.username}}</h6>
+                </div>
+              </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" *ngIf="deleteMessage">Delete User</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" *ngIf="!deleteMessage">{{ editMode ? 'Update User':'Add User'}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" #modalBtn aria-label="Close"></button>
+            </div>
+            <form #hotel="ngForm" (ngSubmit)="onSubmit(hotel)">
+                <div class="modal-body">
+                    <div *ngIf="deleteMessage; else form">
+                        Are you sure you want to delete this user ?
+                    </div>
+                    <ng-template #form>
+                        <div class="row px-2 mb-2">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Select Hotel</label>
+                                    <select class="form-select" [ngModel]="user.hotel" name="hotel_id" #hotel_id="ngModel" required>
+                                        <option value="">---Select Hotel---</option>
+                                        <option *ngFor="let h of hotels" [value]="h.id">{{ h.name }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Select Department</label>
+                                    <select class="form-select" [ngModel]="user.department" name="department_id" #department_id="ngModel" required>
+                                        <option value="">---Select Department---</option>
+                                        <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input class="form-control" type="text" [ngModel]="user.first_name" name="fname" #fname="ngModel" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="form-control" type="text" [ngModel]="user.last_name" name="lname" #lname="ngModel" required>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Username</label>
+                                    <input class="form-control" type="text" [ngModel]="user.username" name="username" #username="ngModel" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Contact Number</label>
+                                    <input class="form-control" type="text" [ngModel]="user.contact_number" name="contact" #contact="ngModel" required>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Password</label>
+                                    <input class="form-control" type="password" ngModel name="password" #password="ngModel" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input class="form-control" type="password" ngModel name="password2" #password2="ngModel" required>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="px-4">
+                    <div class="alert alert-danger" *ngIf="showSuccess === 'false'">
+                        Error
+                    </div>
+                </div>
+                <div class="modal-footer" *ngIf="deleteMessage; else formBtn">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" type="submit">Yes</button>
+                </div>
+                <ng-template #formBtn>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" type="submit">{{ editMode ? 'Update' : 'Add'}}</button>
+                    </div>
+                </ng-template>
+            </form>
+        </div>
+    </div>
+</div>
