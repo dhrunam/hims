@@ -15,14 +15,14 @@
     </div>
     <div class="row" *ngIf="mappedDepartments[0]">
         <div class="col-xl-4 col-md-4 col-6 mt-3" *ngFor="let m of mappedDepartments">
-            <div class="card card-map" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="card card-map">
                 <h5 class="card-header">Hotel {{ m.hotel_name }}</h5>
                 <div class="card-body">
                     <ul class="list-group">
                         <li 
                             class="list-group-item d-flex justify-content-between"
                             *ngFor="let d of m.departments">
-                            <label>{{d.department_name}}</label><span class="text-danger"><i class="bi bi-trash3" (click)="getDeleteMessage(m.id)"></i></span>
+                            <label>{{d.department_name}}</label><span class="text-danger"><i class="bi bi-trash3" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="getDeleteMessage(m.id)"></i></span>
                         </li>
                     </ul>
                 </div>

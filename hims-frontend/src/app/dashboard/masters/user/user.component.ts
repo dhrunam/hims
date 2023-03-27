@@ -25,6 +25,7 @@ export class UserComponent {
   user:User;
   constructor(private userService:UserService, private router: Router, private route: ActivatedRoute, private hotelService: HotelService, private departmentService: DepartmentService){}
   ngOnInit(): void{
+    this.user = new User('','','','','','');
     this.getUsers();
   }
   onGetOperation(values: Mode){
@@ -72,7 +73,7 @@ export class UserComponent {
         fd.append('department', data.value.department_id);
         fd.append('contact_number', data.value.contact);
         fd.append('username', data.value.username);
-        fd.append('group', '2');
+        // fd.append('group', '2');
         if(this.editMode){
           fd.append('id', this.id.toString());
           observable = this.userService.update_user(fd);
