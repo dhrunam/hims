@@ -28,6 +28,16 @@ export class LocalStorageService {
   public getToken(){
     return window.localStorage.getItem(TOKEN);
   }
+  public getHotel(){
+    let data: any = window.localStorage.getItem(USER_DETAILS);
+    let res_data: any = JSON.parse(CryptoJS.AES.decrypt(data,KEY).toString(CryptoJS.enc.Utf8));
+    return res_data.related_profile[0].related_hotel;
+  }
+  public getDepartment(){
+    let data: any = window.localStorage.getItem(USER_DETAILS);
+    let res_data: any = JSON.parse(CryptoJS.AES.decrypt(data,KEY).toString(CryptoJS.enc.Utf8));
+    return res_data.related_profile[0].related_department;
+  }
   public clearSession(){
     window.localStorage.clear();
   }
