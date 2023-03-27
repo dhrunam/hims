@@ -1,22 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  {
-    path: '', redirectTo: '/dashboard/home', pathMatch: 'full'
-  },
+  { path: '', redirectTo:'/dashboard/home', pathMatch: 'full'},
   { path: '', component: DashboardComponent, children: [
-      { path: 'home', loadComponent: () => import('./home/home.component').then(c => c.HomeComponent) },
-      { path: 'hotel', loadChildren: () => import('./hotel/hotel.module').then(m => m.HotelModule) },
-      { path: 'department', loadChildren: () => import('./department/department.module').then(m => m.DepartmentModule) },
-      { path: 'users', loadChildren: () => import('./users/users.module').then(m => m.UsersModule) },
-      { path: 'items', loadChildren: () => import('./items/items.module').then(m => m.ItemsModule) },
-      { path: 'report', loadChildren: () => import('./report/report.module').then(m => m.ReportModule) },
-      { path: 'menu', loadChildren: () => import('./menu/menu.module').then(m => m.MenuModule) },
-      { path: 'mapping', loadChildren: () => import('./map-department/map-department.module').then(m => m.MapDepartmentModule)},
+      { path: 'home', component: HomeComponent },
+      { path: 'masters', loadChildren: () => import('./masters/masters.module').then(m => m.MastersModule)},
+      { path: 'configurations', loadChildren: () => import('./configurations/configurations.module').then(m => m.ConfigurationsModule)},
+      { path: 'operations', loadChildren: () => import('./operations/operations.module').then(m => m.OperationsModule)},
+      { path: 'reporting', loadChildren: () => import('./reporting/reporting.module').then(m => m.ReportingModule)},
     ] 
-  }
+  },
 ];
 
 @NgModule({

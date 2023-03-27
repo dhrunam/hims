@@ -96,6 +96,7 @@ class HotelDepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.HotelDepartment
         fields=[
+            'id',
             'hotel',
             'department',
             'related_hotel',
