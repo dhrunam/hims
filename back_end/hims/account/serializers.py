@@ -195,15 +195,15 @@ class RegisterSerializer(serializers.ModelSerializer):
                 user.is_staff = True if validated_data['group'] == 'user' else False
                 user.set_password(validated_data['password'])
                 user.groups.add(Group.objects.get(
-                    name=validated_data['group']))
+                    id=validated_data['group']))
                 user.save()
 
                 user_profile = acc_models.UserProfile.objects.update_or_create(
                     user=user,
                     defaults={
-                        "designation": acc_models.Designation.objects.get(pk=validated_data['designation']),
-                        "proprietor": acc_models.Office.objects.get(pk=validated_data['proprietor']),
-                        "hotel": acc_models.Office.objects.get(pk=validated_data['hotel']),
+                        #"designation": acc_models.Designation.objects.get(pk=validated_data['designation']),
+                        #"proprietor": acc_models.Office.objects.get(pk=validated_data['proprietor']),
+                        "hotel": acc_models.Hotel.objects.get(pk=validated_data['hotel']),
                         "contact_number": validated_data['contact_number']
                     }
 
