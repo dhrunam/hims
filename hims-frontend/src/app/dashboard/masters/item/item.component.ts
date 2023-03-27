@@ -27,6 +27,8 @@ export class ItemComponent {
     this.getItems();
   }
   onGetOperation(values: Mode){
+    this.item_name = '';
+    this.item_department = '';
     this.item_department = '';
     this.departmentService.get_departments().subscribe({
       next: data => this.departments = data,
