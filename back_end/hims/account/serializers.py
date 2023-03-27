@@ -138,9 +138,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError(
-                {"password": "Password fields didn't match."})
+        if 'password' in attrs:
+            if attrs['password'] != attrs['password2']:
+                raise serializers.ValidationError(
+                    {"password": "Password fields didn't match."})
 
         return attrs
 
@@ -183,31 +184,44 @@ class RegisterSerializer(serializers.ModelSerializer):
             return TypeError("There is some error in processing your data.")
 
     def update(self, instance, validated_data):
-
+        print('Update is calling...')
         try:
             with transaction.atomic():
                 user = instance
 
-                user.username = validated_data['username']
-                user.email = validated_data['email']
-                user.first_name = validated_data['first_name']
-                user.last_name = validated_data['last_name']
-                user.is_staff = True if validated_data['group'] == 'user' else False
-                user.set_password(validated_data['password'])
-                user.groups.add(Group.objects.get(
-                    name=validated_data['group']))
+                user.username = validated_data.get('username',user.username)
+                user.email = validated_data.get('email',user.email)
+                user.first_name = validated_data.get('first_name',user.first_name)
+                user.last_name = validated_data.get('username',user.last_name)
+                
+                password = validated_data.get('password',None)
+                if password:
+
+                    user.set_password(validated_data['password'])
+                
+                group = validated_data.get('group','')
+                if(group!=''):
+                    user.is_staff = True if validated_data['group'] == 'user' else False
+                    user.groups.clear();
+                    user.groups.add(Group.objects.get(
+                        name=validated_data['group']))
                 user.save()
 
-                user_profile = acc_models.UserProfile.objects.update_or_create(
-                    user=user,
-                    defaults={
-                        "department": acc_models.DepartmentMaster.objects.get(pk=validated_data['department']),
-                        # "proprietor": acc_models.Office.objects.get(pk=validated_data['proprietor']),
-                        "hotel": acc_models.Hotel.objects.get(pk=validated_data['hotel']),
-                        "contact_number": validated_data['contact_number']
-                    }
+                department = validated_data.get('department', None)
+                hotel = validated_data.get('hotel', None)
+                contact_number = validated_data.get('contact_number', None)
 
-                )
+                if department and hotel and contact_number:
+                    user_profile = acc_models.UserProfile.objects.update_or_create(
+                        user=user,
+                        defaults={
+                            "department": acc_models.DepartmentMaster.objects.get(pk=validated_data['department']),
+                            # "proprietor": acc_models.Office.objects.get(pk=validated_data['proprietor']),
+                            "hotel": acc_models.Hotel.objects.get(pk=validated_data['hotel']),
+                            "contact_number": validated_data['contact_number']
+                        }
+
+                    )
 
                 return user
 

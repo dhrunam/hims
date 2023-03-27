@@ -1,5 +1,5 @@
 from hims.configuration import models
-from rest_framework import generics, pagination
+from rest_framework import generics, pagination, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from hims.configuration import serializers
