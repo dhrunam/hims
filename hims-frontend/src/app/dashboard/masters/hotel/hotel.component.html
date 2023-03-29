@@ -15,11 +15,11 @@
     </div>
     <div class="row" *ngIf="hotels[0]">
         <div class="col-xl-2 col-md-4 col-6 mt-3" *ngFor="let h of hotels">
-            <div class="card" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <i class="bi bi-pencil-square" style="color: blue;font-size: 20px;" (click)="onGetOperation({operation: 'update', id: h.id})"></i>
-                        <i class="bi bi-trash3" style="color: red;font-size: 20px;" (click)="getDeleteMessage(h.id)"></i>
+                        <i class="bi bi-pencil-square" style="color: blue;font-size: 20px;" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onGetOperation({operation: 'update', id: h.id})"></i>
+                        <i class="bi bi-trash3" style="color: red;font-size: 20px;" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="getDeleteMessage(h.id)"></i>
                     </div>
                     <h5 class="card-title text-center mb-4" style="font-size: 50px;"><i class="bi bi-buildings"></i></h5>
                     <h6 class="card-subtitle mb-4 text-center" style="font-size: 20px;">{{h.name}}</h6>

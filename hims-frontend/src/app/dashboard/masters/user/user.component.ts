@@ -22,12 +22,14 @@ export class UserComponent {
   users: Array<any> = [];
   hotels: Array<any> = [];
   departments: Array<any> = [];
-  user:User = new User('','','','','','');
+  user:User;
   constructor(private userService:UserService, private router: Router, private route: ActivatedRoute, private hotelService: HotelService, private departmentService: DepartmentService){}
   ngOnInit(): void{
+    this.user = new User('','','','','','');
     this.getUsers();
   }
   onGetOperation(values: Mode){
+    this.user = new User('','','','','','');
     this.hotelService.get_hotels().subscribe({
       next: data => this.hotels = data,
     });
@@ -69,9 +71,9 @@ export class UserComponent {
         fd.append('email', 'test@test.com');
         fd.append('hotel', data.value.hotel_id);
         fd.append('department', data.value.department_id);
-        fd.append('group', '2');
         fd.append('contact_number', data.value.contact);
         fd.append('username', data.value.username);
+        // fd.append('group', '2');
         if(this.editMode){
           fd.append('id', this.id.toString());
           observable = this.userService.update_user(fd);

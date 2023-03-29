@@ -62,6 +62,8 @@ export class DepartmentComponent {
     }
   }
   onGetOperation(values: Mode){
+    this.department_name = '';
+    this.department_short_name = '';
     this.deleteMessage = false;
     this.editMode = values.operation === 'add' ? false : true;
     this.id = values.id ? values.id : 0;

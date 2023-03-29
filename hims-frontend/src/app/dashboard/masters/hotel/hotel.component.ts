@@ -24,6 +24,8 @@ export class HotelComponent {
     this.getHotels();
   }
   onGetOperation(values: Mode){
+    this.hotel_name = '';
+    this.hotel_short_name = '';
     this.deleteMessage = false;
     this.editMode = values.operation === 'add' ? false : true;
     this.id = values.id ? values.id : 0;
