@@ -41,7 +41,7 @@ class ReturnedItemList(generics.ListCreateAPIView):
                     
 
                 if item_in_hotel:
-                    item_in_hotel[0].returned=item_in_hotel[0].returned + element['quantity_returned']
+                    item_in_hotel[0].returned=item_in_hotel[0].returned + int(element['quantity_returned'])
                     item_in_hotel[0].save()
 
 

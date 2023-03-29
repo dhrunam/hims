@@ -55,7 +55,7 @@ class ReceivedItemList(generics.ListCreateAPIView):
                 item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
                 if item_in_hotel:
                     #item_in_hotel[0].opening_balance=element['opening_balance']
-                    item_in_hotel[0].received=item_in_hotel[0].received + element['quantity_received']
+                    item_in_hotel[0].received=item_in_hotel[0].received + int(element['quantity_received'])
                     item_in_hotel[0].save()
                 else:
                     item_in_hotel=op_model.ItemInHotel.objects.create(

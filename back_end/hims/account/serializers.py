@@ -192,7 +192,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                 user.username = validated_data.get('username',user.username)
                 user.email = validated_data.get('email',user.email)
                 user.first_name = validated_data.get('first_name',user.first_name)
-                user.last_name = validated_data.get('username',user.last_name)
+                user.last_name = validated_data.get('last_name',user.last_name)
                 
                 password = validated_data.get('password',None)
                 if password:
@@ -211,17 +211,42 @@ class RegisterSerializer(serializers.ModelSerializer):
                 hotel = validated_data.get('hotel', None)
                 contact_number = validated_data.get('contact_number', None)
 
-                if department and hotel and contact_number:
+                if department:
                     user_profile = acc_models.UserProfile.objects.update_or_create(
                         user=user,
                         defaults={
                             "department": acc_models.DepartmentMaster.objects.get(pk=validated_data['department']),
                             # "proprietor": acc_models.Office.objects.get(pk=validated_data['proprietor']),
+                            # "hotel": acc_models.Hotel.objects.get(pk=validated_data['hotel']),
+                            # "contact_number": validated_data['contact_number']
+                        }
+
+                    )
+                if hotel:
+                    user_profile = acc_models.UserProfile.objects.update_or_create(
+                        user=user,
+                        defaults={
+                            # "department": acc_models.DepartmentMaster.objects.get(pk=validated_data['department']),
+                            # "proprietor": acc_models.Office.objects.get(pk=validated_data['proprietor']),
                             "hotel": acc_models.Hotel.objects.get(pk=validated_data['hotel']),
+                            # "contact_number": validated_data['contact_number']
+                        }
+
+                    )
+
+                if contact_number:
+                    user_profile = acc_models.UserProfile.objects.update_or_create(
+                        user=user,
+                        defaults={
+                            # "department": acc_models.DepartmentMaster.objects.get(pk=validated_data['department']),
+                            # "proprietor": acc_models.Office.objects.get(pk=validated_data['proprietor']),
+                            # "hotel": acc_models.Hotel.objects.get(pk=validated_data['hotel']),
                             "contact_number": validated_data['contact_number']
                         }
 
                     )
+
+
 
                 return user
 
