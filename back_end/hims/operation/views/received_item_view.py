@@ -103,7 +103,7 @@ class ReceivedItemPerBatch(generics.ListAPIView):
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
     queryset = op_model.ItemReceived.objects.all()
-    serializer_class = serializers.ItemReceivedBatchesSerializer
+    serializer_class = serializers.ItemReceivedSerializer
     # pagination.PageNumberPagination.page_size = 2
 
     def get_queryset(self):

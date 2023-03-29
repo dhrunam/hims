@@ -1,1 +1,24 @@
-<p>view works!</p>
+<section class="mt-4 px-5">
+    <div class="d-flex justify-content-between">
+        <h3>Item(s) Received</h3>
+        <button class="btn btn-primary" (click)="onRouteReceiveItem()">+ Receive</button>
+    </div>  
+    <hr>
+    <div *ngIf="!items[0]">
+        <h5>No Item(s) Received</h5>
+    </div>
+    <div class="row">
+        <div class="col-xl-2 col-md-4 col-6 mt-3" *ngFor="let it of items">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-end">
+                        <i class="bi bi-printer" style="color: blue;font-size: 20px;"></i>
+                        <i class="bi bi-pencil-square ms-3" style="color: blue;font-size: 20px;" (click)="onRouteUpdateReceiveItem(it.batch_no)"></i>
+                    </div>
+                    <h5 class="card-title text-center mb-4" style="font-size: 50px;"><i class="bi bi-cart-check"></i></h5>
+                    <h6 class="card-subtitle mb-4 text-center" style="font-size: 20px;">Batch No.<br>{{it.batch_no}}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
