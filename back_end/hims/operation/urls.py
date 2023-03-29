@@ -16,7 +16,8 @@ urlpatterns = [
     path('api/op/item/received/<int:pk>', views.ReceivedItemDetails.as_view()),
 
     path('api/op/item/received/batch', views.ReceivedItemBatches.as_view()),
-
+    path('api/op/item/received/batch/items', views.ReceivedItemPerBatch.as_view()),
+    
     path('api/op/item/returned', views.ReturnedItemList.as_view()),
     path('api/op/item/returned/<int:pk>', views.ReturnedItemDetails.as_view()),
 
