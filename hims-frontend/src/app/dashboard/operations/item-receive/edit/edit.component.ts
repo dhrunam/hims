@@ -12,7 +12,6 @@ import { ItemReceive } from 'src/app/shared/interfaces/item-receive.interface';
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent {
-  @ViewChild('item', { static: false} ) item: ElementRef;
   @ViewChild('batch', { static: false } ) batch: ElementRef;
   constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReceiveService: ItemReceiveService, private renderer: Renderer2){}
   items: Array<ItemReceive> = [];
@@ -22,16 +21,15 @@ export class EditComponent {
   editMode: boolean = false;
   batch_no: string = '';
   batchErr: boolean = false;
+  showSuccess: string = '';
   ngOnInit(): void{
     this.route.queryParams.subscribe({
       next: (param: Params) => {
         this.editMode = param['batch_no'] != null;
-        this.batch_no = param['batch_no'];
         if(this.editMode){
           this.itemReceiveService.get_item_received(param['batch_no']).subscribe({
             next: data => {
               this.items = data;
-              console.log(data);
             }
           })
         }
@@ -50,11 +48,15 @@ export class EditComponent {
     }
   }
   onSubmit(){
+    this.showSuccess = '';
     if(this.batch_no === ''){
       this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
       this.batchErr = true;
     }
     else{
+      this.items.forEach((d:any) => {
+        d.batch_no = this.batch_no;
+      })
       let observable: Observable<any>
       if(this.editMode){
 
@@ -66,6 +68,7 @@ export class EditComponent {
         next: data => {
           this.renderer.removeStyle(this.batch.nativeElement, 'border');
           this.batchErr = false;
+          this.showSuccess = 'true';
         }
       }) 
     }  
@@ -82,7 +85,6 @@ export class EditComponent {
         hotel: hotel.id,
         item: data.value.item_id,
         item_name: this.item_name,
-        batch_no: this.batch_no,
         opening_balance: data.value.opening_balance,
         quantity_received: data.value.quantity_received,
         unit_price: data.value.price_per_unit,

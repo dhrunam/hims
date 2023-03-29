@@ -18,7 +18,6 @@ export class ItemReceiveService{
     get_item_received(batch_no: string){
         return this.http.get<any>(`${URL}/api/op/item/received/batch/items?batch_no=${batch_no}`)
         .pipe(map(respData => {
-            console.log(respData);
             let respArray: Array<ItemReceive> = [];
             respData.forEach((data:any) => {
                 let d:ItemReceive = {

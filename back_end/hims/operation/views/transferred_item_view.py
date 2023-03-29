@@ -46,7 +46,7 @@ class TransferredItemList(generics.ListCreateAPIView):
                     
 
                 if item_in_from_hotel and element['from_hotel']!=element['to_hotel']:
-                    item_in_from_hotel[0].transferred=item_in_from_hotel[0].transferred + element['quantity_transferred']
+                    item_in_from_hotel[0].transferred=item_in_from_hotel[0].transferred + int(element['quantity_transferred'])
                     item_in_from_hotel[0].save()
 
                 item_in_to_hotel = op_model.ItemInHotel.objects.filter(hotel=element['to_hotel'], item=element['item'])
