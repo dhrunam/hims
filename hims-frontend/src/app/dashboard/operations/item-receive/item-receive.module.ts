@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/dashboard/operations/item-receive/view', pathMatch: 'full'},
   { path: '', component: ItemReceiveComponent, children: [
       { path: 'add', component: EditComponent },
-      { path: 'edit/:id', component: EditComponent },
+      { path: 'edit', component: EditComponent },
       { path: 'view', component: ViewComponent },
     ]
   }
@@ -23,7 +23,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    FormsModule
+    FormsModule,
   ]
 })
 export class ItemReceiveModule { }

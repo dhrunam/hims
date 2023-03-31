@@ -1,17 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DamageComponent } from './damage/damage.component';
 import { RouterModule, Routes } from '@angular/router';
+import { EditComponent } from './edit/edit.component';
+import { ViewComponent } from './view/view.component';
+import { ItemDamageComponent } from './item-damage.component';
+import { FormsModule } from '@angular/forms';
 const routes: Routes = [
-  { path: '', component: DamageComponent}
+  { path: '', redirectTo: '/dashboard/operations/item-damage/view', pathMatch: 'full'},
+  { path: '', component: ItemDamageComponent, children: [
+      { path: 'add', component: EditComponent },
+      { path: 'edit', component: EditComponent },
+      { path: 'view', component: ViewComponent },
+    ]
+  }
 ]
 @NgModule({
   declarations: [
-    DamageComponent
+    ItemDamageComponent,
+    EditComponent,
+    ViewComponent
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    FormsModule
   ]
 })
 export class ItemDamageModule { }
