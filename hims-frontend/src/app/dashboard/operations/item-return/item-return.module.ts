@@ -6,7 +6,7 @@ import { ViewComponent } from './view/view.component';
 import { ItemReturnComponent } from './item-return.component';
 import { FormsModule } from '@angular/forms';
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard/operations/item-return/view', pathMatch: 'full'},
+  { path: '', redirectTo: '/dashboard/operations/item-return/add', pathMatch: 'full'},
   { path: '', component: ItemReturnComponent, children: [
       { path: 'add', component: EditComponent },
       { path: 'edit', component: EditComponent },
