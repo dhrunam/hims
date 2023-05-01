@@ -20,12 +20,17 @@ class HotelItemList(generics.ListCreateAPIView):
         """
 
         # order_number = self.request.data['order_no']
-        search_text = self.request.query_params.get('item_id')
+        queryset = op_model.ItemInHotel.objects.all()
+        item_id = self.request.query_params.get('item_id')
+        hotel_id= self.request.query_params.get('hotel_id')
 
-        if(search_text):
-            return op_model.ItemInHotel.objects.filter(item=search_text)
+        if(item_id):
+            queryset = queryset.filter(item=item_id)
 
-        return op_model.ItemInHotel.objects.all()
+        if(hotel_id):
+            queryset = queryset.filter(hotel=hotel_id)
+        
+        return queryset
 
 class HotelItemDetails(generics.RetrieveUpdateDestroyAPIView):
     # authentication_classes = (TokenAuthentication,)
