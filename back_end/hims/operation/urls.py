@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/op/item/hotel', views.HotelItemList.as_view()),
     path('api/op/item/hotel/<int:pk>', views.HotelItemDetails.as_view()),
     
+    path('api/report/hotel/item', views.PropertyWiseItemSummary.as_view()),
 
 
 ]

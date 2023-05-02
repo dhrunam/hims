@@ -104,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hims',
         'USER': 'postgres',
-        'PASSWORD': 'Darkhorse@1',
+        'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',
         'PORT':'5432'
     }
@@ -171,7 +171,7 @@ REST_FRAMEWORK = {
     #     'rest_framework_datatables.filters.DatatablesFilterBackend',
     # ),
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 10000000
+    #'PAGE_SIZE': 10000000
 }
 
 
