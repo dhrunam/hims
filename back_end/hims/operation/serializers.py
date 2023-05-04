@@ -160,6 +160,7 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'hotel',
             'item',
             'opening_balance',
@@ -252,6 +253,7 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'hotel',
             'item',
             'opening_balance',
@@ -346,6 +348,7 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'from_hotel',
             'to_hotel',
             'from_department',

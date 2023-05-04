@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from hims.configuration import serializers
 from durin.auth import TokenAuthentication
+from django.db import transaction, connection
 
 class HotelList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -11,6 +12,26 @@ class HotelList(generics.ListCreateAPIView):
     queryset = models.Hotel.objects.all()
     serializer_class = serializers.HotelSerializer
     # pagination.PageNumberPagination.page_size = 2
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        #request.data._mutable = True
+        data = request.data['data']
+
+        result = self.create(request, *args, **kwargs)
+        if(data):
+            
+            # print('batch_no', batch_no)
+            for element in data:
+                
+                result = models.HotelDepartment.objects.create(
+                    hotel = result.data['id'],
+                    department = element['department']
+                )
+
+        #request.data._mutable = False
+        return self.get(request, *args, **kwargs)
+    
+
 
 
 class HotelDetails(generics.RetrieveUpdateDestroyAPIView):

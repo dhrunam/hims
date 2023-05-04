@@ -127,3 +127,18 @@ class UnitSerializer(serializers.ModelSerializer):
                     'short_name',
 
         ] 
+# Vendor
+class VendorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Vendor
+
+        fields = [
+                    'id',
+                    'name',
+                    'address',
+                    'contact_no',
+                    'gst_no',
+                    'description',
+                    'remarks'
+
+        ]  

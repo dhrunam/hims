@@ -27,7 +27,10 @@ class PropertyWiseItemSummary(generics.RetrieveAPIView):
             , coalesce(tra.opening_balance,0) as tra_opening_balance, coalesce(tra.quantity_transferred,0) as quantity_transferred
             from 
             (
-                select dates.date_range, i.id, i.name, coalesce(ih.opening_balance+ih.received - ih.damaged - ih.returned - ih.transferred,0) as current_balance  from  public.configuration_item as i
+                select dates.date_range, i.id, i.name, 
+                coalesce(ih.opening_balance+ih.received - ih.damaged - ih.returned - ih.transferred,0) as current_balance  
+                , ih.hotel_id
+                from  public.configuration_item as i
                 left join  public.operation_iteminhotel as ih on i.id=ih.item_id
                 
                 cross join (SELECT generate_series(%s::date, %s::date, '1 day'::interval) AS date_range) as dates
