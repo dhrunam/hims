@@ -4,7 +4,7 @@ from rest_framework import generics, pagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db import transaction, connection
-
+from hims.operation.utility import ValueManager
 
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
@@ -23,9 +23,10 @@ class TransferredItemList(generics.ListCreateAPIView):
         data = request.data['data']
         result = Response()
         if(data):
+            batch_no = ValueManager.generate_batch_no(self, data)
             for element in data:
 
-
+                request.data['batch_no'] = batch_no
                 request.data['from_hotel'] = element['from_hotel']
                 request.data['to_hotel'] = element['to_hotel']
                 request.data['from_department'] = element['from_department']

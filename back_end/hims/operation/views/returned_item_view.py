@@ -7,6 +7,7 @@ from django.db import transaction, connection
 
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
+from hims.operation.utility.custom_value_generator import ValueManager
 
 class ReturnedItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -22,6 +23,7 @@ class ReturnedItemList(generics.ListCreateAPIView):
         data = request.data['data']
         result=Response()
         if(data):
+            batch_no = ValueManager.generate_batch_no(self,data)
             for element in data:
 
                 print(element)
@@ -29,6 +31,7 @@ class ReturnedItemList(generics.ListCreateAPIView):
                 
                 request.data['hotel'] = element['hotel']
                 request.data['item'] = element['item']
+                request.data['batch_no'] = batch_no
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_returned'] = element['quantity_returned']
                 request.data['returned_on'] = element['returned_on']

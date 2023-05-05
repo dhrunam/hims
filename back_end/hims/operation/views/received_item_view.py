@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.db import transaction, connection
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
+from hims.operation.utility.custom_value_generator import ValueManager
 
 class ReceivedItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -32,24 +33,26 @@ class ReceivedItemList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         #request.data._mutable = True
         data = request.data['data']
+
         # result = self.create(request, *args, **kwargs)
         if(data):
+            batch_no = ValueManager.generate_batch_no(self,data)
+            # print('batch_no', batch_no)
             for element in data:
                 
                 # request.data['id'] = element['id']
                 request.data['hotel'] = element['hotel']
                 request.data['item'] = element['item']
-                request.data['batch_no'] = element['batch_no']
+                request.data['vendor'] = element['vendor']
+                
+                request.data['batch_no'] = batch_no
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_received'] = element['quantity_received']
                 request.data['unit_price'] = element['unit_price']
                 request.data['expiry_date'] = element['expiry_date']
                 request.data['received_on'] = element['received_on']
-                #request.data['brand'] = element['brand']
-                #request.data['warranty_period'] = element['warranty_period']
                 request.data['remarks'] = element['remarks']
                 request.data['created_by'] = request.user.id
-                #if(request.data['id'] is None or request.data['id'] <= 0):
                 result = self.create(request, *args, **kwargs)
 
                 item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
@@ -61,8 +64,10 @@ class ReceivedItemList(generics.ListCreateAPIView):
                     item_in_hotel=op_model.ItemInHotel.objects.create(
                         hotel=conf_model.Hotel.objects.get(id=element['hotel']),
                         item=conf_model.Item.objects.get(id=element['item']),
-                        opening_balance=element['quantity_received'],
-                        received=element['quantity_received']
+                        opening_balance=element['opening_balance'],
+                        received=element['quantity_received'],
+                        min_level = element['min_level'],
+                        max_level = element['max_level']
                     )
                 
 

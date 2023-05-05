@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.db import transaction, connection
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
+from hims.operation.utility.custom_value_generator import ValueManager
 
 class DamagedItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -21,6 +22,7 @@ class DamagedItemList(generics.ListCreateAPIView):
         data = request.data['data']
         result = Response()
         if(data):
+            batch_no = ValueManager.generate_batch_no(self, data)
             for element in data:
 
                 print(element)
@@ -28,6 +30,8 @@ class DamagedItemList(generics.ListCreateAPIView):
                 # request.data['id'] = element['id']
                 request.data['hotel'] = element['hotel']
                 request.data['item'] = element['item']
+                request.data['batch_no'] = batch_no
+
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_damaged'] = element['quantity_damaged']
                 request.data['remarks'] = element['remarks']

@@ -160,6 +160,7 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'hotel',
             'item',
             'opening_balance',
@@ -252,6 +253,7 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'hotel',
             'item',
             'opening_balance',
@@ -346,6 +348,7 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'from_hotel',
             'to_hotel',
             'from_department',
@@ -456,6 +459,43 @@ class ItemInHotelSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'hotel',
+            'item',
+            'opening_balance',
+            'received',
+            'damaged',
+            'returned',
+            'transferred',
+            'min_level',
+            'max_level',
+            'related_hotel',
+            'related_item',
+
+        ]
+
+class CustomItemInHotelSerializer(serializers.ModelSerializer):
+    # purchase_amount = serializers.FloatField(read_only=True)
+    # balance_amount = serializers.FloatField(read_only=True)
+        
+    related_hotel = HotelSerializer(source='hotel', read_only=True)
+
+    related_item= ItemSerializer(source='item', read_only=True)
+
+    class Meta:
+        model = op_models.ItemInHotel
+
+    # hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
+    # item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    # opening_balance=models.IntegerField(default=0)
+    # received=models.IntegerField(default=0)
+    # damaged=models.IntegerField(default=0)
+    # returned=models.IntegerField(default=0)
+    # transferred=models.IntegerField(default=0)
+    # min_level=models.IntegerField(default=0)
+    # max_level=models.IntegerField(default=0)
+
+        fields = [
+
             'hotel',
             'item',
             'opening_balance',
