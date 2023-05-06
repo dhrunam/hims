@@ -24,8 +24,8 @@ class HotelList(generics.ListCreateAPIView):
             for element in data:
                 
                 result = models.HotelDepartment.objects.create(
-                    hotel = result.data['id'],
-                    department = element['department']
+                    hotel =models.Hotel.objects.get(pk=result.data['id']),
+                    department = models.DepartmentMaster.objects.get(pk= element['department'])
                 )
 
         #request.data._mutable = False
