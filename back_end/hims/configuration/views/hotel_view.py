@@ -1,3 +1,4 @@
+import json
 from hims.configuration import models
 from rest_framework import generics, pagination, status
 from rest_framework.permissions import IsAuthenticated
@@ -15,7 +16,7 @@ class HotelList(generics.ListCreateAPIView):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         #request.data._mutable = True
-        data = request.data['data']
+        data = json.loads(request.data['data'])
 
         result = self.create(request, *args, **kwargs)
         if(data):
@@ -23,9 +24,9 @@ class HotelList(generics.ListCreateAPIView):
             # print('batch_no', batch_no)
             for element in data:
                 
-                result = models.HotelDepartment.objects.create(
+                models.HotelDepartment.objects.create(
                     hotel = result.data['id'],
-                    department = element['department']
+                    department = element['id']
                 )
 
         #request.data._mutable = False
