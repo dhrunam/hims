@@ -20,14 +20,19 @@ class ReceivedItemList(generics.ListCreateAPIView):
         This view should return a list of all the purchases item  received
         for the specified order .
         """
-
+        queryset = op_model.ItemReceived.objects.all()
         # order_number = self.request.data['order_no']
-        search_text = self.request.query_params.get('batch_no')
+        batch_no = self.request.query_params.get('batch_no')
+        from_date = self.request.query_params.get('from_date')
+        to_date = self.request.query_params.get('to_date')
 
-        if(search_text):
-            return op_model.ItemReceived.objects.filter(batch_no=search_text)
-
-        return op_model.ItemReceived.objects.all()
+        if(batch_no):
+            queryset = queryset.filter(batch_no=batch_no)
+        
+        if(from_date and to_date):
+            queryset = queryset.filter(received_on__gte=from_date, received_on__lte=to_date)
+        
+        return queryset
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
