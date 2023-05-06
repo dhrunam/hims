@@ -23,6 +23,7 @@ class HotelItemList(generics.ListCreateAPIView):
         queryset = op_model.ItemInHotel.objects.all()
         item_id = self.request.query_params.get('item_id')
         hotel_id= self.request.query_params.get('hotel_id')
+        
 
         if(item_id):
             queryset = queryset.filter(item=item_id)
