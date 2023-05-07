@@ -16,11 +16,16 @@ class PropertyWiseItemSummary(generics.ListAPIView):
         
         hotel_id = self.request.query_params.get('hotel')
         item_id = self.request.query_params.get('item')
+        department_id = self.request.query_params.get('department')
         start_date = self.request.query_params.get('start_date')
         end_date = self.request.query_params.get('end_date')
         queryset = op_model.ItemInHotel.objects.raw(
             '''
-                select  dr.date_range, dr.id,dr.name, dr.hotel_id
+                select  dr.date_range
+                , dr.id
+                ,dr.name
+                , dr.department_id
+                , dr.hotel_id
                 --,coalesce(ir.opening_balance,0) as opening_balance
                 ,coalesce(ir.quantity_received,0) as quantity_received
                 --,coalesce(dm.opening_balance,0) as opening_balance
@@ -39,7 +44,7 @@ class PropertyWiseItemSummary(generics.ListAPIView):
                 end as sod_opening_balance
                 from
                 (
-                    select dr.date_range, im.id, im.name, hi.hotel_id
+                    select dr.date_range, im.id, im.name,im.department_id, hi.hotel_id
 
                     from
 
@@ -67,12 +72,15 @@ class PropertyWiseItemSummary(generics.ListAPIView):
                     select ci.id, tr.transferred_on::date, tr.opening_balance, tr.quantity_transferred, tr.from_hotel_id as hotel_id from public.configuration_item as ci
                     join public.operation_itemtransferred as tr on ci.id=tr.item_id
                 ) as tr on tr.transferred_on = dr.date_range  and tr.id=dr.id and tr.hotel_id=dr.hotel_id
+
                 where dr.hotel_id=coalesce( %s,dr.hotel_id)
                 and dr.id=coalesce( %s,dr.id)
+                and dr.department_id = coalesce( %s,dr.department_id)
+                order by dr.date_range asc, dr.id asc
 
 
             ''',
-            [start_date, end_date,hotel_id, item_id]
+            [start_date, end_date,hotel_id, item_id, department_id]
         )
 
 
