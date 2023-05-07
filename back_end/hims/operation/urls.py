@@ -34,6 +34,8 @@ urlpatterns = [
 
     path('api/op/item/transferred', views.TransferredItemList.as_view()),
     path('api/op/item/transferred/<int:pk>', views.TransferredItemDetails.as_view()),
+    path('api/op/item/transferred/ack/pending', views.TransferredItemAcknowledgePending.as_view()),
+    
 
     path('api/op/item/transferred/batch', views.TransferredItemBatches.as_view()),
     path('api/op/item/transferred/batch/items', views.TransferredItemPerBatch.as_view()),
