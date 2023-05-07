@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.db import transaction, connection
 from hims.operation import models as op_models
 from hims.configuration import models as config_models
+from hims.configuration import serializers as config_serializers
 from hims.account import models as acc_models
 from hims.configuration.serializers import(
     
@@ -29,6 +30,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
     related_hotel = HotelSerializer(source='hotel', read_only=True)
 
     related_item= ItemSerializer(source='item', read_only=True)
+    related_vendor = config_serializers.VendorSerializer(source='vendor', read_only=True)
     class Meta:
         model = op_models.ItemReceived
 
@@ -43,6 +45,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
             'id',
             'hotel',
             'item',
+            'vendor',
             'batch_no',
             'opening_balance',
             'quantity_received',
@@ -55,6 +58,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
             'related_hotel',
             'related_item',
             'related_create_user',
+            'related_vendor',
 
 
         ]

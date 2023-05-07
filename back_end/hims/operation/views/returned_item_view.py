@@ -79,3 +79,49 @@ class ReturnedItemDetails(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes = (IsAuthenticated,)
     queryset = op_model.ItemReturned
     serializer_class = serializers.ItemReturnedSerializer
+
+
+class ReturnedItemBatches(generics.ListAPIView):
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
+    queryset = op_model.ItemReturned.objects.all()
+    serializer_class = serializers.ItemReturnedSerializer
+    # pagination.PageNumberPagination.page_size = 2
+
+    def get_queryset(self):
+        print('What is this?')
+        """
+        This view should return a list of all the purchases item  received
+        for the specified order .
+        """
+        hotel = self.request.query_params.get('hotel_id')
+
+        queryset = op_model.ItemReturned.objects.raw('''
+            SELECT ROW_Number() over( order by batch_no) as id, count(*) as number_of_item, 
+                batch_no
+	        FROM public.operation_itemreturned where hotel_id=%s group by batch_no;
+                ''', [hotel])
+        return queryset
+
+    # def list(self, request, *arg, **kwargs):
+
+    #     return super().list(self, request, *arg, **kwargs)
+
+class ReturnedItemPerBatch(generics.ListAPIView):
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
+    queryset = op_model.ItemReturned.objects.all()
+    serializer_class = serializers.ItemReturnedSerializer
+    # pagination.PageNumberPagination.page_size = 2
+
+    def get_queryset(self):
+        print('What is this?')
+        """
+        This view should return a list of all the purchases item  received
+        for the specified order .
+        """
+        queryset = op_model.ItemReturned.objects.all()
+        batch_no = self.request.query_params.get('batch_no')
+        if batch_no:
+            queryset = op_model.ItemReturned.objects.filter(batch_no=batch_no)
+        return queryset
