@@ -169,6 +169,8 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
             'item',
             'opening_balance',
             'quantity_returned',
+            'unit_price',
+            'expiry_date',
             'returned_on',
             'remarks',
             'created_by',
