@@ -31,10 +31,11 @@ class TransferredItemList(generics.ListCreateAPIView):
                 request.data['to_hotel'] = element['to_hotel']
                 request.data['from_department'] = element['from_department']
                 request.data['to_department'] = element['to_department']
-
                 request.data['item'] = element['item']
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_transferred'] = element['quantity_transferred']
+                request.data['unit_price'] = element['unit_price']
+                request.data['expiry_date'] = element['expiry_date']
                 request.data['remarks'] = element['remarks']
                 request.data['transferred_on'] = element['transferred_on']
                 
