@@ -364,6 +364,8 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
             'item',
             'opening_balance',
             'quantity_transferred',
+            'unit_price',
+            'expiry_date',
             'remarks',
             'transferred_on',
             'created_by',
