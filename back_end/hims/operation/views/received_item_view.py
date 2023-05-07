@@ -7,6 +7,7 @@ from django.db import transaction, connection
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
 from hims.operation.utility.custom_value_generator import ValueManager
+from urllib.parse import unquote
 
 class ReceivedItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -122,7 +123,7 @@ class ReceivedItemPerBatch(generics.ListAPIView):
         This view should return a list of all the purchases item  received
         for the specified order .
         """
-        batch_no = self.request.query_params.get('batch_no')
+        batch_no =unquote(self.request.query_params.get('batch_no'))
         if batch_no:
             queryset = op_model.ItemReceived.objects.filter(batch_no=batch_no)
         return queryset
