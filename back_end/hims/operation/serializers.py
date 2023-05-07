@@ -30,7 +30,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
     related_hotel = HotelSerializer(source='hotel', read_only=True)
 
     related_item= ItemSerializer(source='item', read_only=True)
-    related_vendor = config_serializers.VendorSerializer(source='vendor')
+    related_vendor = config_serializers.VendorSerializer(source='vendor', read_only=True)
     class Meta:
         model = op_models.ItemReceived
 
