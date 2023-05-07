@@ -24,16 +24,14 @@ class DamagedItemList(generics.ListCreateAPIView):
         if(data):
             batch_no = ValueManager.generate_batch_no(self, data)
             for element in data:
-
-                print(element)
-
                 # request.data['id'] = element['id']
                 request.data['hotel'] = element['hotel']
                 request.data['item'] = element['item']
                 request.data['batch_no'] = batch_no
-
                 request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_damaged'] = element['quantity_damaged']
+                request.data['unit_price'] = element['unit_price']
+                request.data['expiry_date'] = element['expiry_date']
                 request.data['remarks'] = element['remarks']
                 request.data['damaged_on'] = element['damaged_on']
                 request.data['created_by'] = request.user.id

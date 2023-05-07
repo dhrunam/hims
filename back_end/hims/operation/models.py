@@ -43,6 +43,8 @@ class ItemDamaged(models.Model):
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
     opening_balance=models.IntegerField(default=0)
     quantity_damaged=models.IntegerField(default=0)
+    unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    expiry_date=models.DateField(auto_now=False, auto_now_add=False,blank=True, null=True)
     remarks=models.CharField(max_length=1024, default='', null=True)
     damaged_on = models.DateTimeField(blank=False)
     created_by = models.ForeignKey(

@@ -264,6 +264,8 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
             'item',
             'opening_balance',
             'quantity_damaged',
+            'unit_price',
+            'expiry_date',
             'remarks',
             'damaged_on',
             'created_by',
