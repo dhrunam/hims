@@ -61,7 +61,7 @@ class DepartmentMaster(models.Model):
         return super().__str__()
 
 class HotelDepartment(models.Model):
-    hotel=models.ForeignKey(Hotel,on_delete=models.SET_NULL, null=True)
+    hotel=models.ForeignKey(Hotel,on_delete=models.CASCADE, null=True)
     department=models.ForeignKey(DepartmentMaster, on_delete=models.SET_NULL, null=True)
     
     def __str__(self) -> str:

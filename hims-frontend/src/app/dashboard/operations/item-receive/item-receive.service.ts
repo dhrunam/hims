@@ -24,6 +24,7 @@ export class ItemReceiveService{
                     item: data.related_item.id,
                     item_name: data.related_item.name,
                     batch_no: data.batch_no,
+                    vendor: data.vendor,
                     opening_balance: data.opening_balance,
                     quantity_received: data.quantity_received,
                     unit_price: data.unit_price,

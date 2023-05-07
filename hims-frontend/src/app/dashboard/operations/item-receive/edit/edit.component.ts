@@ -1,26 +1,26 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
 import { ItemService } from 'src/app/dashboard/masters/item/item.service';
 import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
 import { ItemReceiveService } from '../item-receive.service';
 import { ItemReceive } from 'src/app/shared/interfaces/item-receive.interface';
+import { VendorService } from 'src/app/dashboard/masters/vendor/vendor.service';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent {
-  @ViewChild('batch', { static: false } ) batch: ElementRef;
-  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReceiveService: ItemReceiveService, private renderer: Renderer2){}
+  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReceiveService: ItemReceiveService, private vendorService: VendorService){}
   items: Array<ItemReceive> = [];
   item_master: Array<any> = [];
+  vendors: Array<any> = [];
   item_name: string = '';
   item_id: string = '';
+  vendor_name: string = '';
+  vendor_id: string = '';
   editMode: boolean = false;
-  batch_no: string = '';
-  batchErr: boolean = false;
   showSuccess: string = '';
   ngOnInit(): void{
     this.route.queryParams.subscribe({
@@ -38,40 +38,17 @@ export class EditComponent {
     this.itemService.get_items().subscribe({
       next: data => this.item_master = data,
     })
-  }
-  onEnter(){
-    if(this.batch_no === ''){
-      this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
-    }
-    else{
-      this.renderer.removeStyle(this.batch.nativeElement, 'border');
-    }
+    this.vendorService.get_vendors().subscribe({
+      next: data => this.vendors = data,
+    })
   }
   onSubmit(){
     this.showSuccess = '';
-    if(this.batch_no === ''){
-      this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
-      this.batchErr = true;
-    }
-    else{
-      this.items.forEach((d:any) => {
-        d.batch_no = this.batch_no;
-      })
-      let observable: Observable<any>
-      if(this.editMode){
-
+    this.itemReceiveService.receive_item(this.items).subscribe({
+      next: data => {
+        this.showSuccess = 'true';
       }
-      else{
-        observable = this.itemReceiveService.receive_item(this.items)
-      }
-      observable.subscribe({
-        next: data => {
-          this.renderer.removeStyle(this.batch.nativeElement, 'border');
-          this.batchErr = false;
-          this.showSuccess = 'true';
-        }
-      }) 
-    }  
+    })  
   }
   onAddItems(data: NgForm){
     if(!data.valid){
@@ -85,6 +62,8 @@ export class EditComponent {
         hotel: hotel.id,
         item: data.value.item_id,
         item_name: this.item_name,
+        vendor: this.vendor_id,
+        vendor_name: this.vendor_name,
         opening_balance: data.value.opening_balance,
         quantity_received: data.value.quantity_received,
         unit_price: data.value.price_per_unit,
@@ -101,5 +80,9 @@ export class EditComponent {
   onGetNamesValue(event: any){
     this.item_name = event.target.options[event.target.options.selectedIndex].text;
     this.item_id = event.target.value;
+  }
+  onGetVendorNamesValue(event: any){
+    this.vendor_name = event.target.options[event.target.options.selectedIndex].text;
+    this.vendor_id = event.target.value;
   }
 }

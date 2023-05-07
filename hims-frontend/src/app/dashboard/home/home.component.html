@@ -15,14 +15,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
-        <div class="card" [routerLink]="['/dashboard/configurations/mapping']">
-            <div class="card-body">
-                <h1 class="card-title text-center"><i class="bi bi-diagram-3"></i></h1>
-                <h6 class="card-subtitle mb-2 mt-3 text-center">Map Department</h6>
-            </div>
-        </div>
-    </div>
+    
     <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
         <div class="card" [routerLink]="['/dashboard/masters/user']">
             <div class="card-body">
@@ -36,6 +29,14 @@
             <div class="card-body">
                 <h1 class="card-title text-center"><i class="bi bi-bag-plus"></i></h1>
                 <h6 class="card-subtitle mb-2 mt-3 text-center">Item</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
+        <div class="card" [routerLink]="['/dashboard/masters/vendor']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-shop-window"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Vendor</h6>
             </div>
         </div>
     </div>
