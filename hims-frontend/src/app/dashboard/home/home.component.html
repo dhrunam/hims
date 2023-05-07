@@ -1,17 +1,17 @@
 <div class="row d-flex justify-content-center align-items-center px-5">
     <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
-        <div class="card" [routerLink]="['/dashboard/masters/hotel']">
-            <div class="card-body">
-                <h1 class="card-title text-center"><i class="bi bi-building-add"></i></h1>
-                <h6 class="card-subtitle mb-2 mt-3 text-center">Hotel</h6>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
         <div class="card" [routerLink]="['/dashboard/masters/department']">
             <div class="card-body">
                 <h1 class="card-title text-center"><i class="bi bi-clipboard-plus"></i></h1>
                 <h6 class="card-subtitle mb-2 mt-3 text-center">Department</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6 mt-4" *ngIf="role === 1">
+        <div class="card" [routerLink]="['/dashboard/masters/hotel']">
+            <div class="card-body">
+                <h1 class="card-title text-center"><i class="bi bi-building-add"></i></h1>
+                <h6 class="card-subtitle mb-2 mt-3 text-center">Hotel</h6>
             </div>
         </div>
     </div>
