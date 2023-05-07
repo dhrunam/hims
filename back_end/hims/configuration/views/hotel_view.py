@@ -24,7 +24,7 @@ class HotelList(generics.ListCreateAPIView):
             # print('batch_no', batch_no)
             for element in data:
                 
-                result = models.HotelDepartment.objects.create(
+                models.HotelDepartment.objects.create(
                     hotel =models.Hotel.objects.get(pk=result.data['id']),
                     department = models.DepartmentMaster.objects.get(pk= element['department'])
                 )
