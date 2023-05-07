@@ -518,7 +518,7 @@ class SummaryReportSerializers(serializers.ModelSerializer):
     quantity_damaged= serializers.IntegerField(read_only=True)
     quantity_returned= serializers.IntegerField(read_only=True)
     quantity_transferred= serializers.IntegerField(read_only=True)
-
+    sod_opening_balance= serializers.IntegerField(read_only=True)
     class Meta:
         model =  op_models.ItemInHotel
         fields =[
@@ -529,7 +529,8 @@ class SummaryReportSerializers(serializers.ModelSerializer):
                     'quantity_received',
                     'quantity_damaged',
                     'quantity_returned',
-                    'quantity_transferred'
+                    'quantity_transferred',
+                    'sod_opening_balance'
 
         ]
 
