@@ -3,12 +3,59 @@
         <h5>Transfer Item</h5>
     </div>
     <hr>
+    <div>
+        <form #returned="ngForm" (ngSubmit)="onAddItems(returned)">
+            <div class="row">
+                <div class="col-md-2 mt-2">
+                    <label class="form-label">Item</label>
+                    <select class="form-select" ngModel name="item_id" #item_id="ngModel" required (change)="onGetNamesValue($event, 'item')">
+                        <option value="">---Select Options---</option>
+                        <option *ngFor="let i of item_master" [value]="i.id">{{i.name}}</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mt-2">
+                    <label class="form-label">To Hotel</label>
+                    <select class="form-select" ngModel name="to_hotel" #to_hotel="ngModel" required (change)="onGetNamesValue($event, 'hotel')">
+                        <option value="">---Select Hotel---</option>
+                        <option *ngFor="let h of hotels" [value]="h.id">{{h.name}}</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mt-2">
+                    <label class="form-label">To Department</label>
+                    <select class="form-select" ngModel name="to_department" #to_department="ngModel" required (change)="onGetNamesValue($event, 'department')">
+                        <option value="">---Select Department---</option>
+                        <option *ngFor="let d of departments" [value]="d.id">{{d.name}}</option>
+                    </select>
+                </div>
+                <div class="col-md-2 mt-2">
+                    <label class="form-label">Opening Balance</label>
+                    <input type="text" disabled class="form-control" [(ngModel)]="ob" name="opening_balance" required>
+                </div>
+                <div class="col-md-1 mt-2">
+                    <label class="form-label">Quantity</label>
+                    <input type="text" class="form-control" ngModel name="quantity_transferred" #quantity_transferred="ngModel" required>
+                </div>
+                <div class="col-md-2 mt-2">
+                    <label class="form-label">Price Per Unit</label>
+                    <input type="text" class="form-control" ngModel name="price_per_unit" #price_per_unit="ngModel" required>
+                </div>
+                <div class="col-md-2 mt-2">
+                    <label class="form-label">Expiry Date</label>
+                    <input type="date" class="form-control" ngModel name="expiry" #expiry="ngModel" required>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <label class="form-label">Remarks</label>
+                    <input type="text" class="form-control" ngModel name="remarks" #remarks="ngModel">
+                </div>
+            </div>
+            <div class="text-end mt-3 mb-3">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </div>
+        </form>
+    </div>
     <div class="table-responsive">
         <div class="text-end" *ngIf="items[0]">
             <button class="btn btn-primary mb-2" (click)="onSubmit();">Save</button>
-        </div>
-        <div class="text-center" *ngIf="!items[0]" style="margin-bottom: 30px;">
-            <h4>No Items</h4>
         </div>
         <table class="table table-bordered" *ngIf="items[0]" style="margin-bottom: 30px;">
             <thead>
@@ -38,49 +85,6 @@
         </table>
         <div class="alert alert-success mt-3" *ngIf="showSuccess === 'true'">
             Items Transferred Successfully
-        </div>
-        <hr>
-        <div style="margin-top: 30px;">
-            <form #returned="ngForm" (ngSubmit)="onAddItems(returned)">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label class="form-label">Item</label>
-                        <select class="form-select" ngModel name="item_id" #item_id="ngModel" required (change)="onGetNamesValue($event, 'item')">
-                            <option value="">---Select Options---</option>
-                            <option *ngFor="let i of item_master" [value]="i.id">{{i.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">To Hotel</label>
-                        <select class="form-select" ngModel name="to_hotel" #to_hotel="ngModel" required (change)="onGetNamesValue($event, 'hotel')">
-                            <option value="">---Select Hotel---</option>
-                            <option *ngFor="let h of hotels" [value]="h.id">{{h.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">To Department</label>
-                        <select class="form-select" ngModel name="to_department" #to_department="ngModel" required (change)="onGetNamesValue($event, 'department')">
-                            <option value="">---Select Department---</option>
-                            <option *ngFor="let d of departments" [value]="d.id">{{d.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Opening Balance</label>
-                        <input type="text" class="form-control" ngModel name="opening_balance" #opening_balance="ngModel" required>
-                    </div>
-                    <div class="col-md-1">
-                        <label class="form-label">Quantity</label>
-                        <input type="text" class="form-control" ngModel name="quantity_transferred" #quantity_transferred="ngModel" required>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Remarks</label>
-                        <input type="text" class="form-control" ngModel name="remarks" #remarks="ngModel">
-                    </div>
-                    <div class="col-md-1" style="margin-top: 31px">
-                        <button class="btn btn-primary" style="width: 100%" type="submit">Add</button>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </section>

@@ -71,7 +71,7 @@ class ItemDetails(generics.RetrieveUpdateDestroyAPIView):
 
             for element in item_in_hotel:
 
-                models.Hotel.objects.filter(hotel=element['hotel_id'],item=instance.id).delete()
+                op_models.ItemInHotel.objects.filter(hotel=element['hotel_id'],item=instance.id).delete()
 
                 op_models.ItemInHotel.objects.create(
                     hotel=models.Hotel.objects.get(id=element['hotel_id']),

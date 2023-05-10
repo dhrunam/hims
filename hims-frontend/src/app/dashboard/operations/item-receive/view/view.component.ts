@@ -28,9 +28,6 @@ export class ViewComponent {
   onRouteReceiveItem(){
     this.router.navigate(['../add'], { relativeTo: this.route})
   }
-  onRouteUpdateReceiveItem(batch_no:string){
-    this.router.navigate(['../add'], { relativeTo: this.route, queryParams: { batch_no: batch_no } } );
-  }
   onGetReceivedItems(batch_no: string){
     this.itemReceiveService.get_item_received(batch_no).subscribe({
       next: data => {
@@ -40,6 +37,6 @@ export class ViewComponent {
     })
   }
   onPrint(){
-    this.print.printBill(this.batch_items, this.batch_no, this.hotel.name, this.department.name);
+    this.print.printBill('Receive',this.batch_items, this.batch_no, this.hotel.name, this.department.name);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -8,6 +8,7 @@ import { ItemService } from 'src/app/dashboard/masters/item/item.service';
 import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
 import { ItemTransfer } from 'src/app/shared/interfaces/item-transfer.interface';
 import { ItemTransferService } from '../item-transfer.service';
+import { ItemReceiveService } from '../../item-receive/item-receive.service';
 
 @Component({
   selector: 'app-edit',
@@ -15,8 +16,7 @@ import { ItemTransferService } from '../item-transfer.service';
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent {
-  @ViewChild('batch', { static: false } ) batch: ElementRef;
-  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemTransferService: ItemTransferService, private renderer: Renderer2, private hotelService: HotelService, private deparmentService: DepartmentService){}
+  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemTransferService: ItemTransferService, private hotelService: HotelService, private deparmentService: DepartmentService, private itemReceiveService: ItemReceiveService){}
   items: Array<ItemTransfer> = [];
   item_master: Array<any> = [];
   hotels: Array<any> = [];
@@ -29,6 +29,9 @@ export class EditComponent {
   batch_no: string = '';
   batchErr: boolean = false;
   showSuccess: string = '';
+  ob:number = 0;
+  dept_id: number = this.localStorageService.getDepartment().id;
+  hotel_id: number = this.localStorageService.getHotel().id;
   ngOnInit(): void{
     this.route.queryParams.subscribe({
       next: (param: Params) => {
@@ -42,7 +45,7 @@ export class EditComponent {
         }
       }
     })
-    this.itemService.get_items().subscribe({
+    this.itemService.get_items_by_department(this.dept_id).subscribe({
       next: data => this.item_master = data,
     });
     this.hotelService.get_hotels().subscribe({
@@ -52,14 +55,6 @@ export class EditComponent {
       next: data => this.departments = data,
     });
   }
-  // onEnter(){
-  //   if(this.batch_no === ''){
-  //     this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
-  //   }
-  //   else{
-  //     this.renderer.removeStyle(this.batch.nativeElement, 'border');
-  //   }
-  // }
   onSubmit(){
     this.items.forEach((d:any) => {
       d.batch_no = this.batch_no;
@@ -111,6 +106,7 @@ export class EditComponent {
       let date = new Date();
       let todayDate = `${date.getFullYear()}-${date.getMonth() < 10 ? '0':''}${date.getMonth()+1}-${date.getDate() < 10 ? '0':''}${date.getDate()}`
       this.items.push({
+        hotel: hotel.id,
         from_hotel: hotel.id,
         from_department: department.id,
         to_hotel: data.value.to_hotel,
@@ -119,10 +115,12 @@ export class EditComponent {
         to_department_name: this.department_name,
         item: data.value.item_id,
         item_name: this.item_name,
-        opening_balance: data.value.opening_balance,
+        opening_balance: this.ob.toString(),
         quantity_transferred: data.value.quantity_transferred,
         remarks: data.value.remarks || '',
         transferred_on: todayDate,
+        expiry_date: data.value.expiry,
+        unit_price: data.value.price_per_unit,
       })
       data.reset();
     }
@@ -134,6 +132,16 @@ export class EditComponent {
     if(key === 'item'){
       this.item_name = event.target.options[event.target.options.selectedIndex].text;
       this.item_id = event.target.value;
+      this.itemReceiveService.get_min_max(this.hotel_id,event.target.value).subscribe({
+        next: data => {
+          if(data[0]){
+            this.ob = data[0].opening_balance;
+          }
+          else{
+            this.ob = 0;
+          }
+        }
+      })
     }
     if(key === 'hotel'){
       this.hotel_name = event.target.options[event.target.options.selectedIndex].text;

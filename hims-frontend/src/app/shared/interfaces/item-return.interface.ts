@@ -6,4 +6,7 @@ export interface ItemReturn{
     quantity_returned: string;
     returned_on: string;
     remarks: string;
+    unit_price: string;
+    expiry_date: string;
+    batch_no?: string;
 }
