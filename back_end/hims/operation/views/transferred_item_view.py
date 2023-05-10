@@ -1,6 +1,6 @@
 from hims.configuration import models as conf_model
 from hims.operation import models as op_model
-from rest_framework import generics, pagination
+from rest_framework import generics, pagination, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db import transaction, connection
@@ -88,6 +88,22 @@ class TransferredItemDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = op_model.ItemTransferred
     serializer_class = serializers.ItemTransferredSerializer
 
+    def put(self, request, *args, **kwargs):
+        request.data['created_by'] = request.user.id
+        return super().put(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+
+        is_acknowledged =request.data['is_acknowledged']
+        if(is_acknowledged):
+            request.data['acknowledged_by'] = request.user.id
+        partial = kwargs.pop('partial', True)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class TransferredItemBatches(generics.ListAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -133,3 +149,25 @@ class TransferredItemPerBatch(generics.ListAPIView):
         if batch_no:
             queryset = op_model.ItemTransferred.objects.filter(batch_no=batch_no)
         return queryset
+
+
+class TransferredItemAcknowledgePending(generics.ListAPIView):
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
+    queryset = op_model.ItemTransferred.objects.all()
+    serializer_class = serializers.ItemTransferredSerializer
+    # pagination.PageNumberPagination.page_size = 2
+
+    def get_queryset(self):
+        print('What is this?')
+        """
+        This view should return a list of all the purchases item  received
+        for the specified order .
+        """
+        queryset = op_model.ItemTransferred.objects.all()
+        batch_no = self.request.query_params.get('batch_no')
+        if batch_no:
+            queryset = op_model.ItemTransferred.objects.filter(batch_no=batch_no, is_acknowledged=False)
+        return queryset
+
+
