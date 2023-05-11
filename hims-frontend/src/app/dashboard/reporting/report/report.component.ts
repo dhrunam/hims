@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { DepartmentService } from '../../masters/department/department.service';
 import { HotelService } from '../../masters/hotel/hotel.service';
 import { ItemService } from '../../masters/item/item.service';
+import { Observable, take } from 'rxjs';
 
 @Component({
   selector: 'app-report',
@@ -27,23 +28,35 @@ export class ReportComponent {
         this.departments = data;
       }
     })
-    this.itemService.get_items().subscribe({
-      next: data => {
-        this.items = data;
-      }
-    })
   }
   onGetReport(data: NgForm){
     if(!data.valid){
       data.control.markAllAsTouched();
     }
     else{
-      this.reportingService.get_report(data.value.start_date, data.value.end_date, data.value.hotel_id, data.value.department_id, data.value.item_id).subscribe({
+      this.reports = [];
+      let itemIndex = this.items.findIndex(i => i.name === data.value.item);
+      let itemId = itemIndex > -1 ? this.items[itemIndex].id : null;
+      let observable: Observable<any>;
+      if(itemId != null){
+        observable = this.reportingService.get_report(data.value.start_date, data.value.end_date, data.value.hotel_id, data.value.department_id, itemId);
+      }
+      else{
+        observable = this.reportingService.get_report(data.value.start_date, data.value.end_date, data.value.hotel_id, data.value.department_id);
+      }
+      observable.pipe(take(1)).subscribe({
         next: data => {
           this.reports = data;
-          console.log(data);
         }
       })
     }
+  }
+  getItems(dept_id: number){
+    this.items = [];
+    this.itemService.get_items_by_department(dept_id).subscribe({
+      next: data => {
+        this.items = data;
+      }
+    })
   }
 }
