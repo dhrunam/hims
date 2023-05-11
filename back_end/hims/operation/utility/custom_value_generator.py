@@ -1,5 +1,6 @@
 from hims.configuration import models as conf_models
 from hims.operation import models as op_models
+from django.conf import settings
 
 import datetime
 
@@ -13,8 +14,10 @@ class ValueManager():
 
 
     def generate_batch_no(self, data, op_type):
-        print(data)
+        operation_type = settings.OPERATION_TYPE
+
         latest_record=[]
+<<<<<<< HEAD
         if (op_type==self.operation_type['received']):
             latest_record = op_models.ItemReceived.objects.filter(hotel=data[0]['hotel']).last()
         if (op_type==self.operation_type['damaged']):
@@ -22,6 +25,15 @@ class ValueManager():
         if (op_type==self.operation_type['returned']):
             latest_record = op_models.ItemReturned.objects.filter(hotel=data[0]['hotel']).last()
         if (op_type==self.operation_type['transferred']):
+=======
+        if (op_type==operation_type['received']):
+            latest_record = op_models.ItemReceived.objects.filter(hotel=data[0]['hotel']).last()
+        if (op_type==operation_type['damaged']):
+            latest_record = op_models.ItemDamaged.objects.filter(hotel=data[0]['hotel']).last()
+        if (op_type==operation_type['returned']):
+            latest_record = op_models.ItemReturned.objects.filter(hotel=data[0]['hotel']).last()
+        if (op_type==operation_type['transferred']):
+>>>>>>> 90f31da04a2fc8d9a30d65600dacfeb5e2573935
             latest_record = op_models.ItemTransferred.objects.filter(from_hotel=data[0]['hotel']).last()
         hotel_shot_name = conf_models.Hotel.objects.get(pk=data[0]['hotel']).short_name.upper().strip()
         dept_short_name = conf_models.Item.objects.get(pk=data[0]['item']).department.short_name.upper().strip()

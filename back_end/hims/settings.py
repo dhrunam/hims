@@ -191,7 +191,7 @@ REST_DURIN = {
 }
 
 
-OPERATION_TYPE={
+OPERATION_TYPE = {
     "received": "rec",
     "damaged" : "dam",
     "returned": "ret",
