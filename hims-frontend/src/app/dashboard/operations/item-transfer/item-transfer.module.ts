@@ -6,10 +6,9 @@ import { ViewComponent } from './view/view.component';
 import { ItemTransferComponent } from './item-transfer.component';
 import { FormsModule } from '@angular/forms';
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard/operations/item-transfer/add', pathMatch: 'full'},
+  { path: '', redirectTo: '/dashboard/operations/item-transfer/view', pathMatch: 'full'},
   { path: '', component: ItemTransferComponent, children: [
       { path: 'add', component: EditComponent },
-      { path: 'edit', component: EditComponent },
       { path: 'view', component: ViewComponent },
     ]
   }

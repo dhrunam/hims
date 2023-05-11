@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Mode } from 'src/app/shared/interfaces/mode.interface';
 import { DepartmentService } from '../department/department.service';
 import { ItemService } from './item.service';
+import { HotelService } from '../hotel/hotel.service';
 
 @Component({
   selector: 'app-item',
@@ -18,29 +19,30 @@ export class ItemComponent {
   deleteMessage: boolean = false;
   editMode: boolean = false;
   id:number = 0;
+  hotels: Array<any> = [];
   items: Array<any> = [];
   departments: Array<any> = [];
-  item_name: string = '';
-  item_department: string = '';
-  constructor(private itemService: ItemService, private router: Router, private route: ActivatedRoute, private departmentService: DepartmentService){}
+  minOrderConfig: Array<any> = [];
+  update_items: { name: string, department: string, hotels?: Array<any> } = { name: '', department: '', hotels: []};
+  constructor(private itemService: ItemService, private router: Router, private route: ActivatedRoute, private departmentService: DepartmentService, private hotelService: HotelService){}
   ngOnInit(): void{
     this.getItems();
   }
   onGetOperation(values: Mode){
-    this.item_name = '';
-    this.item_department = '';
-    this.item_department = '';
+    this.update_items = { name: '', department: '', hotels: []};
     this.departmentService.get_departments().subscribe({
       next: data => this.departments = data,
     })
+    this.getHotels();
     this.deleteMessage = false;
     this.editMode = values.operation === 'add' ? false : true;
     this.id = values.id ? values.id : 0;
     if(this.editMode){
       this.itemService.get_item(this.id).subscribe({
         next: data => {
-          this.item_name = data.name;
-          this.item_department = data.department
+          this.update_items.name = data[0].related_item.name;
+          this.update_items.department = data[0].related_item.department;
+          this.update_items.hotels = data;
         }
       })
     }
@@ -57,41 +59,44 @@ export class ItemComponent {
       data.control.markAllAsTouched();
     }
     else{
-      if(!data.valid){
-        data.control.markAllAsTouched();
+      this.minOrderConfig = [];
+      this.showSuccess = '';
+      let observable: Observable<any>;
+      let fd = new FormData();
+      if(this.deleteMessage){
+        fd.append('id', this.id.toString());
+        observable = this.itemService.delete_item(fd);
       }
       else{
-        this.showSuccess = '';
-        let observable: Observable<any>;
-        let fd = new FormData();
-        if(this.deleteMessage){
+        this.hotels.forEach((d:any) => {
+          this.minOrderConfig.push({
+            hotel_id: d.id,
+            min_level: data.value[`${d.short_name}`],
+          })
+        })
+        fd.append('name', data.value.name);
+        fd.append('department', data.value.department);
+        fd.append('hotels', JSON.stringify(this.minOrderConfig));
+        if(this.editMode){
           fd.append('id', this.id.toString());
-          observable = this.itemService.delete_item(fd);
+          observable = this.itemService.update_item(fd);
         }
         else{
-          fd.append('name', data.value.name);
-          fd.append('department', data.value.department);
-          if(this.editMode){
-            fd.append('id', this.id.toString());
-            observable = this.itemService.update_item(fd);
-          }
-          else{
-            observable = this.itemService.add_item(fd);
-          }
+          observable = this.itemService.add_item(fd);
         }
-        this.subscription = observable.subscribe({
-          next: data => {
-            this.showSuccess = 'true';
-            this.modalBtn.nativeElement.click();
-          },
-          error: err => {
-            this.showSuccess = 'false';
-          },
-          complete: () => {
-            this.getItems();
-          }
-        })
       }
+      this.subscription = observable.subscribe({
+        next: data => {
+          this.showSuccess = 'true';
+          this.modalBtn.nativeElement.click();
+        },
+        error: err => {
+          this.showSuccess = 'false';
+        },
+        complete: () => {
+          this.getItems();
+        }
+      })
       data.reset();
     }
   }
@@ -100,9 +105,19 @@ export class ItemComponent {
       next: data => this.items = data,
     })
   }
+  getHotels(){
+    this.hotelService.get_hotels().subscribe({
+      next: data => {
+        this.hotels = data
+      },
+    })
+  }
   ngOnDestroy():void{
     if(this.subscription){
       this.subscription.unsubscribe();
     }
   }
+  // onGetInputValue(hotel_name: string, event:any){
+  //   console.log(hotel_name, event.target.value);
+  // }
 }

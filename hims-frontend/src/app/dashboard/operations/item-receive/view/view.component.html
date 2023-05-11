@@ -1,6 +1,6 @@
 <section class="mt-4 px-5">
     <div class="d-flex justify-content-between">
-        <h3>Item(s) Received</h3>
+        <h5>Item(s) Received</h5>
         <button class="btn btn-primary" (click)="onRouteReceiveItem()">+ Receive</button>
     </div>  
     <hr>
@@ -13,7 +13,6 @@
                 <div class="card-body">
                     <div class="text-end">
                         <i class="bi bi-eye" style="color: blue;font-size: 20px;" (click)="onGetReceivedItems(it.batch_no)" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
-                        <!-- <i class="bi bi-pencil-square ms-3" style="color: blue;font-size: 20px;" (click)="onRouteUpdateReceiveItem(it.batch_no)"></i> -->
                     </div>
                     <h5 class="card-title text-center mb-4" style="font-size: 50px;"><i class="bi bi-cart-check"></i></h5>
                     <h6 class="card-subtitle mb-4 text-center" style="font-size: 20px;">Batch No.<br>{{it.batch_no}}</h6>
@@ -35,6 +34,7 @@
                 <tr>
                     <th scope="col">S.No.</th>
                     <th scope="col">Item Name</th>
+                    <th scope="col">Vendor</th>
                     <th scope="col">Opening Balance</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Price Per Unit</th>
@@ -45,6 +45,7 @@
                 <tr *ngFor="let bi of batch_items; let i=index">
                     <td>{{ i+1 }}</td>
                     <td>{{ bi.item_name }}</td>
+                    <td>{{ bi.vendor_name }}</td>
                     <td>{{ bi.opening_balance }}</td>
                     <td>{{ bi.quantity_received }}</td>
                     <td>{{ bi.unit_price }}</td>

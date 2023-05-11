@@ -7,8 +7,11 @@ export class ItemService{
     get_items(){
         return this.http.get<any>(`${URL}/api/item`);
     }
+    get_items_by_department(dept_id: number){
+        return this.http.get<any>(`${URL}/api/item?dept_id=${dept_id}`);
+    }
     get_item(id:number){
-        return this.http.get<any>(`${URL}/api/item/${id}`);
+        return this.http.get<any>(`${URL}/api/op/item/hotel?item_id=${id}`);
     }
     add_item(fd: FormData){
         return this.http.post(`${URL}/api/item`,fd);

@@ -43,20 +43,34 @@
                     </div>
                     <ng-template #form>
                         <div class="row px-2 mb-2">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label class="form-label">Item Name</label>
-                                <input type="text" class="form-control" name="name" [ngModel]="item_name" #name="ngModel" required>
+                                <input type="text" class="form-control" name="name" [ngModel]="update_items.name" #name="ngModel" required>
                                 <small class="text-danger" *ngIf="name.touched && !name.valid">Please enter item name</small>
                             </div>
-                            <div class="col-md-12 mt-3">
+                            <div class="col-md-6">
                                 <label class="form-label">Department</label>
-                                <select class="form-select" [ngModel]="item_department" name="department" #department="ngModel" required>
+                                <select class="form-select" [ngModel]="update_items.department" name="department" #department="ngModel" required>
                                     <option value="">---Select Department---</option>
                                     <option *ngFor="let d of departments" [value]="d.id">{{d.name}}</option>
                                 </select>
                                 <div *ngIf="department.invalid && department.touched">
                                     <small class="text-danger" *ngIf="department.errors!['required']">Please select a department</small>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row px-2 mt-3">
+                            <div class="col-md-12">
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between" style="border-top: 0; border-left:0; border-right: 0;">
+                                        <span><b>Hotel Name</b></span>
+                                        <span><b>Min. Ord. Qty.</b></span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between" style="border-top: 0; border-left:0; border-right: 0;" *ngFor="let h of hotels; let i=index">
+                                        <span>{{h.name}}</span>
+                                        <input type="number" class="form-control" style="width: 20%;" [name]="h.short_name" [ngModel]="update_items.hotels[i] ? update_items.hotels[i].min_level : 0" required>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </ng-template>

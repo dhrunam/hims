@@ -1,0 +1,61 @@
+<section class="mt-4 px-5">
+    <div class="d-flex justify-content-between">
+        <h5>Item(s) Discard</h5>
+        <button class="btn btn-primary" (click)="onRouteDiscardItem()">+ Discard</button>
+    </div>  
+    <hr>
+    <div *ngIf="!items[0]">
+        <h5>No Item(s) Discarded</h5>
+    </div>
+    <div class="row">
+        <div class="col-xl-2 col-md-4 col-6 mt-3" *ngFor="let it of items">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-end">
+                        <i class="bi bi-eye" style="color: blue;font-size: 20px;" (click)="onGetDiscardedItems(it.batch_no)" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
+                    </div>
+                    <h5 class="card-title text-center mb-4" style="font-size: 50px;"><i class="bi bi-cart-check"></i></h5>
+                    <h6 class="card-subtitle mb-4 text-center" style="font-size: 20px;">Batch No.<br>{{it.batch_no}}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Batch No: {{ batch_no }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">S.No.</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Opening Balance</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price Per Unit</th>
+                    <th scope="col">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let bi of batch_items; let i=index">
+                    <td>{{ i+1 }}</td>
+                    <td>{{ bi.item_name }}</td>
+                    <td>{{ bi.opening_balance }}</td>
+                    <td>{{ bi.quantity_damaged }}</td>
+                    <td>{{ bi.unit_price }}</td>
+                    <td>{{ bi.remarks }}</td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="onPrint()">Print</button>
+        </div>
+      </div>
+    </div>
+</div>

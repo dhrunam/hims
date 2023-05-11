@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from "@angular/router";
                     <button class="btn btn-light" (click)="onGoBack()"><i class="bi bi-arrow-left-circle"></i>&nbsp;&nbsp;Go Back</button>
                 </div>
                 <div class="text-center">
-                  <h2>Item Damage</h2>  
+                  <h2>Item Discard</h2>  
                 </div>
                 <router-outlet></router-outlet>
     `
