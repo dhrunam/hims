@@ -72,6 +72,8 @@ class TransferredItemList(generics.ListCreateAPIView):
         batch_no = self.request.query_params.get('batch_no')
         from_date = self.request.query_params.get('from_date')
         to_date = self.request.query_params.get('to_date')
+        hotel_id = self.request.query_params.get('hotel')
+        department_id= self.request.query_params.get('department')
 
         if(batch_no):
             queryset = queryset.filter(batch_no=batch_no)
@@ -79,6 +81,13 @@ class TransferredItemList(generics.ListCreateAPIView):
         if(from_date and to_date):
             queryset = queryset.filter(transferred_on__gte=from_date, transferred_on__lte=to_date)
         
+        if(hotel_id):
+            queryset = queryset.filter(from_hotel=hotel_id)
+
+        if(department_id):
+            queryset = queryset.filter(item__department=department_id)
+        
+       
         return queryset
 
 
