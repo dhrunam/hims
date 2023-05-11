@@ -16,6 +16,7 @@ export class ReportComponent {
   departments: any;
   items: any;
   reports: Array<any> = [];
+  resetItemInput: string = '';
   constructor(private reportingService: ReportingService, private departmentService: DepartmentService, private hotelService: HotelService, private itemService: ItemService){}
   ngOnInit(): void{
     this.hotelService.get_hotels().subscribe({
@@ -52,6 +53,7 @@ export class ReportComponent {
     }
   }
   getItems(dept_id: number){
+    this.resetItemInput = '';
     this.items = [];
     this.itemService.get_items_by_department(dept_id).subscribe({
       next: data => {

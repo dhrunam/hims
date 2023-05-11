@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PrintModule } from 'src/app/shared/print-module/print-module';
 import { ItemReturn } from 'src/app/shared/interfaces/item-return.interface';
 import { ItemReturnService } from '../item-return.service';
+import { HotelService } from 'src/app/dashboard/masters/hotel/hotel.service';
+import { DepartmentService } from 'src/app/dashboard/masters/department/department.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-view',
@@ -11,21 +14,27 @@ import { ItemReturnService } from '../item-return.service';
   styleUrls: ['./view.component.css']
 })
 export class ViewComponent {
+  hotels: Array<any> = [];
+  departments: Array<any> = [];
+  isAdmin: boolean = true;
   hotel: any;
   department: any;
   items: Array<any> = [];
   batch_items: Array<ItemReturn> = [];
   batch_no:string = '';
-  constructor(private itemReturnService: ItemReturnService, private localStorageService: LocalStorageService, private router: Router, private route: ActivatedRoute, private print: PrintModule){
-    this.hotel = this.localStorageService.getHotel();
-    this.department = this.localStorageService.getDepartment();
-  }
+  hotel_name: string = '';
+  dept_name: string = '';
+  constructor(private itemReturnService: ItemReturnService, private localStorageService: LocalStorageService, private router: Router, private route: ActivatedRoute, private print: PrintModule, private hotelService: HotelService, private departmentService: DepartmentService){}
   ngOnInit():void{
-    this.itemReturnService.get_items_returned().subscribe({
-      next: data => {
-        this.items = data;
-      }
-    })
+    this.isAdmin = this.localStorageService.getRole() === 1 ? true : false;
+    if(this.isAdmin){
+      this.getHotels();
+      this.getDepartments();
+    }
+    if(!this.isAdmin){
+      this.hotel = this.localStorageService.getHotel();
+      this.department = this.localStorageService.getDepartment();
+    }
   }
   onRouteReturnItem(){
     this.router.navigate(['../add'], { relativeTo: this.route})
@@ -39,6 +48,38 @@ export class ViewComponent {
     })
   }
   onPrint(){
-    this.print.printBill('Return',this.batch_items, this.batch_no, this.hotel.name, this.department.name);
+    this.print.printBill('Return',this.batch_items, this.batch_no, this.isAdmin ? this.hotel_name : this.hotel.name, this.isAdmin ? this.dept_name : this.department.name);
+  }
+  getHotels(){
+    this.hotelService.get_hotels().subscribe({
+      next: data => this.hotels = data,
+    })
+  }
+  getDepartments(){
+    this.departmentService.get_departments().subscribe({
+      next: data => this.departments = data,
+    })
+  }
+  onSearchItemReturned(data: NgForm){
+    if(!data.valid){
+      data.control.markAllAsTouched();
+    }
+    else{
+      let hotel = this.isAdmin ? data.value.hotel : this.hotel.id;
+      let department = this.isAdmin ? data.value.dept : this.department.id;
+      this.itemReturnService.get_items_returned(data.value.start_date, data.value.end_date, hotel, department).subscribe({
+        next: data => {
+          this.items = data;
+        },
+      })
+    }
+  }
+  onGetNames(event: any, key: string){
+    if(key === 'd'){
+      this.dept_name = event.target.options[event.target.options.selectedIndex].text;
+    }
+    if(key === 'h'){
+      this.hotel_name = event.target.options[event.target.options.selectedIndex].text;
+    }
   }
 }

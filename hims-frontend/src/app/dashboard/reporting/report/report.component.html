@@ -28,7 +28,7 @@
             </div>
             <div class="col-md-2">
                 <label class="form-label">Select Item</label>
-                <input type="text" list="browsers" name="item" class="form-control" autocomplete="off" ngModel #item="ngModel">
+                <input type="text" list="browsers" name="item" class="form-control" autocomplete="off" [(ngModel)]="resetItemInput" #item="ngModel">
                 <datalist id="browsers">
                     <option *ngFor="let i of items" [value]="i.name">{{ i.name }}</option>
                 </datalist>

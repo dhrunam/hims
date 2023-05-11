@@ -22,15 +22,18 @@ export class ViewComponent {
   batch_items: Array<ItemReceive> = [];
   batch_no:string = '';
   isAdmin: boolean = true;
+  hotel_name: string = '';
+  dept_name: string = '';
   constructor(private itemReceiveService: ItemReceiveService, private localStorageService: LocalStorageService, private router: Router, private route: ActivatedRoute, private print: PrintModule, private hotelService: HotelService, private departmentService: DepartmentService){}
   ngOnInit(): void{
-    if(this.localStorageService.getRole() != 1){
+    this.isAdmin = this.localStorageService.getRole() === 1 ? true : false;
+    if(this.isAdmin){
+      this.getHotels();
+      this.getDepartments();
+    }
+    if(!this.isAdmin){
       this.hotel = this.localStorageService.getHotel();
       this.department = this.localStorageService.getDepartment();
-      this.isAdmin = false;
-    }
-    if(this.isAdmin){
-
     }
   }
   onRouteReceiveItem(){
@@ -45,15 +48,19 @@ export class ViewComponent {
     })
   }
   onPrint(){
-    this.print.printBill('Receive',this.batch_items, this.batch_no, this.hotel.name, this.department.name);
+    this.print.printBill('Receive',this.batch_items, this.batch_no, this.isAdmin ? this.hotel_name : this.hotel.name, this.isAdmin ? this.dept_name : this.department.name);
   }
   onSearchItemReceived(data: NgForm){
     if(!data.valid){
       data.control.markAllAsTouched();
     }
     else{
-      this.itemReceiveService.get_items_received(this.hotel).subscribe({
-        next: data => console.log(data),
+      let hotel = this.isAdmin ? data.value.hotel : this.hotel.id;
+      let department = this.isAdmin ? data.value.dept : this.department.id;
+      this.itemReceiveService.get_items_received(data.value.start_date, data.value.end_date, hotel, department).subscribe({
+        next: data => {
+          this.items = data;
+        },
       })
     }
   }
@@ -66,5 +73,13 @@ export class ViewComponent {
     this.departmentService.get_departments().subscribe({
       next: data => this.departments = data,
     })
+  }
+  onGetNames(event:any, key:string){
+    if(key === 'h'){
+      this.hotel_name = event.target.options[event.target.options.selectedIndex].text;
+    }
+    if(key === 'd'){
+      this.dept_name = event.target.options[event.target.options.selectedIndex].text;
+    }
   }
 }
