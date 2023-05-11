@@ -5,9 +5,17 @@ import datetime
 
 class ValueManager():
 
-    def generate_batch_no(self, data):
+    def generate_batch_no(self, data, op_type):
         print(data)
-        latest_record = op_models.ItemReceived.objects.filter(hotel=data[0]['hotel']).last()
+        latest_record=[]
+        if (op_type=='REC'):
+            latest_record = op_models.ItemReceived.objects.filter(hotel=data[0]['hotel']).last()
+        if (op_type=='DAM'):
+            latest_record = op_models.ItemDamaged.objects.filter(hotel=data[0]['hotel']).last()
+        if (op_type=='RET'):
+            latest_record = op_models.ItemReturned.objects.filter(hotel=data[0]['hotel']).last()
+        if (op_type=='TRA'):
+            latest_record = op_models.ItemTransferred.objects.filter(from_hotel=data[0]['hotel']).last()
         hotel_shot_name = conf_models.Hotel.objects.get(pk=data[0]['hotel']).short_name.upper().strip()
         dept_short_name = conf_models.Item.objects.get(pk=data[0]['item']).department.short_name.upper().strip()
         # date_object = datetime.datetime.strptime(data['checkin_date'], '%Y-%m-%d')

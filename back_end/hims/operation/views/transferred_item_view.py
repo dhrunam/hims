@@ -23,7 +23,7 @@ class TransferredItemList(generics.ListCreateAPIView):
         data = request.data['data']
         result = Response()
         if(data):
-            batch_no = ValueManager.generate_batch_no(self, data)
+            batch_no = ValueManager.generate_batch_no(self, data,'TRA')
             for element in data:
 
                 request.data['batch_no'] = batch_no
