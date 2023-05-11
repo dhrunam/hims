@@ -8,6 +8,8 @@ from django.db import transaction, connection
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
 from hims.operation.utility.custom_value_generator import ValueManager
+from django.conf import settings
+
 
 class ReturnedItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -18,12 +20,12 @@ class ReturnedItemList(generics.ListCreateAPIView):
     
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        print('hi')
+        operation_type = settings.OPERATION_TYPE['returned']
         #request.data._mutable = True
         data = request.data['data']
         result=Response()
         if(data):
-            batch_no = ValueManager.generate_batch_no(self,data)
+            batch_no = ValueManager.generate_batch_no(self,data, operation_type)
             for element in data:
 
                 print(element)
@@ -79,7 +81,7 @@ class ReturnedItemList(generics.ListCreateAPIView):
 
         if(department_id):
             queryset = queryset.filter(item__department=department_id)
-            
+
         return queryset
 
 

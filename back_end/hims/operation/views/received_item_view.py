@@ -8,9 +8,8 @@ from hims.operation import serializers
 from durin.auth import TokenAuthentication
 from hims.operation.utility.custom_value_generator import ValueManager
 from urllib.parse import unquote
-from rest_framework.settings import api_settings
+from django.conf import settings
 
-operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
 
 
 class ReceivedItemList(generics.ListCreateAPIView):
@@ -49,12 +48,14 @@ class ReceivedItemList(generics.ListCreateAPIView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
+        operation_type = settings.OPERATION_TYPE['received']
+        print('Operation_Type:',operation_type)
         #request.data._mutable = True
         data = request.data['data']
 
         # result = self.create(request, *args, **kwargs)
         if(data):
-            batch_no = ValueManager.generate_batch_no(self,data, operation_type.received)
+            batch_no = ValueManager.generate_batch_no(self,data, operation_type)
             # print('batch_no', batch_no)
             for element in data:
                 

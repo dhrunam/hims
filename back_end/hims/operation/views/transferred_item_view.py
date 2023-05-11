@@ -8,9 +8,8 @@ from hims.operation.utility import ValueManager
 
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
-from rest_framework.settings import api_settings
+from django.conf import settings
 
-operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
 
 
 class TransferredItemList(generics.ListCreateAPIView):
@@ -22,12 +21,12 @@ class TransferredItemList(generics.ListCreateAPIView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        print('hi')
+        operation_type = settings.OPERATION_TYPE['transferred']
         #request.data._mutable = True
         data = request.data['data']
         result = Response()
         if(data):
-            batch_no = ValueManager.generate_batch_no(self, data, operation_type.transferred)
+            batch_no = ValueManager.generate_batch_no(self, data, operation_type)
             for element in data:
 
                 request.data['batch_no'] = batch_no

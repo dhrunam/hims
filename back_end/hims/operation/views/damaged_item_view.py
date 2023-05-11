@@ -7,9 +7,9 @@ from django.db import transaction, connection
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
 from hims.operation.utility.custom_value_generator import ValueManager
-from rest_framework.settings import api_settings
+from django.conf import settings
 
-operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
+
 
 
 class DamagedItemList(generics.ListCreateAPIView):
@@ -21,12 +21,12 @@ class DamagedItemList(generics.ListCreateAPIView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        print('hi')
+        operation_type = settings.OPERATION_TYPE['damaged']
         # request.data._mutable = True
         data = request.data['data']
         result = Response()
         if(data):
-            batch_no = ValueManager.generate_batch_no(self, data, operation_type.damaged)
+            batch_no = ValueManager.generate_batch_no(self, data,operation_type)
             for element in data:
                 # request.data['id'] = element['id']
                 request.data['hotel'] = element['hotel']
