@@ -8,6 +8,10 @@ from hims.operation import serializers
 from durin.auth import TokenAuthentication
 from hims.operation.utility.custom_value_generator import ValueManager
 from urllib.parse import unquote
+from rest_framework.settings import api_settings
+
+operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
+
 
 class ReceivedItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -34,7 +38,7 @@ class ReceivedItemList(generics.ListCreateAPIView):
         
         if(from_date and to_date):
             queryset = queryset.filter(received_on__gte=from_date, received_on__lte=to_date)
-            
+
         if(hotel_id):
             queryset = queryset.filter(hotel=hotel_id)
 
@@ -50,7 +54,7 @@ class ReceivedItemList(generics.ListCreateAPIView):
 
         # result = self.create(request, *args, **kwargs)
         if(data):
-            batch_no = ValueManager.generate_batch_no(self,data)
+            batch_no = ValueManager.generate_batch_no(self,data, operation_type.received)
             # print('batch_no', batch_no)
             for element in data:
                 

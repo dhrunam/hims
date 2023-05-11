@@ -104,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hims',
         'USER': 'postgres',
-        'PASSWORD': 'Darkhorse@1',
+        'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',
         'PORT':'5432'
     }
@@ -188,4 +188,13 @@ REST_DURIN = {
     "API_ACCESS_CLIENT_NAME": ['web', 'mobile', 'cli'],
     "API_ACCESS_EXCLUDE_FROM_SESSIONS": False,
     "API_ACCESS_RESPONSE_INCLUDE_TOKEN": False,
+}
+
+
+OPERATION_TYPE={
+    "received": "rec",
+    "damaged" : "dam",
+    "returned": "ret",
+    "transferred": "tra",
+
 }
