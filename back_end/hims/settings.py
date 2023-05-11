@@ -189,3 +189,12 @@ REST_DURIN = {
     "API_ACCESS_EXCLUDE_FROM_SESSIONS": False,
     "API_ACCESS_RESPONSE_INCLUDE_TOKEN": False,
 }
+
+
+OPERATION_TYPE={
+    "received": "rec",
+    "damaged" : "dam",
+    "returned": "ret",
+    "transferred": "tra",
+
+}

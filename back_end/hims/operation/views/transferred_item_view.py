@@ -8,6 +8,10 @@ from hims.operation.utility import ValueManager
 
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
+from rest_framework.settings import api_settings
+
+operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
+
 
 class TransferredItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -23,7 +27,7 @@ class TransferredItemList(generics.ListCreateAPIView):
         data = request.data['data']
         result = Response()
         if(data):
-            batch_no = ValueManager.generate_batch_no(self, data,'TRA')
+            batch_no = ValueManager.generate_batch_no(self, data, operation_type.transferred)
             for element in data:
 
                 request.data['batch_no'] = batch_no
