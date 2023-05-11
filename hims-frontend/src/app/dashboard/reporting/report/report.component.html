@@ -40,8 +40,11 @@
     </form>
     <hr>
 </div>
-<div class="px-5 py-2">
-    <table class="table table-bordered" *ngIf="reports[0]">
+<div class="px-5 py-2" *ngIf="reports[0]">
+    <div class="text-end mb-3">
+        <button class="btn btn-primary" (click)="generateExcelReport()">Export to Excel</button>
+    </div>
+    <table class="table table-bordered" id="report">
         <thead>
             <tr>
                 <th scope="col">S.No.</th>

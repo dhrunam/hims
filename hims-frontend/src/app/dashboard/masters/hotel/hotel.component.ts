@@ -35,6 +35,7 @@ export class HotelComponent {
     if(this.editMode){
       this.hotelService.get_hotel(this.id).subscribe({
         next: data => {
+          console.log(data);
           this.hotel_name = data.name;
           this.hotel_short_name = data.short_name;
         }

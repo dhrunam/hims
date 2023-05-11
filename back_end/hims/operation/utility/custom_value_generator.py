@@ -3,18 +3,25 @@ from hims.operation import models as op_models
 
 import datetime
 
+from rest_framework.settings import api_settings
+
+
+
 class ValueManager():
+    operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
+
+
 
     def generate_batch_no(self, data, op_type):
         print(data)
         latest_record=[]
-        if (op_type=='REC'):
+        if (op_type==self.operation_type['received']):
             latest_record = op_models.ItemReceived.objects.filter(hotel=data[0]['hotel']).last()
-        if (op_type=='DAM'):
+        if (op_type==self.operation_type['damaged']):
             latest_record = op_models.ItemDamaged.objects.filter(hotel=data[0]['hotel']).last()
-        if (op_type=='RET'):
+        if (op_type==self.operation_type['returned']):
             latest_record = op_models.ItemReturned.objects.filter(hotel=data[0]['hotel']).last()
-        if (op_type=='TRA'):
+        if (op_type==self.operation_type['transferred']):
             latest_record = op_models.ItemTransferred.objects.filter(from_hotel=data[0]['hotel']).last()
         hotel_shot_name = conf_models.Hotel.objects.get(pk=data[0]['hotel']).short_name.upper().strip()
         dept_short_name = conf_models.Item.objects.get(pk=data[0]['item']).department.short_name.upper().strip()

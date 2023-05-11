@@ -10,10 +10,11 @@ from hims.operation.utility.custom_value_generator import ValueManager
 from urllib.parse import unquote
 from rest_framework.settings import api_settings
 
-operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
+
 
 
 class ReceivedItemList(generics.ListCreateAPIView):
+    operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
     queryset = op_model.ItemReceived.objects.all()
@@ -54,7 +55,8 @@ class ReceivedItemList(generics.ListCreateAPIView):
 
         # result = self.create(request, *args, **kwargs)
         if(data):
-            batch_no = ValueManager.generate_batch_no(self,data, operation_type.received)
+            print(self.operation_type)
+            batch_no = ValueManager.generate_batch_no(self,data, self.operation_type['received'])
             # print('batch_no', batch_no)
             for element in data:
                 

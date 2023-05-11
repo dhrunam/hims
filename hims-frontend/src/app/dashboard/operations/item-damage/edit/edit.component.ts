@@ -27,15 +27,11 @@ export class EditComponent {
   ob:number = 0;
   showSuccess: string = '';
   ngOnInit(): void{
-    this.route.queryParams.subscribe({
+    this.route.params.subscribe({
       next: (param: Params) => {
-        this.editMode = param['batch_no'] != null;
+        this.editMode = param['id'] != null;
         if(this.editMode){
-          // this.itemReturnService.get_item_received(param['batch_no']).subscribe({
-          //   next: data => {
-          //     this.items = data;
-          //   }
-          // })
+          
         }
       }
     })
@@ -56,33 +52,9 @@ export class EditComponent {
     }
     observable.subscribe({
       next: data => {
-        // this.renderer.removeStyle(this.batch.nativeElement, 'border');
-        // this.batchErr = false;
         this.showSuccess = 'true';
       }
-    }) 
-    // if(this.batch_no === ''){
-    //   this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
-    //   this.batchErr = true;
-    // }
-    // else{
-    //   this.items.forEach((d:any) => {
-    //     d.batch_no = this.batch_no;
-    //   })
-    //   let observable: Observable<any>
-    //   if(this.editMode){
-
-    //   }
-    //   else{
-    //     observable = this.itemReturnService.return_item(this.items)
-    //   }
-    //   observable.subscribe({
-    //     next: data => {
-    //       this.renderer.removeStyle(this.batch.nativeElement, 'border');
-    //       this.batchErr = false;
-    //     }
-    //   }) 
-    // }  
+    })
   }
   onAddItems(data: NgForm){
     if(!data.valid){

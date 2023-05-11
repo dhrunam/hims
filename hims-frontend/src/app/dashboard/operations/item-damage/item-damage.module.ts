@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: '', component: ItemDamageComponent, children: [
       { path: 'add', component: EditComponent },
       { path: 'view', component: ViewComponent },
+      { path: 'edit/:id', component: EditComponent },
     ]
   }
 ]

@@ -64,7 +64,8 @@
                                 <div class="row">
                                     <div class="col-md-6 mt-2 d-flex align-items-center" *ngFor="let d of departments">
                                         <div class="form-check">
-                                            <input class="form-check-input" checked (click)="onRemoveItem(d.name)" type="checkbox" [value]="d.id" id="flexCheckDefault">
+                                            <input class="form-check-input" *ngIf="!editMode" checked (click)="onRemoveItem(d.name)" type="checkbox" [value]="d.id" id="flexCheckDefault">
+                                            <input class="form-check-input" *ngIf="editMode" [checked]="" (click)="onRemoveItem(d.name)" type="checkbox" [value]="d.id" id="flexCheckDefault">
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 {{ d.name }}
                                             </label>

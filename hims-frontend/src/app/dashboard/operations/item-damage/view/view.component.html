@@ -40,7 +40,11 @@
         <div class="col-xl-2 col-md-4 col-6 mt-3" *ngFor="let it of items">
             <div class="card">
                 <div class="card-body">
-                    <div class="text-end">
+                    <div class="d-flex justify-content-between">
+                        <i *ngIf="isAdmin; else alt" class="bi bi-pencil-square" style="color: blue;font-size: 20px;"></i>
+                        <ng-template #alt>
+                            <span></span>
+                        </ng-template>
                         <i class="bi bi-eye" style="color: blue;font-size: 20px;" (click)="onGetDiscardedItems(it.batch_no)" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
                     </div>
                     <h5 class="card-title text-center mb-4" style="font-size: 50px;"><i class="bi bi-cart-check"></i></h5>

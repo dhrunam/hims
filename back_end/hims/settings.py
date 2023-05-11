@@ -104,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hims',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'PASSWORD': 'Darkhorse@1',
         'HOST': '127.0.0.1',
         'PORT':'5432'
     }
@@ -196,5 +196,4 @@ OPERATION_TYPE={
     "damaged" : "dam",
     "returned": "ret",
     "transferred": "tra",
-
 }

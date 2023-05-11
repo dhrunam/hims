@@ -70,6 +70,7 @@ export class ViewComponent {
       this.itemDamageService.get_items_discarded(data.value.start_date, data.value.end_date, hotel, department).subscribe({
         next: data => {
           this.items = data;
+          console.log(data);
         },
       })
     }
