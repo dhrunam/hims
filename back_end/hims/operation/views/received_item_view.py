@@ -58,27 +58,18 @@ class ReceivedItemList(generics.ListCreateAPIView):
             batch_no = ValueManager.generate_batch_no(self,data, operation_type)
             # print('batch_no', batch_no)
             for element in data:
-                
-                # request.data['id'] = element['id']
-                request.data['hotel'] = element['hotel']
-                request.data['item'] = element['item']
-                request.data['vendor'] = element['vendor']
-                
-                request.data['batch_no'] = batch_no
-                request.data['opening_balance'] = element['opening_balance']
-                request.data['quantity_received'] = element['quantity_received']
-                request.data['unit_price'] = element['unit_price']
-                request.data['expiry_date'] = element['expiry_date']
-                request.data['received_on'] = element['received_on']
-                request.data['remarks'] = element['remarks']
-                request.data['created_by'] = request.user.id
-                result = self.create(request, *args, **kwargs)
 
-                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
+                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item']).last()
                 if item_in_hotel:
+                    request.data['opening_balance'] = (item_in_hotel.opening_balance
+                                                       + item_in_hotel.received
+                                                       - item_in_hotel.damaged
+                                                       -item_in_hotel.returned
+                                                       -item_in_hotel.transferred
+                    )
                     #item_in_hotel[0].opening_balance=element['opening_balance']
-                    item_in_hotel[0].received=item_in_hotel[0].received + int(element['quantity_received'])
-                    item_in_hotel[0].save()
+                    item_in_hotel.received=item_in_hotel.received + int(element['quantity_received'])
+                    item_in_hotel.save()
                 else:
                     item_in_hotel=op_model.ItemInHotel.objects.create(
                         hotel=conf_model.Hotel.objects.get(id=element['hotel']),
@@ -89,6 +80,34 @@ class ReceivedItemList(generics.ListCreateAPIView):
                         max_level = element['max_level']
                     )
                 
+                avail_item_quantity_snapshot= op_model.AvailableItemQuantitySnapshot.objects.filter(
+                    item = element['item']
+                ).last()
+
+                if avail_item_quantity_snapshot:
+                    avail_item_quantity_snapshot.quantity_received=  avail_item_quantity_snapshot.quantity_received + int(element['quantity_received'])
+                    avail_item_quantity_snapshot.save()
+                
+                else:
+                    op_model.AvailableItemQuantitySnapshot.objects.create(
+                        item=conf_model.Item.objects.get(id=element['item']),
+                        quantity_received=element['quantity_received'],
+                        opening_balance=element['opening_balance'],
+
+                    )
+                
+                # request.data['id'] = element['id']
+                request.data['hotel'] = element['hotel']
+                request.data['item'] = element['item']
+                request.data['vendor'] = element['vendor']
+                request.data['batch_no'] = batch_no
+                request.data['quantity_received'] = element['quantity_received']
+                request.data['unit_price'] = element['unit_price']
+                request.data['expiry_date'] = element['expiry_date']
+                request.data['received_on'] = element['received_on']
+                request.data['remarks'] = element['remarks']
+                request.data['created_by'] = request.user.id
+                result = self.create(request, *args, **kwargs)
 
 
 
