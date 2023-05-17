@@ -103,7 +103,7 @@ class PropertyWiseItemSummary(generics.ListAPIView):
                 where dr.hotel_id=coalesce( %s,dr.hotel_id)
                 and dr.id=coalesce( %s,dr.id)
                 and dr.department_id = coalesce( %s,dr.department_id)
-                order by dr.date_range asc, dr.id asc
+                order by dr.date_range asc, dr.hotel_id asc, dr.id asc
 
                 ) as final_result
             ''',
