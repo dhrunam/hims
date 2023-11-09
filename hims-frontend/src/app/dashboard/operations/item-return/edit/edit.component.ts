@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef,ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -14,15 +14,19 @@ import { ItemReturnService } from '../item-return.service';
 })
 export class EditComponent {
   @ViewChild('batch', { static: false } ) batch: ElementRef;
-  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReturnService: ItemReturnService, private renderer: Renderer2){}
+  hotel:any;
+  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReturnService: ItemReturnService){
+    this.hotel = this.localStorageService.getHotel();
+  }
   items: Array<ItemReturn> = [];
   item_master: Array<any> = [];
   item_name: string = '';
-  item_id: string = '';
+  item_id: number = 0;
   editMode: boolean = false;
   batch_no: string = '';
   batchErr: boolean = false;
   showSuccess: string = '';
+  ob:number = 0;
   ngOnInit(): void{
     this.route.queryParams.subscribe({
       next: (param: Params) => {
@@ -94,11 +98,10 @@ export class EditComponent {
       data.control.markAllAsTouched();
     }
     else{
-      let hotel = this.localStorageService.getHotel();
       let date = new Date();
       let todayDate = `${date.getFullYear()}-${date.getMonth() < 10 ? '0':''}${date.getMonth()+1}-${date.getDate() < 10 ? '0':''}${date.getDate()}`
       this.items.push({
-        hotel: hotel.id,
+        hotel: this.hotel.id,
         item: data.value.item_id,
         item_name: this.item_name,
         opening_balance: data.value.opening_balance,
@@ -115,5 +118,8 @@ export class EditComponent {
   onGetNamesValue(event: any){
     this.item_name = event.target.options[event.target.options.selectedIndex].text;
     this.item_id = event.target.value;
+    this.itemReturnService.get_opening_balance(this.hotel.id, this.item_id).subscribe({
+      next: data => this.ob = data[0].opening_balance || 0,
+    })
   }
 }

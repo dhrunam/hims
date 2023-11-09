@@ -12,4 +12,7 @@ export class ItemTransferService{
     transfer_item(items: ItemTransfer[]){
         return this.http.post(`${URL}/api/op/item/transferred`, { data: items } );
     }
+    get_opening_balance(hotel_id:number, item_id: number){
+        return this.http.get<any>(`${URL}/api/op/item/hotel`, { params: { hotel_id: hotel_id, item_id: item_id,}});
+    }
 }

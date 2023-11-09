@@ -12,4 +12,7 @@ export class ItemReturnService{
     return_item(items: ItemReturn[]){
         return this.http.post(`${URL}/api/op/item/returned`, { data: items } );
     }
+    get_opening_balance(hotel_id:number, item_id: number){
+        return this.http.get<any>(`${URL}/api/op/item/hotel`, { params: { hotel_id: hotel_id, item_id: item_id,}});
+    }
 }

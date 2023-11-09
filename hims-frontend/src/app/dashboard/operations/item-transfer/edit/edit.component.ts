@@ -16,19 +16,23 @@ import { ItemTransferService } from '../item-transfer.service';
 })
 export class EditComponent {
   @ViewChild('batch', { static: false } ) batch: ElementRef;
-  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemTransferService: ItemTransferService, private renderer: Renderer2, private hotelService: HotelService, private deparmentService: DepartmentService){}
+  hotel: any;
+  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemTransferService: ItemTransferService, private renderer: Renderer2, private hotelService: HotelService, private deparmentService: DepartmentService){
+    this.hotel = this.localStorageService.getHotel();
+  }
   items: Array<ItemTransfer> = [];
   item_master: Array<any> = [];
   hotels: Array<any> = [];
   departments: Array<any> = [];
   item_name: string = '';
-  item_id: string = '';
+  item_id: number = 0;
   hotel_name: string = '';
   department_name: string = '';
   editMode: boolean = false;
   batch_no: string = '';
   batchErr: boolean = false;
   showSuccess: string = '';
+  ob: number = 0;
   ngOnInit(): void{
     this.route.queryParams.subscribe({
       next: (param: Params) => {
@@ -134,6 +138,9 @@ export class EditComponent {
     if(key === 'item'){
       this.item_name = event.target.options[event.target.options.selectedIndex].text;
       this.item_id = event.target.value;
+      this.itemTransferService.get_opening_balance(this.hotel.id, this.item_id).subscribe({
+        next: data => this.ob = data[0].opening_balance || 0,
+      })
     }
     if(key === 'hotel'){
       this.hotel_name = event.target.options[event.target.options.selectedIndex].text;

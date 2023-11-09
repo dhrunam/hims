@@ -9,7 +9,7 @@
                 <input type="text" class="form-control" placeholder="Enter Batch No." (keyup)="onEnter()" [disabled]="editMode" [(ngModel)]="batch_no" name="batch_no" #batch required>
                 <small class="text-danger" *ngIf="batchErr && batch_no === ''">Please enter batch no</small>
             </div>
-            <button class="btn btn-primary mb-2" (click)="onSubmit();">Save</button>
+            <button class="btn btn-primary mb-2" (click)="onSubmit();">Receive</button>
         </div>
         <div class="text-center" *ngIf="!items[0]" style="margin-bottom: 30px;">
             <h4>No Items</h4>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-md-1">
                         <label class="form-label">Opening Balance</label>
-                        <input type="text" class="form-control" ngModel name="opening_balance" #opening_balance="ngModel" required>
+                        <input type="text" class="form-control" [ngModel]="ob" name="opening_balance" #opening_balance="ngModel" required>
                     </div>
                     <div class="col-md-1">
                         <label class="form-label">Quantity</label>

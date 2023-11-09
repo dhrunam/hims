@@ -5,7 +5,7 @@
     <hr>
     <div class="table-responsive">
         <div class="text-end" *ngIf="items[0]">
-            <button class="btn btn-primary mb-2" (click)="onSubmit();">Save</button>
+            <button class="btn btn-primary mb-2" (click)="onSubmit();">Transfer</button>
         </div>
         <div class="text-center" *ngIf="!items[0]" style="margin-bottom: 30px;">
             <h4>No Items</h4>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Opening Balance</label>
-                        <input type="text" class="form-control" ngModel name="opening_balance" #opening_balance="ngModel" required>
+                        <input type="text" class="form-control" [ngModel]="ob" name="opening_balance" #opening_balance="ngModel" required>
                     </div>
                     <div class="col-md-1">
                         <label class="form-label">Quantity</label>
