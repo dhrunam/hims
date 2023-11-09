@@ -25,7 +25,6 @@ export class EditComponent {
   hotel_id: number = this.localStorageService.getHotel().id;
   batch_no: string = '';
   batchErr: boolean = false;
-  ob:number = 0;
   showSuccess: string = '';
   ngOnInit(): void{
     this.route.queryParams.subscribe({
@@ -93,7 +92,7 @@ export class EditComponent {
       let date = new Date();
       let todayDate = `${date.getFullYear()}-${date.getMonth() < 10 ? '0':''}${date.getMonth()+1}-${date.getDate() < 10 ? '0':''}${date.getDate()}`
       this.items.push({
-        hotel: this.hotel.id,
+        hotel: this.hotel_id.toString(),
         item: data.value.item_id,
         item_name: this.item_name,
         expiry_date: data.value.expiry,

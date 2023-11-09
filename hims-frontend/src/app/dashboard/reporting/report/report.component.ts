@@ -41,7 +41,6 @@ export class ReportComponent {
       this.reportingService.get_report(data.value.start_date, data.value.end_date, data.value.hotel_id, data.value.department_id, data.value.item_id).subscribe({
         next: data => {
           this.reports = data;
-          console.log(data);
         }
       })
     }
