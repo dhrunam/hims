@@ -42,7 +42,8 @@ export class UserComponent {
     if(this.editMode){
       this.userService.get_user(this.id).subscribe({
         next: data => {
-          this.user = new User(data.first_name, data.last_name, data.username, data.related_profile[0].contact_number, data.related_profile[0].related_hotel.id, data.related_profile[0].related_department.id)
+          console.log(data);
+          this.user = new User(data.first_name, data.last_name, data.username, data.related_profile[0] ? data.related_profile[0].contact_number : 'N/A', data.related_profile[0] ? data.related_profile[0].related_hotel.id : 'N/A', data.related_profile[0] ? data.related_profile[0].related_department.id : 'N/A')
         }
       })
     }
@@ -73,7 +74,7 @@ export class UserComponent {
         fd.append('department', data.value.department_id);
         fd.append('contact_number', data.value.contact);
         fd.append('username', data.value.username);
-        // fd.append('group', '2');
+        fd.append('group', '2');
         if(this.editMode){
           fd.append('id', this.id.toString());
           observable = this.userService.update_user(fd);
@@ -99,7 +100,9 @@ export class UserComponent {
   }
   getUsers(){
     this.userService.get_users().subscribe({
-      next: data => this.users = data,
+      next: data => {
+        this.users = data;
+      },
     })
   }
   onGoBack(){

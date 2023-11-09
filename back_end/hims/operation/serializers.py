@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.db import transaction, connection
 from hims.operation import models as op_models
 from hims.configuration import models as config_models
+from hims.configuration import serializers as config_serializers
 from hims.account import models as acc_models
 from hims.configuration.serializers import(
     
@@ -29,6 +30,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
     related_hotel = HotelSerializer(source='hotel', read_only=True)
 
     related_item= ItemSerializer(source='item', read_only=True)
+    related_vendor = config_serializers.VendorSerializer(source='vendor', read_only=True)
     class Meta:
         model = op_models.ItemReceived
 
@@ -43,6 +45,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
             'id',
             'hotel',
             'item',
+            'vendor',
             'batch_no',
             'opening_balance',
             'quantity_received',
@@ -55,6 +58,7 @@ class ItemReceivedSerializer(serializers.ModelSerializer):
             'related_hotel',
             'related_item',
             'related_create_user',
+            'related_vendor',
 
 
         ]
@@ -160,10 +164,13 @@ class ItemReturnedSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'hotel',
             'item',
             'opening_balance',
             'quantity_returned',
+            'unit_price',
+            'expiry_date',
             'returned_on',
             'remarks',
             'created_by',
@@ -252,10 +259,13 @@ class ItemDamagedSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'hotel',
             'item',
             'opening_balance',
             'quantity_damaged',
+            'unit_price',
+            'expiry_date',
             'remarks',
             'damaged_on',
             'created_by',
@@ -346,6 +356,7 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
 
         fields = [
             'id',
+            'batch_no',
             'from_hotel',
             'to_hotel',
             'from_department',
@@ -353,6 +364,8 @@ class ItemTransferredSerializer(serializers.ModelSerializer):
             'item',
             'opening_balance',
             'quantity_transferred',
+            'unit_price',
+            'expiry_date',
             'remarks',
             'transferred_on',
             'created_by',
@@ -469,4 +482,85 @@ class ItemInHotelSerializer(serializers.ModelSerializer):
             'related_item',
 
         ]
+
+class CustomItemInHotelSerializer(serializers.ModelSerializer):
+    # purchase_amount = serializers.FloatField(read_only=True)
+    # balance_amount = serializers.FloatField(read_only=True)
+        
+    related_hotel = HotelSerializer(source='hotel', read_only=True)
+
+    related_item= ItemSerializer(source='item', read_only=True)
+
+    class Meta:
+        model = op_models.ItemInHotel
+
+    # hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
+    # item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    # opening_balance=models.IntegerField(default=0)
+    # received=models.IntegerField(default=0)
+    # damaged=models.IntegerField(default=0)
+    # returned=models.IntegerField(default=0)
+    # transferred=models.IntegerField(default=0)
+    # min_level=models.IntegerField(default=0)
+    # max_level=models.IntegerField(default=0)
+
+        fields = [
+
+            'hotel',
+            'item',
+            'opening_balance',
+            'received',
+            'damaged',
+            'returned',
+            'transferred',
+            'min_level',
+            'max_level',
+            'related_hotel',
+            'related_item',
+
+        ]
+
+class AvailableItemQuantitySnapshotSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = op_models.AvailableItemQuantitySnapshot
+        fields = (
+            'id',
+            'item',
+            'opening_balance',
+            'quantity_received',
+            'quantity_damaged',
+            'quantity_returned',
+        )
+
+
+class SummaryReportSerializers(serializers.ModelSerializer):
+    date_range = serializers.DateField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    hotel_id = serializers.IntegerField(read_only=True)
+    quantity_received= serializers.IntegerField(read_only=True)
+    quantity_damaged= serializers.IntegerField(read_only=True)
+    quantity_returned= serializers.IntegerField(read_only=True)
+    quantity_transferred= serializers.IntegerField(read_only=True)
+    department_id= serializers.IntegerField(read_only=True)
+    sod_opening_balance = serializers.IntegerField(read_only=True)
+    eod_balance= serializers.IntegerField(read_only=True)
+    class Meta:
+        model =  op_models.ItemInHotel
+        fields =[
+                    'id',
+                    'name',
+                    'date_range',
+                    'hotel_id',
+                    'department_id',
+                    'quantity_received',
+                    'quantity_damaged',
+                    'quantity_returned',
+                    'quantity_transferred',
+                    'sod_opening_balance',
+                    'eod_balance',
+
+
+        ]
+
 

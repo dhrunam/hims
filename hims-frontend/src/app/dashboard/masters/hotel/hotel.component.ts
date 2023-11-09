@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Mode } from 'src/app/shared/interfaces/mode.interface';
 import { HotelService } from './hotel.service';
+import { DepartmentService } from '../department/department.service';
 @Component({
   selector: 'app-hotel',
   templateUrl: './hotel.component.html',
@@ -16,10 +17,12 @@ export class HotelComponent {
   showSuccess: string = '';
   editMode: boolean = false;
   deleteMessage: boolean = false;
+  departments: Array<{id:number, name: string, short_name: string}> = [];
+  buffer: Array<{id:number, name: string, short_name: string}> = [];
   hotels: Array<any> = [];
   hotel_name: string = '';
   hotel_short_name: string = '';
-  constructor(private hotelService: HotelService, private router: Router, private route: ActivatedRoute){}
+  constructor(private hotelService: HotelService, private router: Router, private route: ActivatedRoute, private departmentService: DepartmentService){}
   ngOnInit(): void{
     this.getHotels();
   }
@@ -37,6 +40,12 @@ export class HotelComponent {
         }
       })
     }
+    this.departmentService.get_departments().subscribe({
+      next: data => {
+        this.departments = data;
+        this.buffer = this.departments.slice();
+      }
+    })
   }
   getDeleteMessage(id:number){
     this.id = id;
@@ -58,7 +67,8 @@ export class HotelComponent {
         fd.append('name', data.value.name);
         fd.append('short_name', data.value.short_name);
         fd.append('address_line1', 'asdf');
-        fd.append('pin','fasd')
+        fd.append('pin','fasd');
+        fd.append('data', JSON.stringify(this.buffer));
         if(this.editMode){
           fd.append('id', this.id.toString());
           observable = this.hotelService.update_hotel(fd);
@@ -91,6 +101,11 @@ export class HotelComponent {
   }
   onGoBack(){
     this.router.navigate(['../../home'], { relativeTo: this.route } );
+  }
+  onRemoveItem(dept_name: string){
+    var index = this.buffer.findIndex(i => i.name === dept_name);
+    this.buffer.splice(index, 1);
+    console.log(this.buffer);
   }
   ngOnDestroy():void{
     if(this.subscription){

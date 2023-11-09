@@ -42,18 +42,34 @@
                         Are you sure you want to delete this hotel ?
                     </div>
                     <ng-template #form>
-                        <div class="row px-2 mb-2">
-                            <div class="col-md-12">
+                        <div class="row px-2">
+                            <div class="col-md-6 mt-2">
                                 <label class="form-label">Hotel Name</label>
                                 <input type="text" class="form-control" name="name" [ngModel]="hotel_name" #name="ngModel" required>
                                 <small class="text-danger" *ngIf="name.touched && !name.valid">Please enter hotel name</small>
                             </div>
-                            <div class="col-md-12 mt-3">
+                            <div class="col-md-6 mt-2">
                                 <label class="form-label">Hotel Short Name</label>
                                 <input type="text" class="form-control" name="short_name" maxlength="3" minlength="2" [ngModel]="hotel_short_name" #short_name="ngModel" required>
                                 <div *ngIf="short_name.touched && short_name.invalid">
                                     <small class="text-danger" *ngIf="short_name.errors!['required']">Please enter hotel short name</small>
                                     <small class="text-danger" *ngIf="short_name.errors!['minlength']">Hotel Short Name must of either 2 or max 3 characters</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <div class="header d-flex justify-content-between align-items-center">
+                                    <span>Department(s)</span>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6 mt-2 d-flex align-items-center" *ngFor="let d of departments">
+                                        <div class="form-check">
+                                            <input class="form-check-input" checked (click)="onRemoveItem(d.name)" type="checkbox" [value]="d.id" id="flexCheckDefault">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                {{ d.name }}
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +86,6 @@
                 </div>
                 <ng-template #formBtn>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" type="submit">{{ editMode ? 'Update' : 'Add'}}</button>
                     </div>
                 </ng-template>

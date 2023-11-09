@@ -1,4 +1,5 @@
 export interface ItemTransfer{
+    hotel?:string;
     from_hotel?: string;
     from_department?: string;
     to_hotel: string;
@@ -12,4 +13,7 @@ export interface ItemTransfer{
     transferred_on:string;
     remarks: string;
     is_acknowledged?: string;
+    expiry_date: string;
+    unit_price: string;
+    batch_no?: string;
 }

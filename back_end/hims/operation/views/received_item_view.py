@@ -6,6 +6,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.db import transaction, connection
 from hims.operation import serializers
 from durin.auth import TokenAuthentication
+from hims.operation.utility.custom_value_generator import ValueManager
+from urllib.parse import unquote
+from django.conf import settings
+
+
 
 class ReceivedItemList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
@@ -19,52 +24,90 @@ class ReceivedItemList(generics.ListCreateAPIView):
         This view should return a list of all the purchases item  received
         for the specified order .
         """
-
+        queryset = op_model.ItemReceived.objects.all()
         # order_number = self.request.data['order_no']
-        search_text = self.request.query_params.get('batch_no')
+        batch_no = self.request.query_params.get('batch_no')
+        from_date = self.request.query_params.get('from_date')
+        to_date = self.request.query_params.get('to_date')
+        hotel_id = self.request.query_params.get('hotel')
+        department_id= self.request.query_params.get('department')
 
-        if(search_text):
-            return op_model.ItemReceived.objects.filter(batch_no=search_text)
+        if(batch_no):
+            queryset = queryset.filter(batch_no=batch_no)
+        
+        if(from_date and to_date):
+            queryset = queryset.filter(received_on__gte=from_date, received_on__lte=to_date)
 
-        return op_model.ItemReceived.objects.all()
+        if(hotel_id):
+            queryset = queryset.filter(hotel=hotel_id)
+
+        if(department_id):
+            queryset = queryset.filter(item__department=department_id)
+        
+        return queryset
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
+        operation_type = settings.OPERATION_TYPE['received']
+        print('Operation_Type:',operation_type)
         #request.data._mutable = True
         data = request.data['data']
+
         # result = self.create(request, *args, **kwargs)
         if(data):
+            batch_no = ValueManager.generate_batch_no(self,data, operation_type)
+            # print('batch_no', batch_no)
             for element in data:
-                
-                # request.data['id'] = element['id']
-                request.data['hotel'] = element['hotel']
-                request.data['item'] = element['item']
-                request.data['batch_no'] = element['batch_no']
-                request.data['opening_balance'] = element['opening_balance']
-                request.data['quantity_received'] = element['quantity_received']
-                request.data['unit_price'] = element['unit_price']
-                request.data['expiry_date'] = element['expiry_date']
-                request.data['received_on'] = element['received_on']
-                #request.data['brand'] = element['brand']
-                #request.data['warranty_period'] = element['warranty_period']
-                request.data['remarks'] = element['remarks']
-                request.data['created_by'] = request.user.id
-                #if(request.data['id'] is None or request.data['id'] <= 0):
-                result = self.create(request, *args, **kwargs)
 
-                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
+                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item']).last()
                 if item_in_hotel:
+                    request.data['opening_balance'] = (item_in_hotel.opening_balance
+                                                       + item_in_hotel.received
+                                                       - item_in_hotel.damaged
+                                                       -item_in_hotel.returned
+                                                       -item_in_hotel.transferred
+                    )
                     #item_in_hotel[0].opening_balance=element['opening_balance']
-                    item_in_hotel[0].received=item_in_hotel[0].received + int(element['quantity_received'])
-                    item_in_hotel[0].save()
+                    item_in_hotel.received=item_in_hotel.received + int(element['quantity_received'])
+                    item_in_hotel.save()
                 else:
                     item_in_hotel=op_model.ItemInHotel.objects.create(
                         hotel=conf_model.Hotel.objects.get(id=element['hotel']),
                         item=conf_model.Item.objects.get(id=element['item']),
-                        opening_balance=element['quantity_received'],
-                        received=element['quantity_received']
+                        opening_balance=element['opening_balance'],
+                        received=element['quantity_received'],
+                        min_level = element['min_level'],
+                        max_level = element['max_level']
                     )
                 
+                avail_item_quantity_snapshot= op_model.AvailableItemQuantitySnapshot.objects.filter(
+                    item = element['item']
+                ).last()
+
+                if avail_item_quantity_snapshot:
+                    avail_item_quantity_snapshot.quantity_received=  avail_item_quantity_snapshot.quantity_received + int(element['quantity_received'])
+                    avail_item_quantity_snapshot.save()
+                
+                else:
+                    op_model.AvailableItemQuantitySnapshot.objects.create(
+                        item=conf_model.Item.objects.get(id=element['item']),
+                        quantity_received=element['quantity_received'],
+                        opening_balance=element['opening_balance'],
+
+                    )
+                
+                # request.data['id'] = element['id']
+                request.data['hotel'] = element['hotel']
+                request.data['item'] = element['item']
+                request.data['vendor'] = element['vendor']
+                request.data['batch_no'] = batch_no
+                request.data['quantity_received'] = element['quantity_received']
+                request.data['unit_price'] = element['unit_price']
+                request.data['expiry_date'] = element['expiry_date']
+                request.data['received_on'] = element['received_on']
+                request.data['remarks'] = element['remarks']
+                request.data['created_by'] = request.user.id
+                result = self.create(request, *args, **kwargs)
 
 
 
@@ -112,7 +155,7 @@ class ReceivedItemPerBatch(generics.ListAPIView):
         This view should return a list of all the purchases item  received
         for the specified order .
         """
-        batch_no = self.request.query_params.get('batch_no')
+        batch_no =unquote(self.request.query_params.get('batch_no'))
         if batch_no:
             queryset = op_model.ItemReceived.objects.filter(batch_no=batch_no)
         return queryset

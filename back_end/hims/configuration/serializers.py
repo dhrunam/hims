@@ -55,12 +55,22 @@ class ProprietorSerializer(serializers.ModelSerializer):
                     'contact_number',
 
                 ]
+class HelperHotelDepartmentSerializer(serializers.ModelSerializer):
+    related_department = DistrictSerializer(source="department",read_only=True)
+    class Meta:
+        model=models.HotelDepartment
+        fields=[
+            'id',
+            'hotel',
+            'department',
+            'related_department',
+        ]
 
 class HotelSerializer(serializers.ModelSerializer):
     related_state = StateSerializer(source="state",read_only=True)
     related_district = DistrictSerializer(source="district",read_only=True)
     related_proprietor = ProprietorSerializer(source='proprietor', read_only=True)
-
+    departments= HelperHotelDepartmentSerializer(source='hotel_department', many=True, read_only=True)
     class Meta:
         model = models.Hotel
         fields = [
@@ -78,6 +88,7 @@ class HotelSerializer(serializers.ModelSerializer):
                     'related_state',
                     'related_district',
                     'related_proprietor',
+                    'departments',
 
                 ]
 
@@ -127,3 +138,18 @@ class UnitSerializer(serializers.ModelSerializer):
                     'short_name',
 
         ] 
+# Vendor
+class VendorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Vendor
+
+        fields = [
+                    'id',
+                    'name',
+                    'address',
+                    'contact_no',
+                    'gst_no',
+                    'description',
+                    'remarks'
+
+        ]  

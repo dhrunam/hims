@@ -39,4 +39,7 @@ urlpatterns = [
     path('api/hotel_department', views.HotelDepartmentList.as_view()),
     path('api/hotel_department/<int:pk>', views.HotelDepartmentDetails.as_view()),
 
+    path('api/vendor', views.VendorList.as_view() ),
+    path('api/vendor/<int:pk>', views.VendorDetails.as_view())
+
 ]

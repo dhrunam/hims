@@ -61,8 +61,8 @@ class DepartmentMaster(models.Model):
         return super().__str__()
 
 class HotelDepartment(models.Model):
-    hotel=models.ForeignKey(Hotel,on_delete=models.SET_NULL, null=True)
-    department=models.ForeignKey(DepartmentMaster, on_delete=models.SET_NULL, null=True)
+    hotel=models.ForeignKey(Hotel,on_delete=models.CASCADE, null=True, related_name='hotel_department')
+    department=models.ForeignKey(DepartmentMaster, on_delete=models.SET_NULL, null=True, related_name='hotel_department')
     
     def __str__(self) -> str:
         return super().__str__()
@@ -92,4 +92,13 @@ class Unit(models.Model):
     def __str__(self) -> str:
         return super().__str__()
 
+class Vendor(models.Model):
+    name = models.CharField(max_length=256, blank=False, unique=True)
+    address = models.CharField(max_length=512, blank=False)
+    contact_no = models.CharField(max_length=15, blank=False)
+    gst_no = models.CharField(max_length=15, blank=False)
+    # bank_account_no = models.CharField(max_length=20, blank=False)
+    # ifsc = models.CharField(max_length=20, blank=False)
+    description = models.CharField( max_length=2048, blank=True)
+    remarks = models.CharField(max_length=2048 ,blank=True)
 

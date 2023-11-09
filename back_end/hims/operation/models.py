@@ -6,13 +6,30 @@ from hims.account import models as acc_model
 
 # Create your models here.
 
-
 #Item Transection in Hotel
+
+class AvailableItemQuantitySnapshot(models.Model):
+   
+    item = models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    opening_balance = models.IntegerField(default=0)
+    quantity_received = models.IntegerField(default=0)
+    quantity_returned = models.IntegerField(default=0)
+    quantity_damaged = models.IntegerField(default=0)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["item"],
+                name="unique_item",
+            ),
+        ]
+
 
 class ItemReceived(models.Model):
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
-    batch_no=models.CharField(max_length=128, null=False)
+    vendor=models.ForeignKey(config_model.Vendor, null=True, on_delete=models.SET_NULL)
+    batch_no=models.CharField(max_length=128, null=True)
     opening_balance=models.IntegerField(default=0)
     quantity_received=models.IntegerField(default=0)
     unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)
@@ -24,10 +41,13 @@ class ItemReceived(models.Model):
     created_at = models.DateTimeField(auto_now=True, blank=False)
 
 class ItemReturned(models.Model):
+    batch_no=models.CharField(max_length=128, null=True)
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
     opening_balance=models.IntegerField(default=0)
     quantity_returned=models.IntegerField(default=0)
+    unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    expiry_date=models.DateField(auto_now=False, auto_now_add=False,blank=True, null=True)
     returned_on = models.DateTimeField(blank=False)
     remarks=models.CharField(max_length=1024, default='', null=True)
     created_by = models.ForeignKey(
@@ -35,10 +55,13 @@ class ItemReturned(models.Model):
     created_at = models.DateTimeField(auto_now=True, blank=False)
 
 class ItemDamaged(models.Model):
+    batch_no=models.CharField(max_length=128, null=True)
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
     opening_balance=models.IntegerField(default=0)
     quantity_damaged=models.IntegerField(default=0)
+    unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    expiry_date=models.DateField(auto_now=False, auto_now_add=False,blank=True, null=True)
     remarks=models.CharField(max_length=1024, default='', null=True)
     damaged_on = models.DateTimeField(blank=False)
     created_by = models.ForeignKey(
@@ -46,6 +69,7 @@ class ItemDamaged(models.Model):
     created_at = models.DateTimeField(auto_now=True, blank=False)
 
 class ItemTransferred(models.Model):
+    batch_no=models.CharField(max_length=128, null=True)
     from_hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL, related_name='from_hotel')
     to_hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL, related_name='to_hotel')
 
@@ -55,6 +79,8 @@ class ItemTransferred(models.Model):
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
     opening_balance=models.IntegerField(default=0)
     quantity_transferred=models.IntegerField(default=0)
+    unit_price=models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    expiry_date=models.DateField(auto_now=False, auto_now_add=False,blank=True, null=True)
     remarks=models.CharField(max_length=1024, default='', null=True)
     transferred_on = models.DateTimeField(blank=False)
     created_by = models.ForeignKey(
@@ -85,4 +111,4 @@ class ItemInHotel(models.Model):
                 name="unique_item_of_hotel",
             ),
         ]
-    
+

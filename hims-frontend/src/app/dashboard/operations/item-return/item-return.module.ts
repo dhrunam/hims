@@ -9,7 +9,6 @@ const routes: Routes = [
   { path: '', redirectTo: '/dashboard/operations/item-return/view', pathMatch: 'full'},
   { path: '', component: ItemReturnComponent, children: [
       { path: 'add', component: EditComponent },
-      { path: 'edit', component: EditComponent },
       { path: 'view', component: ViewComponent },
     ]
   }

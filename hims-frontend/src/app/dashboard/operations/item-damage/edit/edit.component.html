@@ -3,12 +3,45 @@
         <h5>Discard Item</h5>
     </div>
     <hr>
+    <div style="margin-top: 30px;">
+        <form #damaged="ngForm" (ngSubmit)="onAddItems(damaged)">
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Item</label>
+                    <select class="form-select" ngModel name="item_id" #item_id="ngModel" required (change)="onGetNamesValue($event)">
+                        <option value="">---Select Options---</option>
+                        <option *ngFor="let i of item_master" [value]="i.id">{{i.name}}</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Opening Balance</label>
+                    <input type="text" class="form-control" disabled [(ngModel)]="ob" name="opening_balance" required>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">Quantity</label>
+                    <input type="text" class="form-control" ngModel name="quantity_damaged" #quantity_damaged="ngModel" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Price Per Unit</label>
+                    <input type="text" class="form-control" ngModel name="price_per_unit" #price_per_unit="ngModel" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Expiry Date</label>
+                    <input type="date" class="form-control" ngModel name="expiry" #expiry="ngModel" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Remarks</label>
+                    <input type="text" class="form-control" ngModel name="remarks" #remarks="ngModel">
+                </div>
+            </div>
+            <div class="text-end mt-3 mb-3">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </div>
+        </form>
+    </div>
     <div class="table-responsive">
         <div class="text-end" *ngIf="items[0]">
             <button class="btn btn-primary mb-2" (click)="onSubmit();">Discard</button>
-        </div>
-        <div class="text-center" *ngIf="!items[0]" style="margin-bottom: 30px;">
-            <h4>No Items</h4>
         </div>
         <table class="table table-bordered" *ngIf="items[0]" style="margin-bottom: 30px;">
             <thead>
@@ -17,6 +50,8 @@
                     <th scope="col">Item</th>
                     <th scope="col">Opening Balance</th>
                     <th scope="col">Quantity</th>
+                    <th scope="col">Price Per Unit</th>
+                    <th scope="col">Expiry</th>
                     <th scope="col">Remarks</th>
                     <th scope="col">Operations</th>
                 </tr>
@@ -27,6 +62,8 @@
                     <td>{{ i.item_name }}</td>
                     <td>{{ i.opening_balance }}</td>
                     <td>{{ i.quantity_damaged }}</td>
+                    <td>{{ i.unit_price }}</td>
+                    <td>{{ i.expiry_date }}</td>
                     <td>{{ i.remarks || '' }}</td>
                     <td><i class="bi bi-trash3 text-danger" (click)="onDeleteItem(i.item_name)"></i></td>
                 </tr>
@@ -34,35 +71,6 @@
         </table>
         <div class="alert alert-success mt-3" *ngIf="showSuccess === 'true'">
             Items Discarded Successfully
-        </div>
-        <hr>
-        <div style="margin-top: 30px;">
-            <form #damaged="ngForm" (ngSubmit)="onAddItems(damaged)">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label class="form-label">Item</label>
-                        <select class="form-select" ngModel name="item_id" #item_id="ngModel" required (change)="onGetNamesValue($event)">
-                            <option value="">---Select Options---</option>
-                            <option *ngFor="let i of item_master" [value]="i.id">{{i.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Opening Balance</label>
-                        <input type="text" class="form-control" [ngModel]="ob" name="opening_balance" #opening_balance="ngModel" required>
-                    </div>
-                    <div class="col-md-1">
-                        <label class="form-label">Quantity</label>
-                        <input type="text" class="form-control" ngModel name="quantity_damaged" #quantity_damaged="ngModel" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Remarks</label>
-                        <input type="text" class="form-control" ngModel name="remarks" #remarks="ngModel">
-                    </div>
-                    <div class="col-md-1" style="margin-top: 31px">
-                        <button class="btn btn-primary" style="width: 100%" type="submit">Add</button>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
 </section>
