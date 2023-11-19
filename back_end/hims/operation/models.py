@@ -8,6 +8,23 @@ from hims.account import models as acc_model
 
 #Item Transection in Hotel
 
+class AvailableItemQuantitySnapshot(models.Model):
+   
+    item = models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)
+    opening_balance = models.IntegerField(default=0)
+    quantity_received = models.IntegerField(default=0)
+    quantity_returned = models.IntegerField(default=0)
+    quantity_damaged = models.IntegerField(default=0)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["item"],
+                name="unique_item",
+            ),
+        ]
+
+
 class ItemReceived(models.Model):
     hotel=models.ForeignKey(config_model.Hotel,null=True, on_delete=models.SET_NULL)
     item=models.ForeignKey(config_model.Item, null=True, on_delete=models.SET_NULL)

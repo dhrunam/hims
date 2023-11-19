@@ -520,6 +520,20 @@ class CustomItemInHotelSerializer(serializers.ModelSerializer):
 
         ]
 
+class AvailableItemQuantitySnapshotSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = op_models.AvailableItemQuantitySnapshot
+        fields = (
+            'id',
+            'item',
+            'opening_balance',
+            'quantity_received',
+            'quantity_damaged',
+            'quantity_returned',
+        )
+
+
 class SummaryReportSerializers(serializers.ModelSerializer):
     date_range = serializers.DateField(read_only=True)
     name = serializers.CharField(read_only=True)
@@ -528,8 +542,9 @@ class SummaryReportSerializers(serializers.ModelSerializer):
     quantity_damaged= serializers.IntegerField(read_only=True)
     quantity_returned= serializers.IntegerField(read_only=True)
     quantity_transferred= serializers.IntegerField(read_only=True)
-    sod_opening_balance= serializers.IntegerField(read_only=True)
     department_id= serializers.IntegerField(read_only=True)
+    sod_opening_balance = serializers.IntegerField(read_only=True)
+    eod_balance= serializers.IntegerField(read_only=True)
     class Meta:
         model =  op_models.ItemInHotel
         fields =[
@@ -542,7 +557,9 @@ class SummaryReportSerializers(serializers.ModelSerializer):
                     'quantity_damaged',
                     'quantity_returned',
                     'quantity_transferred',
-                    'sod_opening_balance'
+                    'sod_opening_balance',
+                    'eod_balance',
+
 
         ]
 

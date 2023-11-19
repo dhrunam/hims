@@ -61,11 +61,10 @@ export class EditComponent {
       data.control.markAllAsTouched();
     }
     else{
-      let hotel = this.localStorageService.getHotel();
       let date = new Date();
       let todayDate = `${date.getFullYear()}-${date.getMonth() < 10 ? '0':''}${date.getMonth()+1}-${date.getDate() < 10 ? '0':''}${date.getDate()}`
       this.items.push({
-        hotel: hotel.id,
+        hotel: this.hotel_id.toString(),
         item: data.value.item_id,
         item_name: this.item_name,
         vendor: this.vendor_id,

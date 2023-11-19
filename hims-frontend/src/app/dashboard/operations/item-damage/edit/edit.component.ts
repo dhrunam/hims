@@ -18,13 +18,13 @@ export class EditComponent {
   items: Array<ItemDamage> = [];
   item_master: Array<any> = [];
   item_name: string = '';
-  item_id: string = '';
+  item_id: number = 0;
+  ob: number = 0;
   editMode: boolean = false;
   dept_id: number = this.localStorageService.getDepartment().id;
   hotel_id: number = this.localStorageService.getHotel().id;
   batch_no: string = '';
   batchErr: boolean = false;
-  ob:number = 0;
   showSuccess: string = '';
   ngOnInit(): void{
     this.route.params.subscribe({
@@ -61,11 +61,10 @@ export class EditComponent {
       data.control.markAllAsTouched();
     }
     else{
-      let hotel = this.localStorageService.getHotel();
       let date = new Date();
       let todayDate = `${date.getFullYear()}-${date.getMonth() < 10 ? '0':''}${date.getMonth()+1}-${date.getDate() < 10 ? '0':''}${date.getDate()}`
       this.items.push({
-        hotel: hotel.id,
+        hotel: this.hotel_id.toString(),
         item: data.value.item_id,
         item_name: this.item_name,
         expiry_date: data.value.expiry,

@@ -28,13 +28,29 @@ class ReturnedItemList(generics.ListCreateAPIView):
             batch_no = ValueManager.generate_batch_no(self,data, operation_type)
             for element in data:
 
-                print(element)
+                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item']).last()
+                if item_in_hotel:
+                    request.data['opening_balance'] = (item_in_hotel.opening_balance
+                                                       + item_in_hotel.received
+                                                       - item_in_hotel.damaged
+                                                       -item_in_hotel.returned
+                                                       -item_in_hotel.transferred
+                    )
+                    item_in_hotel.returned=item_in_hotel.returned + int(element['quantity_returned'])
+                    item_in_hotel.save()
+
+                avail_item_quantity_snapshot= op_model.AvailableItemQuantitySnapshot.objects.filter(
+                    item = element['item']
+                ).last()
+
+                if avail_item_quantity_snapshot:
+                    avail_item_quantity_snapshot.quantity_returned=  avail_item_quantity_snapshot.quantity_returned + int(element['quantity_returned'])
+                    avail_item_quantity_snapshot.save()
 
                 
                 request.data['hotel'] = element['hotel']
                 request.data['item'] = element['item']
                 request.data['batch_no'] = batch_no
-                request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_returned'] = element['quantity_returned']
                 request.data['unit_price'] = element['unit_price']
                 request.data['expiry_date'] = element['expiry_date']
@@ -44,12 +60,6 @@ class ReturnedItemList(generics.ListCreateAPIView):
 
                 result = self.create(request, *args, **kwargs)
 
-                item_in_hotel = op_model.ItemInHotel.objects.filter(hotel=element['hotel'], item=element['item'])
-                    
-
-                if item_in_hotel:
-                    item_in_hotel[0].returned=item_in_hotel[0].returned + int(element['quantity_returned'])
-                    item_in_hotel[0].save()
 
 
 

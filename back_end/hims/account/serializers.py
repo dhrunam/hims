@@ -204,7 +204,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                     user.is_staff = True if validated_data['group'] == 'user' else False
                     user.groups.clear();
                     user.groups.add(Group.objects.get(
-                        name=validated_data['group']))
+                        id=validated_data['group']))
                 user.save()
 
                 department = validated_data.get('department', None)

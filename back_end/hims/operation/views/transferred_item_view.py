@@ -28,6 +28,23 @@ class TransferredItemList(generics.ListCreateAPIView):
         if(data):
             batch_no = ValueManager.generate_batch_no(self, data, operation_type)
             for element in data:
+                item_in_from_hotel = op_model.ItemInHotel.objects.filter(hotel=element['from_hotel'], item=element['item']).last()
+                if item_in_from_hotel and element['from_hotel']!=element['to_hotel']:
+                    request.data['opening_balance'] = (item_in_from_hotel.opening_balance
+                                                       + item_in_from_hotel.received
+                                                       - item_in_from_hotel.damaged
+                                                       -item_in_from_hotel.returned
+                                                       -item_in_from_hotel.transferred
+                    )
+
+                    item_in_from_hotel.transferred=item_in_from_hotel.transferred + int(element['quantity_transferred'])
+                    item_in_from_hotel.save()
+
+                item_in_to_hotel = op_model.ItemInHotel.objects.filter(hotel=element['to_hotel'], item=element['item']).last()
+               
+                if item_in_to_hotel and element['from_hotel']!=element['to_hotel']:
+                    item_in_to_hotel.received=item_in_to_hotel.received + int(element['quantity_transferred'])
+                    item_in_to_hotel.save()
 
                 request.data['batch_no'] = batch_no
                 request.data['from_hotel'] = element['from_hotel']
@@ -35,7 +52,6 @@ class TransferredItemList(generics.ListCreateAPIView):
                 request.data['from_department'] = element['from_department']
                 request.data['to_department'] = element['to_department']
                 request.data['item'] = element['item']
-                request.data['opening_balance'] = element['opening_balance']
                 request.data['quantity_transferred'] = element['quantity_transferred']
                 request.data['unit_price'] = element['unit_price']
                 request.data['expiry_date'] = element['expiry_date']
@@ -47,18 +63,8 @@ class TransferredItemList(generics.ListCreateAPIView):
 
                 result = self.create(request, *args, **kwargs)
 
-                item_in_from_hotel = op_model.ItemInHotel.objects.filter(hotel=element['from_hotel'], item=element['item'])
-                    
 
-                if item_in_from_hotel and element['from_hotel']!=element['to_hotel']:
-                    item_in_from_hotel[0].transferred=item_in_from_hotel[0].transferred + int(element['quantity_transferred'])
-                    item_in_from_hotel[0].save()
 
-                item_in_to_hotel = op_model.ItemInHotel.objects.filter(hotel=element['to_hotel'], item=element['item'])
-               
-                if item_in_to_hotel and element['from_hotel']!=element['to_hotel']:
-                    item_in_to_hotel[0].received=item_in_to_hotel[0].received + int(element['quantity_transferred'])
-                    item_in_to_hotel[0].save()
 
 
         #request.data._mutable = False

@@ -21,27 +21,54 @@ class PropertyWiseItemSummary(generics.ListAPIView):
         end_date = self.request.query_params.get('end_date')
         queryset = op_model.ItemInHotel.objects.raw(
             '''
+                select final_result.*,
+                case    when    (ir_opening_balance <= dm_opening_balance )
+                            and 
+                            (dm_opening_balance <= rt_opening_balance)
+                            and
+                            (rt_opening_balance <= tr_opening_balance)
+                        then    ir_opening_balance
+                        when    (dm_opening_balance <= rt_opening_balance)
+                            and 
+                            (rt_opening_balance <= tr_opening_balance)
+                            and 
+                            (tr_opening_balance <= ir_opening_balance)
+                        then    dm_opening_balance
+                        when    (rt_opening_balance <= tr_opening_balance)
+                            and 
+                            (tr_opening_balance <= ir_opening_balance)
+                            and 
+                            (ir_opening_balance<=dm_opening_balance)
+                            then rt_opening_balance
+                        when  (tr_opening_balance <= ir_opening_balance)
+                            and 
+                            (ir_opening_balance<=dm_opening_balance)
+                            and
+                            (dm_opening_balance <= rt_opening_balance)
+                            then tr_opening_balance
+                        end as sod_opening_balance
+
+                from (
                 select  dr.date_range
                 , dr.id
                 ,dr.name
                 , dr.department_id
                 , dr.hotel_id
-                --,coalesce(ir.opening_balance,0) as opening_balance
+                ,coalesce(ir.opening_balance,0) as ir_opening_balance
                 ,coalesce(ir.quantity_received,0) as quantity_received
-                --,coalesce(dm.opening_balance,0) as opening_balance
+                ,coalesce(dm.opening_balance,0) as dm_opening_balance
                 ,coalesce(dm.quantity_damaged,0) as quantity_damaged
-                --,coalesce(rt.opening_balance,0) as opening_balance
+                ,coalesce(rt.opening_balance,0) as rt_opening_balance
                 ,coalesce(rt.quantity_returned,0) as quantity_returned
-                --,coalesce(tr.opening_balance,0) as opening_balance
+                ,coalesce(tr.opening_balance,0) as tr_opening_balance
                 ,coalesce(tr.quantity_transferred,0) as quantity_transferred
-                , case 	when ir.received_on < dm.damaged_on and dm.damaged_on < rt.returned_on and rt.returned_on < tr.transferred_on
-                        then coalesce(ir.opening_balance,0)
-                        when dm.damaged_on < rt.returned_on and rt.returned_on < tr.transferred_on and tr.transferred_on < ir.received_on 
-                        then coalesce(dm.opening_balance,0)
-                        when rt.returned_on < tr.transferred_on and tr.transferred_on < ir.received_on and  ir.received_on <  dm.damaged_on
-                        then coalesce(rt.opening_balance,0)
-                        else  coalesce(tr.opening_balance,0)
-                end as sod_opening_balance
+                ,(coalesce(ir.opening_balance,0) + coalesce(ir.quantity_received,0)
+                  - coalesce(dm.quantity_damaged,0)
+                  - coalesce(rt.quantity_returned,0)
+                  - coalesce(tr.quantity_transferred,0)
+                 
+                   ) as eod_balance
+
                 from
                 (
                     select dr.date_range, im.id, im.name,im.department_id, hi.hotel_id
@@ -55,38 +82,68 @@ class PropertyWiseItemSummary(generics.ListAPIView):
                 ) as dr
 
                 left join (
-                    select ci.id, ir.received_on::date, ir.opening_balance, ir.quantity_received,  ir.hotel_id from public.configuration_item as ci
+                    select ci.id,coalesce(ir.created_at, now()) as created_at, ir.received_on::date, ir.opening_balance, ir.quantity_received,  ir.hotel_id from public.configuration_item as ci
                     join public.operation_itemreceived as ir on ci.id=ir.item_id
                 ) as ir on ir.received_on=dr.date_range and ir.id=dr.id and ir.hotel_id=dr.hotel_id
 
                 left join (
-                    select ci.id, dm.damaged_on::date, dm.opening_balance, dm.quantity_damaged, dm.hotel_id from public.configuration_item as ci
+                    select ci.id, coalesce(dm.created_at,now()) as created_at, dm.damaged_on::date, dm.opening_balance, dm.quantity_damaged, dm.hotel_id from public.configuration_item as ci
                     join public.operation_itemdamaged as dm on ci.id=dm.item_id
                 ) as dm on dm.damaged_on=dr.date_range  and dm.id=dr.id and dm.hotel_id=dr.hotel_id
                 left join (
-                    select ci.id, rt.returned_on::date, rt.opening_balance, rt.quantity_returned, rt.hotel_id from public.configuration_item as ci
+                    select ci.id,coalesce(rt.created_at,now()) as created_at, rt.returned_on::date, rt.opening_balance, rt.quantity_returned, rt.hotel_id from public.configuration_item as ci
                     join public.operation_itemreturned as rt on ci.id=rt.item_id
                 ) as rt on rt.returned_on = dr.date_range  and rt.id=dr.id and rt.hotel_id=dr.hotel_id
 
                 left join (
-                    select ci.id, tr.transferred_on::date, tr.opening_balance, tr.quantity_transferred, tr.from_hotel_id as hotel_id from public.configuration_item as ci
+                    select ci.id, coalesce(tr.created_at,now()) as created_at, tr.transferred_on::date, tr.opening_balance, tr.quantity_transferred, tr.from_hotel_id as hotel_id from public.configuration_item as ci
                     join public.operation_itemtransferred as tr on ci.id=tr.item_id
                 ) as tr on tr.transferred_on = dr.date_range  and tr.id=dr.id and tr.hotel_id=dr.hotel_id
 
                 where dr.hotel_id=coalesce( %s,dr.hotel_id)
                 and dr.id=coalesce( %s,dr.id)
                 and dr.department_id = coalesce( %s,dr.department_id)
-                order by dr.date_range asc, dr.id asc
+                order by dr.date_range asc, dr.hotel_id asc, dr.id asc
 
-
+                ) as final_result
             ''',
             [start_date, end_date,hotel_id, item_id, department_id]
         )
 
+        prev_sod_balance=0
+        prev_eod_balance=0
+        prev_hotel=0
+        prev_dept=0
+        prev_item=0
+
+        for  element in queryset:
+            if (element.sod_opening_balance==0 
+                and prev_hotel==element.hotel_id 
+                and prev_dept== element.department_id
+                and prev_item == element.id  ):
+
+
+               element.sod_opening_balance=prev_eod_balance
+
+
+            if (element.eod_balance==0 
+                and prev_hotel==element.hotel_id 
+                and prev_dept== element.department_id
+                and prev_item == element.id  ):
+
+
+               element.eod_balance=prev_eod_balance
+
+           
+            prev_sod_balance = element.sod_opening_balance
+            prev_eod_balance = element.eod_balance
+            prev_hotel= element.hotel_id
+            prev_item = element.id
+            prev_dept = element.department_id
 
         return queryset
 
-
+#
 
    
 
