@@ -9,7 +9,7 @@ from durin.auth import TokenAuthentication
 class DepartmentList(generics.ListCreateAPIView):
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
-    queryset = models.DepartmentMaster.objects.all()
+    queryset = models.DepartmentMaster.objects.all().order_by('id')
     serializer_class = serializers.DepartmentMasterSerializer
     # pagination.PageNumberPagination.page_size = 2
 

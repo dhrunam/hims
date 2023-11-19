@@ -17,6 +17,7 @@ export class HotelComponent {
   showSuccess: string = '';
   editMode: boolean = false;
   deleteMessage: boolean = false;
+  departments_buffer: Array<any> = [];
   departments: Array<{id:number, name: string, short_name: string}> = [];
   buffer: Array<{id:number, name: string, short_name: string}> = [];
   hotels: Array<any> = [];
@@ -35,9 +36,17 @@ export class HotelComponent {
     if(this.editMode){
       this.hotelService.get_hotel(this.id).subscribe({
         next: data => {
-          console.log(data);
-          this.hotel_name = data.name;
-          this.hotel_short_name = data.short_name;
+          this.hotel_name = data.hotel_name;
+          this.hotel_short_name = data.hotel_short_name;
+          this.departments_buffer = data.departments.sort((a,b) => {
+            if(a.department_id > b.department_id){
+              return 1;
+            }
+            else{
+              return -1;
+            }
+          });
+          this.departments_buffer.forEach(d => { console.log(d)});
         }
       })
     }

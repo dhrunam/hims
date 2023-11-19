@@ -13,7 +13,7 @@ from django.conf import settings
 
 
 class ReceivedItemList(generics.ListCreateAPIView):
-    operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
+    operation_type = settings.OPERATION_TYPE['received']
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
     queryset = op_model.ItemReceived.objects.all()
@@ -56,12 +56,7 @@ class ReceivedItemList(generics.ListCreateAPIView):
 
         # result = self.create(request, *args, **kwargs)
         if(data):
-<<<<<<< HEAD
-            print(self.operation_type)
-            batch_no = ValueManager.generate_batch_no(self,data, self.operation_type['received'])
-=======
             batch_no = ValueManager.generate_batch_no(self,data, operation_type)
->>>>>>> 90f31da04a2fc8d9a30d65600dacfeb5e2573935
             # print('batch_no', batch_no)
             for element in data:
                 
