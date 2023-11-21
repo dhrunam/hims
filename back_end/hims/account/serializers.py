@@ -253,6 +253,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         except TypeError:
             return TypeError("There is some error in processing your data.")
 
+   
 
 
 class LeanUserSerializer(serializers.ModelSerializer):
