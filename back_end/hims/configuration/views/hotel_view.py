@@ -53,20 +53,15 @@ class HotelDetails(generics.RetrieveUpdateDestroyAPIView):
         if(data):
             
             # print('batch_no', batch_no)
+            models.HotelDepartment.objects.filter(
+                    hotel = instance.id
+                ).delete()
+            
             for element in data:
-               
-                hotel_department=models.HotelDepartment.objects.filter(
-                    hotel = instance.id,
-                    department = element['id']
-                )
-              
-                if hotel_department is None or  not hotel_department.exists():
-                   
                     models.HotelDepartment.objects.create(
                     hotel = instance,
                     department = models.DepartmentMaster.objects.get(pk= element['id'])
-                )
-                
-        
+                    )
+                    
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
