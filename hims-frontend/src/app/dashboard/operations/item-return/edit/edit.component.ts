@@ -7,6 +7,8 @@ import { LocalStorageService } from 'src/app/services/local-storage/local-storag
 import { ItemReturn } from 'src/app/shared/interfaces/item-return.interface';
 import { ItemReturnService } from '../item-return.service';
 import { ItemReceiveService } from '../../item-receive/item-receive.service';
+import { HotelService } from 'src/app/dashboard/masters/hotel/hotel.service';
+import { DepartmentService } from 'src/app/dashboard/masters/department/department.service';
 
 @Component({
   selector: 'app-edit',
@@ -15,83 +17,52 @@ import { ItemReceiveService } from '../../item-receive/item-receive.service';
 })
 export class EditComponent {
   @ViewChild('batch', { static: false } ) batch: ElementRef;
-  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReturnService: ItemReturnService, private itemReceiveService: ItemReceiveService){}
+  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReturnService: ItemReturnService, private itemReceiveService: ItemReceiveService, private hotelService: HotelService, private departmentService: DepartmentService){}
   items: Array<ItemReturn> = [];
   item_master: Array<any> = [];
+  hotels: Array<any> = [];
+  departments: Array<any> = [];
   item_name: string = '';
-  dept_id: number = this.localStorageService.getDepartment().id;
-  hotel_id: number = this.localStorageService.getHotel().id;
   item_id: string = '';
+  hotel_id: any;
+  dept_id: any;
   editMode: boolean = false;
   batch_no: string = '';
   ob: number = 0;
   batchErr: boolean = false;
   showSuccess: string = '';
+  isAdmin: boolean = false;
   ngOnInit(): void{
+    this.isAdmin = this.localStorageService.getRole() === 1 ? true : false;
     this.route.queryParams.subscribe({
       next: (param: Params) => {
         this.editMode = param['batch_no'] != null;
-        if(this.editMode){
-          // this.itemReturnService.get_item_received(param['batch_no']).subscribe({
-          //   next: data => {
-          //     this.items = data;
-          //   }
-          // })
-        }
       }
     })
-    this.itemService.get_items_by_department(this.dept_id).subscribe({
-      next: data => this.item_master = data,
-    })
+    if(!this.isAdmin){
+      this.hotel_id = this.localStorageService.getHotel().id;
+      this.dept_id = this.localStorageService.getDepartment().id;
+      this.getItems();
+    }
+    else{
+      this.getHotels();
+      this.getDepartments();
+    }
   }
-  // onEnter(){
-  //   if(this.batch_no === ''){
-  //     this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
-  //   }
-  //   else{
-  //     this.renderer.removeStyle(this.batch.nativeElement, 'border');
-  //   }
-  // }
   onSubmit(){
     this.items.forEach((d:any) => {
       d.batch_no = this.batch_no;
     })
     let observable: Observable<any>
-    if(this.editMode){
-
-    }
+    if(this.editMode){}
     else{
       observable = this.itemReturnService.return_item(this.items)
     }
     observable.subscribe({
       next: data => {
-        // this.renderer.removeStyle(this.batch.nativeElement, 'border');
-        // this.batchErr = false;
         this.showSuccess = 'true';
       }
     }) 
-    // if(this.batch_no === ''){
-    //   this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
-    //   this.batchErr = true;
-    // }
-    // else{
-    //   this.items.forEach((d:any) => {
-    //     d.batch_no = this.batch_no;
-    //   })
-    //   let observable: Observable<any>
-    //   if(this.editMode){
-
-    //   }
-    //   else{
-    //     observable = this.itemReturnService.return_item(this.items)
-    //   }
-    //   observable.subscribe({
-    //     next: data => {
-    //       this.renderer.removeStyle(this.batch.nativeElement, 'border');
-    //       this.batchErr = false;
-    //     }
-    //   }) 
-    // }  
   }
   onAddItems(data: NgForm){
     if(!data.valid){
@@ -108,7 +79,7 @@ export class EditComponent {
         quantity_returned: data.value.quantity_returned,
         unit_price: data.value.price_per_unit,
         expiry_date: data.value.expiry,
-        remarks: data.value.remarks || '',
+        remarks: data.value.remarks || 'N/A',
         returned_on: todayDate,
       })
       data.reset();
@@ -130,5 +101,27 @@ export class EditComponent {
         }
       }
     })
+  }
+  getItems(){
+    this.itemService.get_items_by_department(this.dept_id).subscribe({
+      next: data => this.item_master = data,
+    })
+  }
+  getHotels(){
+    this.hotelService.get_hotels().subscribe({
+      next: data => this.hotels = data,
+    })
+  }
+  getDepartments(){
+    this.departmentService.get_departments().subscribe({
+      next: data => this.departments = data,
+    })
+  }
+  onSetHotelId(event: any){
+    this.hotel_id = event.target.value;
+  }
+  onSetDepartmentId(event: any){
+    this.dept_id = event.target.value;
+    this.getItems();
   }
 }

@@ -63,12 +63,12 @@
                 <td>{{ i+1 }}</td>
                 <td>{{ r.date_range | date: 'dd/MM/YYYY'}}</td>
                 <td>{{ r.name }}</td>
-                <td>{{ r.sod_opening_balance }}</td>
+                <td>{{ r.sod_opening_balance || 0 }}</td>
                 <td>{{ r.quantity_received }}</td>
                 <td>{{ r.quantity_returned }}</td>
                 <td>{{ r.quantity_damaged }}</td>
                 <td>{{ r.quantity_transferred }}</td>
-                <td>0</td>
+                <td>{{ r.eod_balance }}</td>
             </tr>
         </tbody>
     </table>

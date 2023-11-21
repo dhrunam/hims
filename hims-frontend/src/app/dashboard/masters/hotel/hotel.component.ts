@@ -19,7 +19,7 @@ export class HotelComponent {
   deleteMessage: boolean = false;
   departments_buffer: Array<any> = [];
   departments: Array<{id:number, name: string, short_name: string}> = [];
-  buffer: Array<{id:number, name: string, short_name: string}> = [];
+  buffer: Array<any> = [];
   hotels: Array<any> = [];
   hotel_name: string = '';
   hotel_short_name: string = '';
@@ -112,10 +112,24 @@ export class HotelComponent {
   onGoBack(){
     this.router.navigate(['../../home'], { relativeTo: this.route } );
   }
-  onRemoveItem(dept_name: string){
-    var index = this.buffer.findIndex(i => i.name === dept_name);
-    this.buffer.splice(index, 1);
-    console.log(this.buffer);
+  // onItemArray(dept_name: string, key: string){
+  //   var index = this.buffer.findIndex(i => i.name === dept_name);
+  //   this.buffer.splice(index, 1);
+    
+  // }
+  onItemArray(event:any, full_name: string, short_name: string){
+    if(event.target.checked){
+      this.buffer.push({
+        id: event.target.value,
+        name: full_name,
+        short_name: short_name,
+      })
+    }
+    else{
+      var index = this.buffer.findIndex(i => i.name === full_name);
+      this.buffer.splice(index, 1);
+    }
+    console.log(this.buffer);    
   }
   ngOnDestroy():void{
     if(this.subscription){

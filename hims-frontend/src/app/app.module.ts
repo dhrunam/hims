@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TokenInterceptor } from './interceptors/token-interceptor/token.interceptor';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,7 @@ import { TokenInterceptor } from './interceptors/token-interceptor/token.interce
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     {

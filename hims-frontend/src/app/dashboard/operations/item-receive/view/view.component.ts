@@ -35,6 +35,7 @@ export class ViewComponent {
       this.hotel = this.localStorageService.getHotel();
       this.department = this.localStorageService.getDepartment();
     }
+    
   }
   onRouteReceiveItem(){
     this.router.navigate(['../add'], { relativeTo: this.route})

@@ -19,8 +19,15 @@
                                     <input type="password" class="form-control" placeholder="Password" name="password" ngModel #password="ngModel" required>
                                 </div>
                                 <small class="text-danger" *ngIf="(username.touched && username.invalid) || (password.touched && password.invalid)">Please enter credentials</small>
+                                <app-prompt [message]="showErrMessage" *ngIf="showErrMessage"></app-prompt>
                                 <div class="d-grid mt-4">
-                                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Login</button>
+                                    <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" [disabled]="showLoader" type="submit">
+                                        <span *ngIf="!showLoader; else loader">Login</span>
+                                        <ng-template #loader>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Loading...
+                                        </ng-template>
+                                    </button>
                                 </div>
                             </form>
                         </div>

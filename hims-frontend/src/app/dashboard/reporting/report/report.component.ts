@@ -50,6 +50,7 @@ export class ReportComponent {
       }
       observable.pipe(take(1)).subscribe({
         next: data => {
+          console.log(data);
           this.reports = data;
         }
       })

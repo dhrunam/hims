@@ -6,22 +6,27 @@ import { LocalStorageService } from 'src/app/services/local-storage/local-storag
 import { ItemReceiveService } from '../item-receive.service';
 import { ItemReceive } from 'src/app/shared/interfaces/item-receive.interface';
 import { VendorService } from 'src/app/dashboard/masters/vendor/vendor.service';
+import { HotelService } from 'src/app/dashboard/masters/hotel/hotel.service';
+import { DepartmentService } from 'src/app/dashboard/masters/department/department.service';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent {
-  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReceiveService: ItemReceiveService, private vendorService: VendorService){}
+  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemReceiveService: ItemReceiveService, private vendorService: VendorService,  private hotelService: HotelService, private departmentService: DepartmentService){}
   items: Array<ItemReceive> = [];
   item_master: Array<any> = [];
+  hotels: Array<any> = [];
+  departments: Array<any> = [];
+  isAdmin: boolean = false;
   vendors: Array<any> = [];
   item_name: string = '';
   item_id: string = '';
   vendor_name: string = '';
   vendor_id: string = '';
-  hotel_id: number = this.localStorageService.getHotel().id;
-  dept_id: number = this.localStorageService.getDepartment().id;
+  hotel_id: any;
+  dept_id: any;
   editMode: boolean = false;
   showSuccess: string = '';
   editableOB: boolean = true;
@@ -29,6 +34,7 @@ export class EditComponent {
   max: number = 0;
   ob: number = 0;
   ngOnInit(): void{
+    this.isAdmin = this.localStorageService.getRole() === 1 ? true : false;
     this.route.queryParams.subscribe({
       next: (param: Params) => {
         this.editMode = param['batch_no'] != null;
@@ -41,9 +47,15 @@ export class EditComponent {
         }
       }
     })
-    this.itemService.get_items_by_department(this.dept_id).subscribe({
-      next: data => this.item_master = data,
-    })
+    if(!this.isAdmin){
+      this.hotel_id = this.localStorageService.getHotel().id;
+      this.dept_id = this.localStorageService.getDepartment().id;
+      this.getItems();
+    }
+    else{
+      this.getHotels();
+      this.getDepartments();
+    }
     this.vendorService.get_vendors().subscribe({
       next: data => this.vendors = data,
     })
@@ -69,12 +81,13 @@ export class EditComponent {
         item_name: this.item_name,
         vendor: this.vendor_id,
         min_level: this.min.toString(),
+        max_level: this.max.toString(),
         vendor_name: this.vendor_name,
         opening_balance: this.ob,
         quantity_received: data.value.quantity_received,
         unit_price: data.value.price_per_unit,
         expiry_date: data.value.expiry,
-        remarks: data.value.remarks || '',
+        remarks: data.value.remarks || 'N/A',
         received_on: todayDate,
       })
       data.reset();
@@ -106,5 +119,27 @@ export class EditComponent {
   onGetVendorNamesValue(event: any){
     this.vendor_name = event.target.options[event.target.options.selectedIndex].text;
     this.vendor_id = event.target.value;
+  }
+  getItems(){
+    this.itemService.get_items_by_department(this.dept_id).subscribe({
+      next: data => this.item_master = data,
+    })
+  }
+  getHotels(){
+    this.hotelService.get_hotels().subscribe({
+      next: data => this.hotels = data,
+    })
+  }
+  getDepartments(){
+    this.departmentService.get_departments().subscribe({
+      next: data => this.departments = data,
+    })
+  }
+  onSetHotelId(event: any){
+    this.hotel_id = event.target.value;
+  }
+  onSetDepartmentId(event: any){
+    this.dept_id = event.target.value;
+    this.getItems();
   }
 }

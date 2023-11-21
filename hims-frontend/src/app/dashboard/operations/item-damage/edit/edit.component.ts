@@ -7,6 +7,8 @@ import { LocalStorageService } from 'src/app/services/local-storage/local-storag
 import { ItemDamage } from 'src/app/shared/interfaces/item-damaged.interface';
 import { ItemDamageService } from '../item-damage.service';
 import { ItemReceiveService } from '../../item-receive/item-receive.service';
+import { HotelService } from 'src/app/dashboard/masters/hotel/hotel.service';
+import { DepartmentService } from 'src/app/dashboard/masters/department/department.service';
 
 @Component({
   selector: 'app-edit',
@@ -14,19 +16,23 @@ import { ItemReceiveService } from '../../item-receive/item-receive.service';
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent {
-  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemDamageService: ItemDamageService, private itemReceiveService: ItemReceiveService){}
+  constructor(private route: ActivatedRoute, private itemService: ItemService, private localStorageService: LocalStorageService, private itemDamageService: ItemDamageService, private itemReceiveService: ItemReceiveService,  private hotelService: HotelService, private departmentService: DepartmentService){}
   items: Array<ItemDamage> = [];
   item_master: Array<any> = [];
   item_name: string = '';
   item_id: number = 0;
   ob: number = 0;
   editMode: boolean = false;
-  dept_id: number = this.localStorageService.getDepartment().id;
-  hotel_id: number = this.localStorageService.getHotel().id;
+  hotels: Array<any> = [];
+  departments: Array<any> = [];
+  dept_id: any;
+  hotel_id: any;
   batch_no: string = '';
+  isAdmin: boolean = false;
   batchErr: boolean = false;
   showSuccess: string = '';
   ngOnInit(): void{
+    this.isAdmin = this.localStorageService.getRole() === 1 ? true : false;
     this.route.params.subscribe({
       next: (param: Params) => {
         this.editMode = param['id'] != null;
@@ -35,9 +41,15 @@ export class EditComponent {
         }
       }
     })
-    this.itemService.get_items_by_department(this.dept_id).subscribe({
-      next: data => this.item_master = data,
-    })
+    if(!this.isAdmin){
+      this.hotel_id = this.localStorageService.getHotel().id;
+      this.dept_id = this.localStorageService.getDepartment().id;
+      this.getItems();
+    }
+    else{
+      this.getHotels();
+      this.getDepartments();
+    }
   }
   onSubmit(){
     this.items.forEach((d:any) => {
@@ -71,7 +83,7 @@ export class EditComponent {
         unit_price: data.value.price_per_unit,
         opening_balance: this.ob.toString(),
         quantity_damaged: data.value.quantity_damaged,
-        remarks: data.value.remarks || '',
+        remarks: data.value.remarks || 'N/A',
         damaged_on: todayDate,
       })
       data.reset();
@@ -93,5 +105,27 @@ export class EditComponent {
         }
       }
     })
+  }
+  getItems(){
+    this.itemService.get_items_by_department(this.dept_id).subscribe({
+      next: data => this.item_master = data,
+    })
+  }
+  getHotels(){
+    this.hotelService.get_hotels().subscribe({
+      next: data => this.hotels = data,
+    })
+  }
+  getDepartments(){
+    this.departmentService.get_departments().subscribe({
+      next: data => this.departments = data,
+    })
+  }
+  onSetHotelId(event: any){
+    this.hotel_id = event.target.value;
+  }
+  onSetDepartmentId(event: any){
+    this.dept_id = event.target.value;
+    this.getItems();
   }
 }
