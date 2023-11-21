@@ -66,6 +66,7 @@ class HotelDetails(generics.RetrieveUpdateDestroyAPIView):
                     hotel = instance,
                     department = models.DepartmentMaster.objects.get(pk= element['id'])
                 )
+                
         
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
