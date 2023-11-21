@@ -4,7 +4,14 @@ from django.conf import settings
 
 import datetime
 
+from rest_framework.settings import api_settings
+
+
+
 class ValueManager():
+    operation_type = getattr(api_settings, 'OPERATION_TYPE', None)
+
+
 
     def generate_batch_no(self, data, op_type):
         operation_type = settings.OPERATION_TYPE

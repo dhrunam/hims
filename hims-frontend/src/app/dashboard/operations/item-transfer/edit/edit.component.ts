@@ -22,7 +22,7 @@ export class EditComponent {
   hotels: Array<any> = [];
   departments: Array<any> = [];
   item_name: string = '';
-  item_id: string = '';
+  item_id: number = 0;
   hotel_name: string = '';
   department_name: string = '';
   editMode: boolean = false;

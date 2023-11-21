@@ -21,17 +21,17 @@
             </div>
             <div class="col-md-2">
                 <label class="form-label">Select Department</label>
-                <select class="form-select" name="department_id" ngModel #department_id="ngModel">
+                <select class="form-select" name="department_id" (change)="getItems(department_id.value)" ngModel #department_id="ngModel" required>
                     <option disabled selected>---Select Department---</option>
                     <option *ngFor="let d of departments" [value]="d.id">{{d.name}}</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <label class="form-label">Select Item</label>
-                <select class="form-select" name="item_id" ngModel #item_id="ngModel">
-                    <option disabled selected>---Select Item---</option>
-                    <option *ngFor="let i of items" [value]="i.id">{{ i.name }}</option>
-                </select>
+                <input type="text" list="browsers" name="item" class="form-control" autocomplete="off" [(ngModel)]="resetItemInput" #item="ngModel">
+                <datalist id="browsers">
+                    <option *ngFor="let i of items" [value]="i.name">{{ i.name }}</option>
+                </datalist>
             </div>
             <div class="col-md-2">
                 <button class="btn btn-primary" style="margin-top: 31px;" type="submit"><i class="bi bi-search"></i></button>
@@ -40,8 +40,11 @@
     </form>
     <hr>
 </div>
-<div class="px-5 py-2">
-    <table class="table table-bordered" *ngIf="reports[0]">
+<div class="px-5 py-2" *ngIf="reports[0]">
+    <div class="text-end mb-3">
+        <button class="btn btn-primary" (click)="generateExcelReport()">Export to Excel</button>
+    </div>
+    <table class="table table-bordered" id="report">
         <thead>
             <tr>
                 <th scope="col">S.No.</th>

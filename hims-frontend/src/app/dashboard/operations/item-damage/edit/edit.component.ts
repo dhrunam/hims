@@ -18,24 +18,20 @@ export class EditComponent {
   items: Array<ItemDamage> = [];
   item_master: Array<any> = [];
   item_name: string = '';
-  item_id: string = '';
+  item_id: number = 0;
+  ob: number = 0;
   editMode: boolean = false;
   dept_id: number = this.localStorageService.getDepartment().id;
   hotel_id: number = this.localStorageService.getHotel().id;
   batch_no: string = '';
   batchErr: boolean = false;
-  ob:number = 0;
   showSuccess: string = '';
   ngOnInit(): void{
-    this.route.queryParams.subscribe({
+    this.route.params.subscribe({
       next: (param: Params) => {
-        this.editMode = param['batch_no'] != null;
+        this.editMode = param['id'] != null;
         if(this.editMode){
-          // this.itemReturnService.get_item_received(param['batch_no']).subscribe({
-          //   next: data => {
-          //     this.items = data;
-          //   }
-          // })
+          
         }
       }
     })
@@ -56,44 +52,19 @@ export class EditComponent {
     }
     observable.subscribe({
       next: data => {
-        // this.renderer.removeStyle(this.batch.nativeElement, 'border');
-        // this.batchErr = false;
         this.showSuccess = 'true';
       }
-    }) 
-    // if(this.batch_no === ''){
-    //   this.renderer.setStyle(this.batch.nativeElement, 'border', '1px solid red');
-    //   this.batchErr = true;
-    // }
-    // else{
-    //   this.items.forEach((d:any) => {
-    //     d.batch_no = this.batch_no;
-    //   })
-    //   let observable: Observable<any>
-    //   if(this.editMode){
-
-    //   }
-    //   else{
-    //     observable = this.itemReturnService.return_item(this.items)
-    //   }
-    //   observable.subscribe({
-    //     next: data => {
-    //       this.renderer.removeStyle(this.batch.nativeElement, 'border');
-    //       this.batchErr = false;
-    //     }
-    //   }) 
-    // }  
+    })
   }
   onAddItems(data: NgForm){
     if(!data.valid){
       data.control.markAllAsTouched();
     }
     else{
-      let hotel = this.localStorageService.getHotel();
       let date = new Date();
       let todayDate = `${date.getFullYear()}-${date.getMonth() < 10 ? '0':''}${date.getMonth()+1}-${date.getDate() < 10 ? '0':''}${date.getDate()}`
       this.items.push({
-        hotel: hotel.id,
+        hotel: this.hotel_id.toString(),
         item: data.value.item_id,
         item_name: this.item_name,
         expiry_date: data.value.expiry,

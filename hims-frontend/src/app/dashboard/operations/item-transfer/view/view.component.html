@@ -1,12 +1,41 @@
 <section class="mt-4 px-5">
-    <div class="d-flex justify-content-between">
-        <h5>Item(s) Transferred</h5>
-        <button class="btn btn-primary" (click)="onRouteTransferItem()">+ Transfer</button>
-    </div>  
-    <hr>
-    <div *ngIf="!items[0]">
-        <h5>No Item(s) Transferred</h5>
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="w-75">
+            <form #search="ngForm" (ngSubmit)="onSearchItemTransferred(search)">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" #start_date="ngModel" ngModel required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control" name="end_date" #end_date="ngModel" ngModel required>
+                    </div>
+                    <div class="col-md-3" *ngIf="isAdmin">
+                        <label class="form-label">Hotel</label>
+                        <select class="form-select" name="hotel" (change)="onGetNames($event, 'h')" [ngModel]="''" #hotel="ngModel" required>
+                            <option disabled value="">---Select Hotel---</option>
+                            <option *ngFor="let h of hotels" [value]="h.id">{{ h.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3" *ngIf="isAdmin">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" name="dept" (change)="onGetNames($event, 'd')" [ngModel]="''" #dept="ngModel" required>
+                            <option disabled value="">---Select Department---</option>
+                            <option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" style="margin-top: 31px;"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>  
+            </form>
+        </div>
+        <div>
+            <button class="btn btn-primary" style="margin-top: 31px;" *ngIf="!isAdmin" (click)="onRouteTransferItem()">Return Item</button>
+        </div>
     </div>
+    <hr>
     <div class="row">
         <div class="col-xl-2 col-md-4 col-6 mt-3" *ngFor="let it of items">
             <div class="card">

@@ -13,6 +13,7 @@ from django.conf import settings
 
 
 class ReceivedItemList(generics.ListCreateAPIView):
+    operation_type = settings.OPERATION_TYPE['received']
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
     queryset = op_model.ItemReceived.objects.all()
