@@ -204,7 +204,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                     user.is_staff = True if validated_data['group'] == 'user' else False
                     user.groups.clear();
                     user.groups.add(Group.objects.get(
-                        name=validated_data['group']))
+                        id=validated_data['group']))
                 user.save()
 
                 department = validated_data.get('department', None)
@@ -253,6 +253,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         except TypeError:
             return TypeError("There is some error in processing your data.")
 
+   
 
 
 class LeanUserSerializer(serializers.ModelSerializer):

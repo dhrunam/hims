@@ -23,7 +23,7 @@ class HotelList(generics.ListCreateAPIView):
             
             # print('batch_no', batch_no)
             for element in data:
-                
+               
                 models.HotelDepartment.objects.create(
                     hotel = models.Hotel.objects.get(pk=result.data['id']),
                     department = models.DepartmentMaster.objects.get(pk= element['id'])
@@ -40,11 +40,32 @@ class HotelDetails(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes = (IsAuthenticated,)
     queryset = models.Hotel
     serializer_class = serializers.HotelSerializer
-
+    @transaction.atomic
     def patch(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', True)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
+
+        data = json.loads(request.data['data'])
+
+      
+        if(data):
+            
+            # print('batch_no', batch_no)
+            for element in data:
+               
+                hotel_department=models.HotelDepartment.objects.filter(
+                    hotel = instance.id,
+                    department = element['id']
+                )
+              
+                if hotel_department is None or  not hotel_department.exists():
+                   
+                    models.HotelDepartment.objects.create(
+                    hotel = instance,
+                    department = models.DepartmentMaster.objects.get(pk= element['id'])
+                )
+        
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
