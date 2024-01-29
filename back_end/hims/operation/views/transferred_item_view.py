@@ -29,7 +29,12 @@ class TransferredItemList(generics.ListCreateAPIView):
             batch_no = ValueManager.generate_batch_no(self, data, operation_type)
             for element in data:
                 item_in_from_hotel = op_model.ItemInHotel.objects.filter(hotel=element['from_hotel'], item=element['item']).last()
-                if item_in_from_hotel and element['from_hotel']!=element['to_hotel']:
+                available_item_count= ValueManager.get_available_item_count(self,item_in_from_hotel)
+                
+                if available_item_count <= int(element['quantity_transferred']):
+                    continue
+
+                if element['from_hotel']!=element['to_hotel']:
                     request.data['opening_balance'] = (item_in_from_hotel.opening_balance
                                                        + item_in_from_hotel.received
                                                        - item_in_from_hotel.damaged
@@ -63,10 +68,6 @@ class TransferredItemList(generics.ListCreateAPIView):
 
                 result = self.create(request, *args, **kwargs)
 
-
-
-
-
         #request.data._mutable = False
         return self.get(request, *args, **kwargs)
     
@@ -98,6 +99,8 @@ class TransferredItemList(generics.ListCreateAPIView):
         
        
         return queryset
+
+   
 
 
 class TransferredItemDetails(generics.RetrieveUpdateDestroyAPIView):
